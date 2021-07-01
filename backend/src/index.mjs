@@ -1,7 +1,7 @@
 import app from "./server.mjs"
 import { MongoClient } from "mongodb";
 import UsersDAO from "./dao/UsersDAO.js";
-import ArticlesDAO from "./dao/ArticlesDAO";
+import ArticlesDAO from "./dao/ArticlesDAO.mjs";
 import CustomersDAO from "./dao/CustomersDAO";
 import OrdersDAO from "./dao/OrdersDAO";
 

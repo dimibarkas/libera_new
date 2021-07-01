@@ -1,4 +1,4 @@
-import ArticlesDAO from "../../dao/ArticlesDAO";
+import ArticlesDAO from "../../dao/ArticlesDAO.mjs";
 
 export default class ArticlesController {
     static async apiGetArticles(req, res, next) {

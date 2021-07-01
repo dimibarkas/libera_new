@@ -20,7 +20,7 @@ MongoClient.connect(
         await ArticlesDAO.injectDB(client)
         await CustomersDAO.injectDB(client)
         await OrdersDAO.injectDB(client)
-        app.listen(8080, () => {
+        app.listen(port, () => {
             console.log(`Libera backend listening on Port ${port}`);
         })
     })

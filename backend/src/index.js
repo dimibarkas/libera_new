@@ -6,7 +6,7 @@ import CustomersDAO from "./dao/CustomersDAO";
 import OrdersDAO from "./dao/OrdersDAO";
 
 
-const port = process.env.port || 8080;
+const port = process.env.PORT || 8080;
 
 MongoClient.connect(
     process.env.LIBERA_DB_URI,

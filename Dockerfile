@@ -14,4 +14,4 @@ RUN npm install
 COPY --from=frontend-build /app/build/ public/
 RUN ls -al ./public/
 
-CMD [ "node", "src/index.js" ]
+CMD [ "node", "src/index.mjs" ]

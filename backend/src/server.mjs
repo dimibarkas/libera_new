@@ -2,7 +2,7 @@ import express from "express"
 import bodyParser from "body-parser"
 import cors from "cors"
 import morgan from "morgan"
-import articles from "../src/api/articles/articles.route"
+import articles from "./api/articles/articles.route"
 import path from "path"
 
 const app = express()

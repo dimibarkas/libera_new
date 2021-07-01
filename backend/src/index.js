@@ -1,0 +1,27 @@
+import app from "./server"
+import { MongoClient } from "mongodb";
+import UsersDAO from "./dao/UsersDAO.js";
+import ArticlesDAO from "./dao/ArticlesDAO";
+import CustomersDAO from "./dao/CustomersDAO";
+import OrdersDAO from "./dao/OrdersDAO";
+
+
+const port = process.env.port || 8080;
+
+MongoClient.connect(
+    process.env.LIBERA_DB_URI,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+).catch(err => {
+    console.error(err.stack)
+    process.exit(1)
+})
+    .then(async client => {
+        await UsersDAO.injectDB(client)
+        await ArticlesDAO.injectDB(client)
+        await CustomersDAO.injectDB(client)
+        await OrdersDAO.injectDB(client)
+        app.listen(8080, () => {
+            console.log(`Libera backend listening on Port ${port}`);
+        })
+    })
+

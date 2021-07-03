@@ -27,3 +27,11 @@ function App() {
 }
 
 export default App;
+
+/*
+* ToDo's:
+* #1 Feste IP-Range des Containers bestimmen und in MongoDB eintragen.
+* #2 Tests Automatisieren.
+* #3 Eigene Domain zuweisen.
+*/
+

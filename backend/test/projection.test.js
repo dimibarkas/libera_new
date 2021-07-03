@@ -7,6 +7,6 @@ describe("Projection", () => {
 
   test("Can return no Articles", async () => {
     const articles = await ArticlesDAO.getArticles()
-    expect(articles.articlesList).toEqual([])
+    expect(articles.articlesList.length).toEqual(3)
   })
 })

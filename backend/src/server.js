@@ -8,13 +8,15 @@ import path from "path"
 const app = express()
 
 app.use(cors())
-process.env.NODE_ENV !== "prod" && app.use(morgan("dev"))
+process.env.NODE_ENV !== "production" && app.use(morgan("dev"))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 //Register api routes
 app.use("/api/articles", articles)
 app.use("/", express.static("public"))
-app.use("*", (req, res) => res.sendFile(path.join(path.resolve(), "public/index.html")))
+app.use("*", (req, res) =>
+  res.sendFile(path.join(path.resolve(), "public/index.html")),
+)
 
 export default app

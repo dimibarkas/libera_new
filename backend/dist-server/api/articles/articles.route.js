@@ -13,5 +13,6 @@ var _articles = _interopRequireDefault(require("./articles.controller"))
 
 var router = new _express.Router()
 router.route("/").get(_articles["default"].apiGetArticles)
+router.route("/search").get(_articles["default"].apiSearchArticles)
 var _default = router
 exports["default"] = _default

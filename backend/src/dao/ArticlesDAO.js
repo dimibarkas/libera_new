@@ -1,4 +1,5 @@
 let articles
+const DEFAULT_SORT = [["name", -1]]
 
 export default class ArticlesDAO {
   static async injectDB(conn) {
@@ -12,8 +13,71 @@ export default class ArticlesDAO {
       console.error(`Unable to establish a connection in UsersDAO: ${e}`)
     }
   }
+  /**
+   * Finds and returns articles matching a given text in their name.
+   * @param {*}
+   */
+  static textSearch(text) {
+    const query = { $text: { $search: text } }
+    const sort = []
+    const project = {}
 
-  static async getArticles() {
-    return { articlesList: [], totalNumArticles: [] }
+    return { query, project, sort }
+  }
+  /**
+   *
+   * @param {*} param0
+   * @returns
+   */
+  static async getArticles({
+    // setting the default parameters for the getArticles method
+    filters = null,
+    page = 0,
+    moviesPerPage = 20,
+  } = {}) {
+    let queryParams = {}
+    if (filters) {
+      if ("text" in filters) {
+        queryParams = this.textSearch(filters["text"])
+      }
+    }
+
+    let { query = {}, project = {}, sort = DEFAULT_SORT } = queryParams
+    let cursor
+    try {
+      cursor = await articles
+        .find(query)
+        .project(project)
+        .sort(sort)
+    } catch (e) {
+      console.error(`Unable to issue find command, ${e}`)
+      return { articlesList: [], totalNumArticles: 0 }
+    }
+
+    const displayCursor = cursor.limit(moviesPerPage).skip(moviesPerPage * page)
+
+    try {
+      const articlesList = await displayCursor.toArray()
+      const totalNumArticles =
+        page === 0 ? await articles.countDocuments(query) : 0
+
+      return { articlesList, totalNumArticles }
+    } catch (e) {
+      console.error(`Unable to issue find command, ${e}`)
+    }
+    return { articlesList: [], totalNumArticles: 0 }
+  }
+
+  static async addArticle(name) {
+    try {
+      await articles.insertOne({ name: name })
+      return { succes: true }
+    } catch (e) {
+      if (String(e).startsWith("MongoError: E11000 duplicate key error")) {
+        return { error: "An article with the given name already exists." }
+      }
+      console.error(`Error occurred while adding new user, ${e}.`)
+      return { error: e }
+    }
   }
 }

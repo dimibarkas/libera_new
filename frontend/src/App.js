@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 
-fetch("http://localhost:8080/api/articles")
+fetch("/api/articles")
   .then(response => response.json())
   .then(data => console.log(data));
 

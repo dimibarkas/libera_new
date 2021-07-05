@@ -1,5 +1,6 @@
 import React from "react"
-import Login from "./views/login-page"
+import { routes } from "./routes"
+import { Redirect, Route, Switch } from "react-router"
 
 fetch("/api/articles")
   .then(response => response.json())
@@ -8,7 +9,12 @@ fetch("/api/articles")
 function App() {
   return (
     <>
-      <Login />
+      <Switch>
+        {routes.map((item) => (
+          <Route exact key={item.path} path={item.path} component={item.component} />
+        ))}
+        <Redirect to={"/"} />
+      </Switch>
     </>
   );
 }

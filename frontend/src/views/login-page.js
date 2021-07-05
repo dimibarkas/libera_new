@@ -65,7 +65,7 @@ export default function Login() {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5" className={classes.loginLabel}>
-                    Login
+                    Log-in
                 </Typography>
                 <form className={classes.form} noValidate>
                     <TextField
@@ -77,7 +77,6 @@ export default function Login() {
                         label="Benutzername"
                         name="email"
                         autoComplete="email"
-                        autoFocus
                     />
                     <TextField
                         variant="outlined"

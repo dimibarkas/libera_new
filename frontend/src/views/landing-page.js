@@ -74,41 +74,35 @@ const useStyles = makeStyles((theme) => ({
             paddingBottom: theme.spacing(6),
         },
     },
-
+    getStartedButtonContainer: {
+        margin: "2em 0",
+        display: "flex",
+        justifyContent: "center",
+    }
 }));
 
 const tiers = [
     {
         title: 'Bestellungen aufnehmen',
-        price: '0',
-        description: ['10 users included', '2 GB of storage', 'Help center access', 'Email support'],
-        buttonText: 'Sign up for free',
-        buttonVariant: 'outlined',
+        description: ['schnell und einfach', 'intuitive Bedienung', 'für Desktop- und Mobile Ansicht'],
     },
     {
         title: 'Einkaufsplan generieren',
-        subheader: 'Most popular',
+        subheader: 'Wichtigstes Feature',
         price: '15',
         description: [
-            '20 users included',
-            '10 GB of storage',
-            'Help center access',
-            'Priority email support',
-        ],
-        buttonText: 'Get started',
-        buttonVariant: 'contained',
+            'auf Basis der aufgenommenen Bestellungen',
+            'Zusammenfassung und Bereitstellung als PDF',
+        ]
     },
     {
-        title: 'Übersicht erhalten',
+        title: 'Stammdaten verwalten',
         price: '30',
         description: [
-            '50 users included',
-            '30 GB of storage',
-            'Help center access',
-            'Phone & email support',
+            'Kundendaten',
+            'Artikel',
+            'Bestellungen',
         ],
-        buttonText: 'Contact us',
-        buttonVariant: 'outlined',
     },
 ];
 const footers = [
@@ -118,7 +112,7 @@ const footers = [
     },
     {
         title: 'Features',
-        description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
+        description: ['Cool Feature', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
     },
     {
         title: 'Resources',
@@ -156,9 +150,15 @@ export default function Pricing() {
                 <Typography variant="h5" align="center" color="textSecondary" component="p">
                     Erfassen Sie die Bestellungen Ihrer Kunden digitial und unkompliziert über diese App.
                 </Typography>
+                <div className={classes.getStartedButtonContainer}>
+                    <Button variant="contained" color="primary" >
+                        Jetzt Starten
+                    </Button>
+                </div>
             </Container>
             {/* End hero unit */}
             <Container maxWidth="md" component="main">
+
                 <Grid container spacing={5} alignItems="flex-end">
                     {tiers.map((tier) => (
                         // Enterprise card is full width at sm breakpoint

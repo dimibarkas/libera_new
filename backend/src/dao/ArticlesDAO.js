@@ -1,5 +1,7 @@
+import { ObjectId } from "bson"
+
 let articles
-const DEFAULT_SORT = [["name", -1]]
+const DEFAULT_SORT = []
 
 export default class ArticlesDAO {
   static async injectDB(conn) {
@@ -68,16 +70,66 @@ export default class ArticlesDAO {
     return { articlesList: [], totalNumArticles: 0 }
   }
 
-  static async addArticle(name) {
+  static async insertArticle(name) {
     try {
-      await articles.insertOne({ name: name })
-      return { succes: true }
-    } catch (e) {
-      if (String(e).startsWith("MongoError: E11000 duplicate key error")) {
-        return { error: "An article with the given name already exists." }
+      const result = await articles.findOne({ name: name })
+      if (!result) {
+        const { insertedCount, insertedId } = await articles.insertOne({
+          name: name,
+        })
+        let response = { insertedCount, insertedId }
+        return response
       }
-      console.error(`Error occurred while adding new user, ${e}.`)
+      return null
+    } catch (e) {
+      console.error(`Error occurred while adding a new article, ${e}.`)
       return { error: e }
+    }
+  }
+
+  static async getArticleById(id) {
+    try {
+      const result = await articles.findOne({ _id: ObjectId(id) })
+      if (!result) {
+        return null
+      }
+      return result
+    } catch (error) {
+      console.error(`Error occurred while searching article, ${error}.`)
+      return { error: error }
+    }
+  }
+
+  static async updateArticleById(id, name) {
+    try {
+      const result = await this.getArticleById(id)
+      if (result) {
+        const response = await articles.updateOne(
+          { _id: ObjectId(id) },
+          { $set: { name: name } },
+        )
+        if (response) {
+          return response
+        }
+        return null
+      }
+      return null
+    } catch (error) {
+      console.error(`Error occurred while updating article, ${error}.`)
+      return { error: error }
+    }
+  }
+
+  static async deleteArticleById(id) {
+    try {
+      const response = await articles.deleteOne({ _id: ObjectId(id) })
+      if (response) {
+        return response
+      }
+      return null
+    } catch (error) {
+      console.error(`Error occurred while deleting the article, ${error}.`)
+      return { error: error }
     }
   }
 }

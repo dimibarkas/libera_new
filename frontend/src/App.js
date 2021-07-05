@@ -1,5 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react"
+import Login from "./views/login-page"
 
 fetch("/api/articles")
   .then(response => response.json())
@@ -7,22 +7,9 @@ fetch("/api/articles")
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Login />
+    </>
   );
 }
 
@@ -33,5 +20,6 @@ export default App;
 * #1 Feste IP-Range des Containers bestimmen und in MongoDB eintragen.
 * #2 Tests Automatisieren.
 * #3 Eigene Domain zuweisen.
+* #4 Swagger UI in Projekt einbinden.
 */
 

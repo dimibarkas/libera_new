@@ -21,8 +21,10 @@ var _createClass2 = _interopRequireDefault(
   require("@babel/runtime/helpers/createClass"),
 )
 
+var _bson = require("bson")
+
 var articles
-var DEFAULT_SORT = [["name", -1]]
+var DEFAULT_SORT = []
 
 var ArticlesDAO = /*#__PURE__*/ (function() {
   function ArticlesDAO() {
@@ -110,6 +112,11 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
           sort: sort,
         }
       },
+      /**
+       *
+       * @param {*} param0
+       * @returns
+       */
     },
     {
       key: "getArticles",
@@ -271,6 +278,300 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
         }
 
         return getArticles
+      })(),
+    },
+    {
+      key: "insertArticle",
+      value: (function() {
+        var _insertArticle = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee3(name) {
+            var result,
+              _yield$articles$inser,
+              insertedCount,
+              insertedId,
+              response
+
+            return _regenerator["default"].wrap(
+              function _callee3$(_context3) {
+                while (1) {
+                  switch ((_context3.prev = _context3.next)) {
+                    case 0:
+                      _context3.prev = 0
+                      _context3.next = 3
+                      return articles.findOne({
+                        name: name,
+                      })
+
+                    case 3:
+                      result = _context3.sent
+
+                      if (result) {
+                        _context3.next = 12
+                        break
+                      }
+
+                      _context3.next = 7
+                      return articles.insertOne({
+                        name: name,
+                      })
+
+                    case 7:
+                      _yield$articles$inser = _context3.sent
+                      insertedCount = _yield$articles$inser.insertedCount
+                      insertedId = _yield$articles$inser.insertedId
+                      response = {
+                        insertedCount: insertedCount,
+                        insertedId: insertedId,
+                      }
+                      return _context3.abrupt("return", response)
+
+                    case 12:
+                      return _context3.abrupt("return", null)
+
+                    case 15:
+                      _context3.prev = 15
+                      _context3.t0 = _context3["catch"](0)
+                      console.error(
+                        "Error occurred while adding a new article, ".concat(
+                          _context3.t0,
+                          ".",
+                        ),
+                      )
+                      return _context3.abrupt("return", {
+                        error: _context3.t0,
+                      })
+
+                    case 19:
+                    case "end":
+                      return _context3.stop()
+                  }
+                }
+              },
+              _callee3,
+              null,
+              [[0, 15]],
+            )
+          }),
+        )
+
+        function insertArticle(_x2) {
+          return _insertArticle.apply(this, arguments)
+        }
+
+        return insertArticle
+      })(),
+    },
+    {
+      key: "getArticleById",
+      value: (function() {
+        var _getArticleById = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee4(id) {
+            var result
+            return _regenerator["default"].wrap(
+              function _callee4$(_context4) {
+                while (1) {
+                  switch ((_context4.prev = _context4.next)) {
+                    case 0:
+                      _context4.prev = 0
+                      _context4.next = 3
+                      return articles.findOne({
+                        _id: (0, _bson.ObjectId)(id),
+                      })
+
+                    case 3:
+                      result = _context4.sent
+
+                      if (result) {
+                        _context4.next = 6
+                        break
+                      }
+
+                      return _context4.abrupt("return", null)
+
+                    case 6:
+                      return _context4.abrupt("return", result)
+
+                    case 9:
+                      _context4.prev = 9
+                      _context4.t0 = _context4["catch"](0)
+                      console.error(
+                        "Error occurred while searching article, ".concat(
+                          _context4.t0,
+                          ".",
+                        ),
+                      )
+                      return _context4.abrupt("return", {
+                        error: _context4.t0,
+                      })
+
+                    case 13:
+                    case "end":
+                      return _context4.stop()
+                  }
+                }
+              },
+              _callee4,
+              null,
+              [[0, 9]],
+            )
+          }),
+        )
+
+        function getArticleById(_x3) {
+          return _getArticleById.apply(this, arguments)
+        }
+
+        return getArticleById
+      })(),
+    },
+    {
+      key: "updateArticleById",
+      value: (function() {
+        var _updateArticleById = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee5(
+            id,
+            name,
+          ) {
+            var result, response
+            return _regenerator["default"].wrap(
+              function _callee5$(_context5) {
+                while (1) {
+                  switch ((_context5.prev = _context5.next)) {
+                    case 0:
+                      _context5.prev = 0
+                      _context5.next = 3
+                      return this.getArticleById(id)
+
+                    case 3:
+                      result = _context5.sent
+
+                      if (!result) {
+                        _context5.next = 11
+                        break
+                      }
+
+                      _context5.next = 7
+                      return articles.updateOne(
+                        {
+                          _id: (0, _bson.ObjectId)(id),
+                        },
+                        {
+                          $set: {
+                            name: name,
+                          },
+                        },
+                      )
+
+                    case 7:
+                      response = _context5.sent
+
+                      if (!response) {
+                        _context5.next = 10
+                        break
+                      }
+
+                      return _context5.abrupt("return", response)
+
+                    case 10:
+                      return _context5.abrupt("return", null)
+
+                    case 11:
+                      return _context5.abrupt("return", null)
+
+                    case 14:
+                      _context5.prev = 14
+                      _context5.t0 = _context5["catch"](0)
+                      console.error(
+                        "Error occurred while updating article, ".concat(
+                          _context5.t0,
+                          ".",
+                        ),
+                      )
+                      return _context5.abrupt("return", {
+                        error: _context5.t0,
+                      })
+
+                    case 18:
+                    case "end":
+                      return _context5.stop()
+                  }
+                }
+              },
+              _callee5,
+              this,
+              [[0, 14]],
+            )
+          }),
+        )
+
+        function updateArticleById(_x4, _x5) {
+          return _updateArticleById.apply(this, arguments)
+        }
+
+        return updateArticleById
+      })(),
+    },
+    {
+      key: "deleteArticleById",
+      value: (function() {
+        var _deleteArticleById = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee6(id) {
+            var response
+            return _regenerator["default"].wrap(
+              function _callee6$(_context6) {
+                while (1) {
+                  switch ((_context6.prev = _context6.next)) {
+                    case 0:
+                      _context6.prev = 0
+                      _context6.next = 3
+                      return articles.deleteOne({
+                        _id: (0, _bson.ObjectId)(id),
+                      })
+
+                    case 3:
+                      response = _context6.sent
+
+                      if (!response) {
+                        _context6.next = 6
+                        break
+                      }
+
+                      return _context6.abrupt("return", response)
+
+                    case 6:
+                      return _context6.abrupt("return", null)
+
+                    case 9:
+                      _context6.prev = 9
+                      _context6.t0 = _context6["catch"](0)
+                      console.error(
+                        "Error occurred while deleting the article, ".concat(
+                          _context6.t0,
+                          ".",
+                        ),
+                      )
+                      return _context6.abrupt("return", {
+                        error: _context6.t0,
+                      })
+
+                    case 13:
+                    case "end":
+                      return _context6.stop()
+                  }
+                }
+              },
+              _callee6,
+              null,
+              [[0, 9]],
+            )
+          }),
+        )
+
+        function deleteArticleById(_x6) {
+          return _deleteArticleById.apply(this, arguments)
+        }
+
+        return deleteArticleById
       })(),
     },
   ])

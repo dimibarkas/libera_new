@@ -2,7 +2,7 @@ import jwt_decode from "jwt-decode";
 import { LOGIN, LOGOUT } from "../../../types";
 
 
-export default function userReducer(state = [], action) {
+export default function userReducer(state, action) {
     switch (action.type) {
         case LOGIN:
             return {

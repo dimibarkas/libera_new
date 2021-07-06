@@ -1,6 +1,6 @@
 import { TOGGLE_DARK_MODE } from "../../../types";
 
-export default function darkModeReducer(state = [], action) {
+export default function darkModeReducer(state, action) {
     switch (action.type) {
         case TOGGLE_DARK_MODE:
             return {

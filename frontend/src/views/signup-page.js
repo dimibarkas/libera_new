@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -113,10 +113,10 @@ export default function SignUp() {
                     </RouterLink>
                 </Typography>
                 <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
+                    <PersonOutlineOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5" className={classes.loginLabel}>
-                    Registrieren
+                    Registrierung
                 </Typography>
                 <form className={classes.form} noValidate onSubmit={submitRegisterForm}>
                     <Grid container spacing={2}>
@@ -178,7 +178,7 @@ export default function SignUp() {
                         color="primary"
                         className={classes.submit}
                     >
-                        Registrier mich
+                        Registrieren
                     </Button>
                     <Grid container >
                         <Grid item>

@@ -19,6 +19,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toggleDarkMode } from "../redux/store/darkmode/actions/index"
 import Brightness7Icon from "@material-ui/icons/Brightness7"
 import Brightness4Icon from "@material-ui/icons/Brightness4"
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 function Copyright() {
     return (
@@ -88,10 +91,16 @@ const useStyles = makeStyles((theme) => ({
 
 const tiers = [
     {
+        icon: <ShoppingCartIcon fontSize="large" />,
         title: 'Bestellungen aufnehmen',
-        description: ['schnell und einfach', 'intuitive Bedienung', 'für Desktop- und Mobile Ansicht'],
+        description: [
+            'schnell und einfach',
+            'intuitive Bedienung',
+            'für Desktop- und Mobile Ansicht',
+            'Bestellungen verwalten'],
     },
     {
+        icon: <AssignmentIcon fontSize="large" />,
         title: 'Einkaufsplan generieren',
         subheader: 'Wichtigstes Feature',
         price: '15',
@@ -101,12 +110,14 @@ const tiers = [
         ]
     },
     {
+        icon: <ImportContactsIcon fontSize="large" />,
         title: 'Stammdaten verwalten',
         price: '30',
         description: [
-            'Kundendaten',
+            'Kunden',
             'Artikel',
             'Bestellungen',
+            'Benutzer'
         ],
     },
 ];
@@ -185,6 +196,7 @@ export default function LandingPage() {
                         <Grid item key={tier.title} xs={12} sm={12} md={4}>
                             <Card>
                                 <CardHeader
+                                    avatar={tier.icon}
                                     title={tier.title}
                                     subheader={tier.subheader}
                                     titleTypographyProps={{ align: 'center' }}

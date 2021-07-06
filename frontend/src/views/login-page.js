@@ -155,7 +155,7 @@ export default function Login() {
                     </Button>
                     <Grid container direction="row-reverse">
                         <Grid item>
-                            <RouterLink to="/register" variant="body2">
+                            <RouterLink to="/register" variant="body2" >
                                 {"Registrieren"}
                             </RouterLink>
                         </Grid>

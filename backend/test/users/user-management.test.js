@@ -2,7 +2,7 @@ import UsersDAO from "../../src/dao/UsersDAO"
 
 const testUser = {
   name: "Dimitrios Barkas",
-  username: "dimitrios",
+  username: "dimitest",
   password: "thegreatest97",
 }
 
@@ -26,7 +26,7 @@ describe("Usermanegement", () => {
   })
 
   test("Can find an account by its username", async () => {
-    const account = await UsersDAO.findByUsername("dimitrios")
+    const account = await UsersDAO.findByUsername("dimitest")
     expect(account.name).toBe("Dimitrios Barkas")
   })
 

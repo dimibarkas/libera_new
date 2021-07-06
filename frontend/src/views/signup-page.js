@@ -4,23 +4,21 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Grid from "@material-ui/core/Grid"
 import { Link as RouterLink, useHistory } from "react-router-dom"
-import { postLogin } from '../services/accountService';
-import { useSnackbar } from "notistack"
-import { useDispatch } from "react-redux"
-import { login } from "../redux/store/user/actions/index"
+import { useSnackbar } from 'notistack';
+import { postRegister } from '../services/accountService';
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https:/dimitriosbarkas.de/">
+            <Link color="inherit" href="https://dimitriosbarkas.de/">
                 Dimitrios Barkas
             </Link>{' '}
             {new Date().getFullYear()}
@@ -42,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
+        marginTop: theme.spacing(3),
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
@@ -64,14 +62,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const initialState = {
+    firstname: "",
+    lastname: "",
     username: "",
     password: ""
 }
 
-export default function Login() {
+export default function SignUp() {
     const classes = useStyles();
     const history = useHistory();
-    const dispatch = useDispatch();
     const [formData, updateFormData] = useState(initialState)
     const { enqueueSnackbar } = useSnackbar();
 
@@ -82,25 +81,26 @@ export default function Login() {
         });
     };
 
-    const submitLoginForm = async (event) => {
+    const submitRegisterForm = async (event) => {
         event.preventDefault();
         if (event.currentTarget.checkValidity() === false) {
             event.stopPropagation();
         } else {
-            const resp = await postLogin(
+            const fullName = formData.firstname + " " + formData.lastname;
+            const resp = await postRegister(
+                fullName,
                 formData.username,
                 formData.password
             );
-            if (!resp || resp.status !== 200) {
-                enqueueSnackbar("Login fehlgeschlagen", { variant: 'error' })
+            if (!resp || resp.status !== 201) {
+                enqueueSnackbar("Registrierung fehlgeschlagen", { variant: 'error' })
+                updateFormData(initialState)
             } else {
-                dispatch(
-                    login(resp.data.access_token, resp.data.refresh_token)
-                )
-                enqueueSnackbar("Login erfolgreich", { variant: 'success' })
-                history.push("/dashboard")
+                enqueueSnackbar("Registrierung erfolgreich", { variant: 'success' })
+                history.push("/login")
             }
         }
+        updateFormData(initialState)
     }
 
     return (
@@ -116,34 +116,61 @@ export default function Login() {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5" className={classes.loginLabel}>
-                    Log-in
+                    Registrieren
                 </Typography>
-                <form className={classes.form} noValidate onSubmit={submitLoginForm}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Benutzername"
-                        name="username"
-                        autoComplete="email"
-                        onChange={handleChange}
-                        value={formData.username}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Passwort"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        onChange={handleChange}
-                        value={formData.password}
-                    />
+                <form className={classes.form} noValidate onSubmit={submitRegisterForm}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                autoComplete="fname"
+                                name="firstname"
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="firstName"
+                                label="Vorname"
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="lastname"
+                                label="Nachname"
+                                name="lastName"
+                                autoComplete="lname"
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Benutzername"
+                                name="username"
+                                autoComplete="username"
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Passwort"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                onChange={handleChange}
+                            />
+                        </Grid>
+
+                    </Grid>
                     <Button
                         type="submit"
                         fullWidth
@@ -151,18 +178,18 @@ export default function Login() {
                         color="primary"
                         className={classes.submit}
                     >
-                        LogIn
+                        Registrier mich
                     </Button>
-                    <Grid container direction="row-reverse">
+                    <Grid container >
                         <Grid item>
-                            <RouterLink to="/register" variant="body2">
-                                {"Registrieren"}
+                            <RouterLink to="login" variant="body2">
+                                Account vorhanden? Einloggen
                             </RouterLink>
                         </Grid>
                     </Grid>
                 </form>
             </div>
-            <Box mt={8}>
+            <Box mt={5}>
                 <Copyright />
             </Box>
         </Container>

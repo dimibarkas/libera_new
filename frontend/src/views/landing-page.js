@@ -14,6 +14,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { Link as RouterLink } from "react-router-dom"
+import { IconButton } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleDarkMode } from "../redux/store/darkmode/actions/index"
+import Brightness7Icon from "@material-ui/icons/Brightness7"
+import Brightness4Icon from "@material-ui/icons/Brightness4"
 
 function Copyright() {
     return (
@@ -125,8 +130,14 @@ const footers = [
 
 ];
 
-export default function Pricing() {
+export default function LandingPage() {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const darkModeState = useSelector((state) => state.darkMode);
+
+    const handleDarkModeToggle = () => {
+        dispatch(toggleDarkMode())
+    }
 
     return (
         <React.Fragment>
@@ -137,9 +148,16 @@ export default function Pricing() {
                         Dimitrios Barkas
                     </Typography>
 
-                    <Button color="primary" variant="outlined" >
-                        <RouterLink to="/login" className={classes.link}>Login</RouterLink>
-                    </Button>
+                    <div>
+                        <IconButton onClick={handleDarkModeToggle}>
+                            {darkModeState.isEnabled ? <Brightness7Icon /> : <Brightness4Icon />}
+                        </IconButton>
+                        <RouterLink to="/login" className={classes.link}>
+                            <Button color="primary" variant="outlined" >
+                                Login
+                            </Button>
+                        </RouterLink>
+                    </div>
                 </Toolbar>
             </AppBar>
             {/* Hero unit */}
@@ -151,18 +169,20 @@ export default function Pricing() {
                     Erfassen Sie die Bestellungen Ihrer Kunden digitial und unkompliziert über diese App.
                 </Typography>
                 <div className={classes.getStartedButtonContainer}>
-                    <Button variant="contained" color="primary" >
-                        Jetzt Starten
-                    </Button>
+                    <RouterLink to="/dashboard" className={classes.link}>
+                        <Button variant="contained" color="primary" >
+                            Jetzt Starten
+                        </Button>
+                    </RouterLink>
                 </div>
             </Container>
             {/* End hero unit */}
             <Container maxWidth="md" component="main">
 
-                <Grid container spacing={5} alignItems="flex-end">
+                <Grid container spacing={3} alignItems="flex-end">
                     {tiers.map((tier) => (
                         // Enterprise card is full width at sm breakpoint
-                        <Grid item key={tier.title} xs={12} sm={tier.title === 'Enterprise' ? 12 : 6} md={4}>
+                        <Grid item key={tier.title} xs={12} sm={12} md={4}>
                             <Card>
                                 <CardHeader
                                     title={tier.title}

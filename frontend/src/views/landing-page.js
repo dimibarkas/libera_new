@@ -199,7 +199,7 @@ export default function LandingPage() {
                                     avatar={tier.icon}
                                     title={tier.title}
                                     subheader={tier.subheader}
-                                    titleTypographyProps={{ align: 'center' }}
+                                    titleTypographyProps={{ align: 'center', variant: 'subtitle1' }}
                                     subheaderTypographyProps={{ align: 'center' }}
                                     className={classes.cardHeader}
                                 />

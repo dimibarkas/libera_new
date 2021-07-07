@@ -130,6 +130,7 @@ export default function SignUp() {
                                 id="firstName"
                                 label="Vorname"
                                 onChange={handleChange}
+                                value={formData.firstname}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -139,9 +140,10 @@ export default function SignUp() {
                                 fullWidth
                                 id="lastname"
                                 label="Nachname"
-                                name="lastName"
+                                name="lastname"
                                 autoComplete="lname"
                                 onChange={handleChange}
+                                value={formData.lastname}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -154,6 +156,7 @@ export default function SignUp() {
                                 name="username"
                                 autoComplete="username"
                                 onChange={handleChange}
+                                value={formData.username}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -167,6 +170,7 @@ export default function SignUp() {
                                 id="password"
                                 autoComplete="current-password"
                                 onChange={handleChange}
+                                value={formData.password}
                             />
                         </Grid>
 

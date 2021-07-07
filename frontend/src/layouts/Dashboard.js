@@ -189,7 +189,7 @@ export default function Dashboard() {
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                     <Typography component="p" variant="h4" style={{ marginBottom: "1em" }}>
-                        {"Guten Tag " + firstName + "!"}
+                        {"Guten Tag, " + firstName + "!"}
                     </Typography>
                     <Grid container spacing={3}>
                         {/* Chart */}

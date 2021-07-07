@@ -22,6 +22,8 @@ import Brightness4Icon from "@material-ui/icons/Brightness4"
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import { logout } from '../redux/store/user/actions';
+import { useSnackbar } from "notistack"
 
 function Copyright() {
     return (
@@ -145,9 +147,18 @@ export default function LandingPage() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const darkModeState = useSelector((state) => state.darkMode);
+    const userState = useSelector((state) => state.user);
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleDarkModeToggle = () => {
         dispatch(toggleDarkMode())
+    }
+
+    const onLogoutClick = () => {
+        if (userState.loggedIn) {
+            dispatch(logout())
+            enqueueSnackbar("Erfolgreich ausgeloggt", { variant: 'info' })
+        }
     }
 
     return (
@@ -164,8 +175,8 @@ export default function LandingPage() {
                             {darkModeState.isEnabled ? <Brightness7Icon /> : <Brightness4Icon />}
                         </IconButton>
                         <RouterLink to="/login" className={classes.link}>
-                            <Button color="primary" variant="outlined" >
-                                Login
+                            <Button color="primary" variant="outlined" onClick={onLogoutClick}>
+                                {userState.loggedIn ? "Logout" : "Login"}
                             </Button>
                         </RouterLink>
                     </div>

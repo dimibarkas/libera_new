@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink, useHistory } from "react-router-dom"
 import { useSnackbar } from 'notistack';
-import { postRegister } from '../services/accountService';
+import { postRegister } from '../services/account-services';
 
 function Copyright() {
     return (

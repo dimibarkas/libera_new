@@ -4,10 +4,6 @@ import { Redirect, Route, Switch } from "react-router"
 import { useSelector } from "react-redux"
 
 
-fetch("/api/articles")
-  .then(response => response.json())
-  .then(data => console.log(data));
-
 function App() {
   return (
     <>

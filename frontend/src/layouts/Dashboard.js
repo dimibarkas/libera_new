@@ -158,7 +158,7 @@ export default function Dashboard() {
                         <MenuIcon />
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Dashboard
+                        Libera
                     </Typography>
                     <IconButton onClick={handleDarkModeToggle} color="inherit">
                         {darkModeState.isEnabled ? <Brightness7Icon /> : <Brightness4Icon />}
@@ -191,7 +191,9 @@ export default function Dashboard() {
                     <Typography component="p" variant="h4" style={{ marginBottom: "1em" }}>
                         {"Guten Tag, " + firstName + "!"}
                     </Typography>
+
                     <Grid container spacing={3}>
+
                         {/* Chart */}
                         <Grid item xs={12} md={8} lg={9}>
                             <Paper className={fixedHeightPaper}>

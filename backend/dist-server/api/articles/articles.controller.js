@@ -25,6 +25,23 @@ var _ArticlesDAO = _interopRequireDefault(require("../../dao/ArticlesDAO.js"))
 
 var _http = require("http2")
 
+var _token = require("../../utils/token.js")
+
+var _fs = _interopRequireDefault(require("fs"))
+
+var _crypto = _interopRequireDefault(require("crypto"))
+
+var config = {}
+
+if (!process.env.JWT_PRIVATE_KEY) {
+  config.jwtPrivateKey = _fs["default"].readFileSync("private.pem")
+} else {
+  config.jwtPrivateKey = Buffer.from(process.env.JWT_PRIVATE_KEY, "base64")
+}
+
+config.jwtPublicKey = _crypto["default"].createPublicKey(config.jwtPrivateKey)
+console.log(config.jwtPublicKey)
+
 var ArticlesController = /*#__PURE__*/ (function() {
   function ArticlesController() {
     ;(0, _classCallCheck2["default"])(this, ArticlesController)
@@ -50,11 +67,28 @@ var ArticlesController = /*#__PURE__*/ (function() {
               while (1) {
                 switch ((_context.prev = _context.next)) {
                   case 0:
-                    ARTICLES_PER_PAGE = 20
-                    _context.next = 3
-                    return _ArticlesDAO["default"].getArticles()
+                    if (
+                      !(
+                        !req.header("Authorization") ||
+                        (0, _token.isLoggedIn)(
+                          req.header("Authorization"),
+                          config.jwtPublicKey,
+                        )
+                      )
+                    ) {
+                      _context.next = 3
+                      break
+                    }
+
+                    res.status(_http.constants.HTTP_STATUS_UNAUTHORIZED).send()
+                    return _context.abrupt("return")
 
                   case 3:
+                    ARTICLES_PER_PAGE = 20
+                    _context.next = 6
+                    return _ArticlesDAO["default"].getArticles()
+
+                  case 6:
                     _yield$ArticlesDAO$ge = _context.sent
                     articlesList = _yield$ArticlesDAO$ge.articlesList
                     totalNumArticles = _yield$ArticlesDAO$ge.totalNumArticles
@@ -67,7 +101,7 @@ var ArticlesController = /*#__PURE__*/ (function() {
                     }
                     res.json(response)
 
-                  case 8:
+                  case 11:
                   case "end":
                     return _context.stop()
                 }

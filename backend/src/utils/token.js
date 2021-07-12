@@ -8,7 +8,6 @@ export function isLoggedIn(token, publicKey) {
   try {
     jwt.verify(removeBearerPrefix(token), publicKey, {
       algorithms: "ES512",
-      subject: "access",
     })
   } catch (err) {
     return false

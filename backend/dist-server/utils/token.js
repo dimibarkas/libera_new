@@ -19,7 +19,6 @@ function isLoggedIn(token, publicKey) {
   try {
     _jsonwebtoken["default"].verify(removeBearerPrefix(token), publicKey, {
       algorithms: "ES512",
-      subject: "access",
     })
   } catch (err) {
     return false

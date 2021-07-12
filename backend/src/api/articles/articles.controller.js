@@ -1,8 +1,30 @@
 import ArticlesDAO from "../../dao/ArticlesDAO.js"
 import { constants } from "http2"
+import { isLoggedIn } from "../../utils/token.js"
+import fs from "fs"
+import crypto from "crypto"
+
+const config = {}
+
+if (!process.env.JWT_PRIVATE_KEY) {
+  config.jwtPrivateKey = fs.readFileSync("private.pem")
+} else {
+  config.jwtPrivateKey = Buffer.from(process.env.JWT_PRIVATE_KEY, "base64")
+}
+config.jwtPublicKey = crypto.createPublicKey(config.jwtPrivateKey)
+console.log(config.jwtPublicKey)
 
 export default class ArticlesController {
   static async apiGetArticles(req, res, next) {
+    //if user not registered
+    if (
+      !req.header("Authorization") ||
+      isLoggedIn(req.header("Authorization"), config.jwtPublicKey)
+    ) {
+      res.status(constants.HTTP_STATUS_UNAUTHORIZED).send()
+      return
+    }
+
     const ARTICLES_PER_PAGE = 20
     const { articlesList, totalNumArticles } = await ArticlesDAO.getArticles()
     let response = {

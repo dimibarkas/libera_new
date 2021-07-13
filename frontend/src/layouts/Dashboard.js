@@ -1,43 +1,15 @@
 import React from 'react';
-import clsx from 'clsx';
+import clsx from "clsx";
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleDarkMode } from '../redux/store/darkmode/actions';
-import Brightness7Icon from "@material-ui/icons/Brightness7"
-import Brightness4Icon from "@material-ui/icons/Brightness4"
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import { useSelector } from 'react-redux';
 
 const drawerWidth = 240;
 
@@ -118,106 +90,62 @@ const useStyles = makeStyles((theme) => ({
     fixedHeight: {
         height: 240,
     },
+    headerLabel: {
+        fontFamily: "Montserrat-Light",
+        letterSpacing: "0.5px",
+        paddingBottom: "2rem"
+    },
+    greetingsLabel: {
+        fontFamily: "Montserrat-Light",
+        letterSpacing: "0.5px",
+        paddingBottom: "2rem",
+    }
 }));
 
 export default function Dashboard() {
     const classes = useStyles();
     const userInfo = useSelector((state) => state.user)
-    const [open, setOpen] = React.useState(false);
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
+
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-    const dispatch = useDispatch();
-    const darkModeState = useSelector((state) => state.darkMode);
-
-    const handleDarkModeToggle = () => {
-        dispatch(toggleDarkMode())
-    }
 
     const name = userInfo.tokenData.name;
     const parts = name.split(" ")
     const firstName = parts[0];
-
     return (
         <div className={classes.root}>
             <CssBaseline />
-            <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-                <Toolbar className={classes.toolbar}>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Libera
-                    </Typography>
-                    <IconButton onClick={handleDarkModeToggle} color="inherit">
-                        {darkModeState.isEnabled ? <Brightness7Icon /> : <Brightness4Icon />}
-                    </IconButton>
-                    <IconButton color="inherit">
-                        <AccountCircleIcon />
-                    </IconButton>
-                </Toolbar>
-            </AppBar>
-            <Drawer
-                variant="permanent"
-                classes={{
-                    paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-                }}
-                open={open}
-            >
-                <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>{mainListItems}</List>
-                <Divider />
-                <List>{secondaryListItems}</List>
-            </Drawer>
-            <main className={classes.content}>
-                <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
-                    <Typography component="p" variant="h4" style={{ marginBottom: "1em" }}>
-                        {"Guten Tag, " + firstName + "!"}
-                    </Typography>
 
-                    <Grid container spacing={3}>
+            <Container maxWidth="lg" className={classes.container}>
+                <Typography component="h2" variant="h3" className={classes.headerLabel}>
+                    Dashboard
+                </Typography>
+                <Typography component="p" variant="h5" className={classes.greetingsLabel}>
+                    {"Guten Tag, " + firstName + "!"}
+                </Typography>
 
-                        {/* Chart */}
-                        <Grid item xs={12} md={8} lg={9}>
-                            <Paper className={fixedHeightPaper}>
-                                <Chart />
-                            </Paper>
-                        </Grid>
-                        {/* Recent Deposits */}
-                        <Grid item xs={12} md={4} lg={3}>
-                            <Paper className={fixedHeightPaper}>
-                                <Deposits />
-                            </Paper>
-                        </Grid>
-                        {/* Recent Orders */}
-                        <Grid item xs={12}>
-                            <Paper className={classes.paper}>
-                                <Orders />
-                            </Paper>
-                        </Grid>
+                <Grid container spacing={3}>
+
+                    {/* Chart */}
+                    <Grid item xs={12} md={8} lg={9}>
+                        <Paper className={fixedHeightPaper}>
+                            <Chart />
+                        </Paper>
                     </Grid>
-                    <Box pt={4}>
-                        <Copyright />
-                    </Box>
-                </Container>
-            </main>
+                    {/* Recent Deposits */}
+                    <Grid item xs={12} md={4} lg={3}>
+                        <Paper className={fixedHeightPaper}>
+                            <Deposits />
+                        </Paper>
+                    </Grid>
+                    {/* Recent Orders */}
+                    <Grid item xs={12}>
+                        <Paper className={classes.paper}>
+                            <Orders />
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </Container>
+
         </div>
     );
 }

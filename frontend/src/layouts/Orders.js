@@ -6,7 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Title from './Title';
+import { Container, CssBaseline, Grid, Typography } from '@material-ui/core';
 
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
@@ -29,40 +29,78 @@ const useStyles = makeStyles((theme) => ({
     seeMore: {
         marginTop: theme.spacing(3),
     },
+    root: {
+        display: 'flex',
+    },
+    content: {
+        flexGrow: 1,
+        height: '100vh',
+        overflow: 'auto',
+    },
+    container: {
+        paddingTop: theme.spacing(4),
+        paddingBottom: theme.spacing(4),
+    },
+    paper: {
+        padding: theme.spacing(2),
+        display: 'flex',
+        overflow: 'auto',
+        flexDirection: 'column',
+    },
+    fixedHeight: {
+        height: 240,
+    },
+    headerLabel: {
+        fontFamily: "Montserrat-Light",
+        letterSpacing: "0.5px",
+        paddingBottom: "2rem",
+    },
 }));
 
 export default function Orders() {
     const classes = useStyles();
     return (
-        <React.Fragment>
-            <Title>Recent Orders</Title>
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Ship To</TableCell>
-                        <TableCell>Payment Method</TableCell>
-                        <TableCell align="right">Sale Amount</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell>{row.date}</TableCell>
-                            <TableCell>{row.name}</TableCell>
-                            <TableCell>{row.shipTo}</TableCell>
-                            <TableCell>{row.paymentMethod}</TableCell>
-                            <TableCell align="right">{row.amount}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <div className={classes.seeMore}>
-                <Link color="primary" href="#" onClick={preventDefault}>
-                    See more orders
-                </Link>
-            </div>
-        </React.Fragment>
+        <div className={classes.root}>
+            <CssBaseline />
+
+            <Container maxWidth="lg" className={classes.container}>
+                <Typography component="h2" variant="h3" className={classes.headerLabel}>
+                    Bestellungen
+                </Typography>
+
+
+                <Grid container spacing={3}>
+
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Date</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Ship To</TableCell>
+                                <TableCell>Payment Method</TableCell>
+                                <TableCell align="right">Sale Amount</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    <TableCell>{row.date}</TableCell>
+                                    <TableCell>{row.name}</TableCell>
+                                    <TableCell>{row.shipTo}</TableCell>
+                                    <TableCell>{row.paymentMethod}</TableCell>
+                                    <TableCell align="right">{row.amount}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <div className={classes.seeMore}>
+                        <Link color="primary" href="#" onClick={preventDefault}>
+                            See more orders
+                        </Link>
+                    </div>
+                </Grid>
+            </Container>
+
+        </div>
     );
 }

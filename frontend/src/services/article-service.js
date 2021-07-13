@@ -1,11 +1,11 @@
 import axios from "axios"
 
-export async function listArticles() {
+export async function listArticles(token) {
     const res = await axios({
         method: "get",
         url: "/api/articles",
         headers: {
-            "Authorization": "Bearer"
+            "Authorization": `Bearer ${token}`
         }
     });
     if (res.status !== 200) {

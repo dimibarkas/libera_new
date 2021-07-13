@@ -66,9 +66,6 @@ var ArticlesController = /*#__PURE__*/ (function() {
               while (1) {
                 switch ((_context.prev = _context.next)) {
                   case 0:
-                    //if user not registered
-                    console.log(config.jwtPrivateKey)
-
                     if (
                       !(
                         !req.header("Authorization") ||
@@ -78,19 +75,19 @@ var ArticlesController = /*#__PURE__*/ (function() {
                         )
                       )
                     ) {
-                      _context.next = 4
+                      _context.next = 3
                       break
                     }
 
                     res.status(_http.constants.HTTP_STATUS_UNAUTHORIZED).send()
                     return _context.abrupt("return")
 
-                  case 4:
+                  case 3:
                     ARTICLES_PER_PAGE = 20
-                    _context.next = 7
+                    _context.next = 6
                     return _ArticlesDAO["default"].getArticles()
 
-                  case 7:
+                  case 6:
                     _yield$ArticlesDAO$ge = _context.sent
                     articlesList = _yield$ArticlesDAO$ge.articlesList
                     totalNumArticles = _yield$ArticlesDAO$ge.totalNumArticles
@@ -103,7 +100,7 @@ var ArticlesController = /*#__PURE__*/ (function() {
                     }
                     res.json(response)
 
-                  case 12:
+                  case 11:
                   case "end":
                     return _context.stop()
                 }

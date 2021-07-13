@@ -2,6 +2,7 @@ import React from "react"
 import { routes, LOGGED_IN } from "./routes"
 import { Redirect, Route, Switch } from "react-router"
 import { useSelector } from "react-redux"
+import SideNavLayout from "./layouts/side-nav-layout";
 
 
 function App() {
@@ -23,10 +24,12 @@ function LoggedInRouteWithSubRoutes(route) {
   const isLoggedIn = useSelector((state) => state.user.loggedIn)
   if (isLoggedIn === true) {
     return (
-      <Route
-        path={route.path}
-        render={(props) => <route.component {...props} routes={route.routes} />}
-      />
+      <SideNavLayout>
+        <Route
+          path={route.path}
+          render={(props) => <route.component {...props} routes={route.routes} />}
+        />
+      </SideNavLayout>
     )
   }
   return <Redirect path={route.path} to="/login" />;

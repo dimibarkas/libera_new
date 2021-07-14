@@ -1,6 +1,6 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
+import Button from "../components/controls/button"
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -175,9 +175,7 @@ export default function LandingPage() {
                             {darkModeState.isEnabled ? <Brightness7Icon /> : <Brightness4Icon />}
                         </IconButton>
                         <RouterLink to="/login" className={classes.link}>
-                            <Button color="primary" variant="outlined" onClick={onLogoutClick}>
-                                {userState.loggedIn ? "Logout" : "Login"}
-                            </Button>
+                            <Button color="primary" variant="outlined" onClick={onLogoutClick} text={userState.loggedIn ? "Logout" : "Login"} />
                         </RouterLink>
                     </div>
                 </Toolbar>
@@ -192,9 +190,7 @@ export default function LandingPage() {
                 </Typography>
                 <div className={classes.getStartedButtonContainer}>
                     <RouterLink to="/dashboard" className={classes.link}>
-                        <Button variant="contained" color="primary" >
-                            Jetzt Starten
-                        </Button>
+                        <Button text={"JETZT STARTEN"} />
                     </RouterLink>
                 </div>
             </Container>
@@ -227,9 +223,6 @@ export default function LandingPage() {
                                     </ul>
                                 </CardContent>
                                 <CardActions>
-                                    <Button fullWidth variant={tier.buttonVariant} color="primary">
-                                        {tier.buttonText}
-                                    </Button>
                                 </CardActions>
                             </Card>
                         </Grid>
@@ -261,6 +254,6 @@ export default function LandingPage() {
                 </Box>
             </Container>
             {/* End footer */}
-        </React.Fragment >
+        </React.Fragment>
     );
 }

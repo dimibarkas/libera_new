@@ -59,3 +59,20 @@ export const getArticleById = async (token, id) => {
     }
     return res;
 }
+
+export const updateArticleById = async (token, id, name) => {
+    const res = await axios({
+        method: "patch",
+        url: `/api/articles/id/${id}`,
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+        data: {
+            name: name
+        }
+    });
+    if (res.status === 304) {
+        throw new Error("request failed");
+    }
+    return res;
+}

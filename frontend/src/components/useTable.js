@@ -2,7 +2,6 @@ import { makeStyles, Table, TableCell, TableHead as MuiTableHead, TableRow, Tabl
 import { Button } from "./controls"
 import React, { useState } from 'react'
 import AddIcon from "@material-ui/icons/Add"
-import { Link as RouterLink, Router } from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -11,9 +10,6 @@ const useStyles = makeStyles(theme => ({
             fontWeight: "600",
             color: theme.palette.primary.main,
         },
-        [theme.breakpoints.down("sm")]: {
-            display: "none"
-        }
     },
     toolbar: {
         display: "flex",

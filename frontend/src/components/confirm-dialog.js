@@ -6,8 +6,6 @@ import NotListedLocationIcon from "@material-ui/icons/NotListedLocation"
 const useStyles = makeStyles(theme => ({
     dialog: {
         padding: theme.spacing(2),
-        position: "absolute",
-        top: theme.spacing(5),
     },
     dialogContent: {
         textAlign: "center",
@@ -19,14 +17,12 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "center",
     },
     titleIcon: {
-        backgroundColor: theme.palette.secondary.light,
-        color: theme.palette.secondary.main,
         '&:hover': {
             backgroundColor: theme.palette.secondary.light,
             cursor: "default",
         },
         '& .MuiSvgIcon-root': {
-            fontSize: "8rem",
+            fontSize: "3rem",
         }
     }
 }))

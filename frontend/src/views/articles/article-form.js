@@ -1,11 +1,11 @@
 import { Grid, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input } from '../../components/controls';
 import { useForm, Form } from '../../components/useForm';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from "react-router";
-import { getArticleById, postArticle } from '../../services/article-service';
+import { getArticleById, postArticle, updateArticleById } from '../../services/article-service';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from "notistack"
 import { mutate } from 'swr';
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ArticleForm() {
+    const [currentMode, setCurrentMode] = useState(null);
 
     const validate = (fieldValues = formData) => {
         let temp = { ...errors }
@@ -61,7 +62,6 @@ export default function ArticleForm() {
         setErrors
     } = useForm(initialValues, true, validate);
 
-    console.log(formData);
     const accessToken = useSelector(state => state.user.authInfo.accessToken)
     const classes = useStyles();
     const history = useHistory();
@@ -71,36 +71,51 @@ export default function ArticleForm() {
     let path = location.pathname.split("/");
     const id = path.pop() || path.pop();
 
-    const fetchArticleData = async (id) => {
-        if (id !== "new") {
-            try {
-                const res = await getArticleById(accessToken, id)
-                updateFormData(res.data)
-            } catch (error) {
-
-            }
-        }
-        return
-    }
 
     useEffect(() => {
-        fetchArticleData(id);
-    }, [id]);
+        async function determineAddOrEditMode(id) {
+            if (id === "new") {
+                setCurrentMode("Artikel hinzufügen")
+            } else {
+                setCurrentMode("Artikel bearbeiten")
+                const res = await getArticleById(accessToken, id);
+                updateFormData(res.data);
+            }
+        };
+        determineAddOrEditMode(id);
+    }, [id, accessToken, updateFormData]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const res = await postArticle(accessToken, formData.name)
-            if (res.status === 201) {
-                enqueueSnackbar("Artikel wurde erfolgreich erstellt", { variant: 'success' })
-                history.goBack();
-                mutate("/api/articles");
-            }
-        } catch (error) {
-            enqueueSnackbar(`Ein Fehler ist aufgerteten ${error}`, { variant: 'error' })
-            onAbort();
-        }
+        if (validate()) {
+            if (currentMode === "Artikel bearbeiten") {
+                try {
+                    const res = await updateArticleById(accessToken, formData._id, formData.name)
+                    if (res.status === 200) {
+                        enqueueSnackbar("Artikel wurde erfolgreich bearbeitet", { variant: 'success' })
+                        history.goBack();
+                        mutate("/api/articles");
+                        return
+                    }
+                } catch (error) {
 
+                    enqueueSnackbar("Artikel wurde nicht bearbeitet", { variant: 'warning' })
+                    history.goBack();
+                    return
+                }
+            }
+            try {
+                const res = await postArticle(accessToken, formData.name)
+                if (res.status === 201) {
+                    enqueueSnackbar("Artikel wurde erfolgreich erstellt", { variant: 'success' })
+                    history.goBack();
+                    mutate("/api/articles");
+                }
+            } catch (error) {
+                enqueueSnackbar(`Ein Fehler ist aufgerteten ${error}`, { variant: 'error' })
+                onAbort();
+            }
+        }
     }
 
     const onAbort = () => {
@@ -110,7 +125,7 @@ export default function ArticleForm() {
     return (
         <Form onSubmit={handleSubmit}>
             <Typography component="h2" variant="h3" className={classes.headerLabel}>
-                Neuen Artikel hinzufügen
+                {currentMode}
             </Typography>
             <Toolbar className={classes.toolbar}>
                 <IconButton

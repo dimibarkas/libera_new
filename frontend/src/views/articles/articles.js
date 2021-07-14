@@ -10,8 +10,6 @@ import { TableBody, TableCell, TableRow } from '@material-ui/core';
 import CircularIndeterminate from '../../components/circular-indeterminate';
 import useSWR from 'swr'
 import Error from '../../components/error';
-import useCard from '../../components/useCard';
-import Card from "../../components/card"
 import { useHistory } from "react-router"
 import TableActionButtons from '../../components/table-action-buttons';
 import { deleteArticle } from '../../services/article-service';
@@ -85,7 +83,6 @@ export default function Articles() {
     const { data, error } = useSWR("/api/articles", fetcher);
     const classes = useStyles();
     const { TableContainer, TableHead } = useTable(headCells, data, onAdd);
-    const { CardContainer } = useCard();
 
     if (error) return <Error />
 
@@ -109,7 +106,7 @@ export default function Articles() {
                                         <TableActionButtons
                                             onDelete={() => setConfirmDialog({
                                                 isOpen: true,
-                                                title: "Möchten Sie den Artikel wirklich löschen ?",
+                                                title: "Möchten Sie den Artikel wirklich löschen?",
                                                 onConfirm: () => onDelete(item._id)
                                             })}
                                             onEdit={() => onEdit(item._id)}
@@ -120,13 +117,6 @@ export default function Articles() {
                         }
                     </TableBody>
                 </TableContainer>
-                <CardContainer>
-                    {
-                        data.articles.map(item => (
-                            <Card key={item._id} row={item} />
-                        ))
-                    }
-                </CardContainer>
             </Container>
             <ConfirmDialog
                 confirmDialog={confirmDialog}

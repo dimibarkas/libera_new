@@ -1,5 +1,5 @@
-import { makeStyles, TableCell, TableHead as MuiTableHead, TableRow } from '@material-ui/core'
-import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core'
+import React from 'react'
 
 const useStyles = makeStyles(theme => ({
     cardcontainer: {
@@ -13,9 +13,6 @@ const useStyles = makeStyles(theme => ({
 export default function useCard() {
 
     const classes = useStyles();
-    const [page, setPage] = useState(0);
-
-
     const CardContainer = props => (
         <div className={classes.cardcontainer}>
             {props.children}

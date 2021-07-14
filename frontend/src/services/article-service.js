@@ -30,3 +30,32 @@ export const postArticle = async (token, name) => {
     }
     return res;
 }
+
+
+export const deleteArticle = async (token, id) => {
+    const res = await axios({
+        method: "delete",
+        url: `/api/articles/id/${id}`,
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+    });
+    if (res.status !== 200) {
+        throw new Error("request failed");
+    }
+    return res;
+}
+
+export const getArticleById = async (token, id) => {
+    const res = await axios({
+        method: "get",
+        url: `/api/articles/id/${id}`,
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    if (res.status !== 200) {
+        throw new Error("request failed");
+    }
+    return res;
+}

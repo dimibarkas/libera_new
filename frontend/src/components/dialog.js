@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function Dialog(props) {
-    const { title, children, openDialog, setOpenDialog } = props;
+    const { title, children, openDialog } = props;
     const classes = useStyles();
     return (
         <MuiDialog open={openDialog} fullWidth classes={{ paper: classes.dialogWrapper }}>

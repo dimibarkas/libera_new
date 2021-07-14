@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
@@ -14,6 +14,10 @@ import useCard from '../../components/useCard';
 import Card from "../../components/card"
 import { useHistory } from "react-router"
 import TableActionButtons from '../../components/table-action-buttons';
+import { deleteArticle } from '../../services/article-service';
+import { useSnackbar } from "notistack"
+import { mutate } from 'swr';
+import ConfirmDialog from "../../components/confirm-dialog"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,16 +51,36 @@ const headCells = [
     { id: "actions", label: "Aktionen", align: "right" }
 ]
 
-
-
 export default function Articles() {
+    const accessToken = useSelector(state => state.user.authInfo.accessToken)
     const history = useHistory();
+    const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
+    const { enqueueSnackbar } = useSnackbar();
 
     const onAdd = () => {
         history.push("/articles/new")
     }
 
-    const accessToken = useSelector(state => state.user.authInfo.accessToken)
+    const onDelete = async (id) => {
+        setConfirmDialog({
+            ...confirmDialog,
+            isOpen: false,
+        })
+        try {
+            const res = await deleteArticle(accessToken, id);
+            if (res.status === 200) {
+                enqueueSnackbar("Artikel wurde erfolgreich gelöscht.", { variant: 'success' })
+                mutate("/api/articles");
+            }
+        } catch (error) {
+            enqueueSnackbar("Artikel konnte nicht gelöscht werden", { variant: 'error' })
+        }
+    }
+
+    const onEdit = (id) => {
+        history.push(`/articles/${id}`)
+    }
+
     const fetcher = url => listArticles(url, accessToken)
     const { data, error } = useSWR("/api/articles", fetcher);
     const classes = useStyles();
@@ -82,7 +106,14 @@ export default function Articles() {
                                 <TableRow key={item._id}>
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell align="right">
-                                        <TableActionButtons />
+                                        <TableActionButtons
+                                            onDelete={() => setConfirmDialog({
+                                                isOpen: true,
+                                                title: "Möchten Sie den Artikel wirklich löschen ?",
+                                                onConfirm: () => onDelete(item._id)
+                                            })}
+                                            onEdit={() => onEdit(item._id)}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -97,6 +128,10 @@ export default function Articles() {
                     }
                 </CardContainer>
             </Container>
+            <ConfirmDialog
+                confirmDialog={confirmDialog}
+                setConfirmDialog={setConfirmDialog}
+            />
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import { Container, makeStyles, Typography } from '@material-ui/core';
+import { Container, makeStyles } from '@material-ui/core';
 import { useState } from 'react'
 
 const useStyles = makeStyles(theme => ({
@@ -47,9 +47,6 @@ export function Form(props) {
     const { children, ...other } = props;
     return (
         <Container maxWidth="lg" className={classes.container}>
-            <Typography component="h2" variant="h3" className={classes.headerLabel}>
-                Neuen Artikel hinzufügen
-            </Typography>
             <form className={classes.root} autoComplete="false" autoCorrect="false" {...other}>
                 {props.children}
             </form>

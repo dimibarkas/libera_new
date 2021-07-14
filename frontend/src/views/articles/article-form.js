@@ -1,11 +1,11 @@
-import { Grid, IconButton, makeStyles, Toolbar } from '@material-ui/core';
-import React from 'react'
+import { Grid, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import React, { useEffect } from 'react'
 import { Input } from '../../components/controls';
 import { useForm, Form } from '../../components/useForm';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from "react-router";
-import { postArticle } from '../../services/article-service';
+import { getArticleById, postArticle } from '../../services/article-service';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from "notistack"
 import { mutate } from 'swr';
@@ -25,25 +25,20 @@ const useStyles = makeStyles((theme) => ({
     toolbar: {
         borderBottom: "0.5px solid grey"
     },
-    //Besser mit MUI-Grid lösen
     input: {
         width: "50%",
         [theme.breakpoints.down("xs")]: {
             width: "100%",
         }
     },
+    headerLabel: {
+        fontFamily: "Montserrat-Light",
+        letterSpacing: "0.5px",
+        paddingBottom: "2rem",
+    },
 }));
 
 export default function ArticleForm() {
-    const accessToken = useSelector(state => state.user.authInfo.accessToken)
-    const classes = useStyles();
-    const history = useHistory();
-    const location = useLocation();
-    const { enqueueSnackbar } = useSnackbar();
-
-    let path = location.pathname.split("/");
-    const id = path.pop() || path.pop();
-    console.log(id);
 
     const validate = (fieldValues = formData) => {
         let temp = { ...errors }
@@ -60,10 +55,37 @@ export default function ArticleForm() {
 
     const {
         formData,
+        updateFormData,
         handleChange,
         errors,
         setErrors
     } = useForm(initialValues, true, validate);
+
+    console.log(formData);
+    const accessToken = useSelector(state => state.user.authInfo.accessToken)
+    const classes = useStyles();
+    const history = useHistory();
+    const location = useLocation();
+    const { enqueueSnackbar } = useSnackbar();
+
+    let path = location.pathname.split("/");
+    const id = path.pop() || path.pop();
+
+    const fetchArticleData = async (id) => {
+        if (id !== "new") {
+            try {
+                const res = await getArticleById(accessToken, id)
+                updateFormData(res.data)
+            } catch (error) {
+
+            }
+        }
+        return
+    }
+
+    useEffect(() => {
+        fetchArticleData(id);
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -71,7 +93,6 @@ export default function ArticleForm() {
             const res = await postArticle(accessToken, formData.name)
             if (res.status === 201) {
                 enqueueSnackbar("Artikel wurde erfolgreich erstellt", { variant: 'success' })
-
                 history.goBack();
                 mutate("/api/articles");
             }
@@ -87,8 +108,10 @@ export default function ArticleForm() {
     }
 
     return (
-
         <Form onSubmit={handleSubmit}>
+            <Typography component="h2" variant="h3" className={classes.headerLabel}>
+                Neuen Artikel hinzufügen
+            </Typography>
             <Toolbar className={classes.toolbar}>
                 <IconButton
                     variant="contained"

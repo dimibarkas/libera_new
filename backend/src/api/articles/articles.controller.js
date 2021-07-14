@@ -104,7 +104,7 @@ export default class ArticlesController {
         })
         return
       }
-      res.status(constants.HTTP_STATUS_OK).json({
+      res.status(constants.HTTP_STATUS_CREATED).json({
         code: "INSERTION_SUCCED",
         message: `${response.insertedCount} article with name ${body.name} and id ${response.insertedId} inserted.`,
       })

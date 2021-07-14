@@ -14,12 +14,12 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { mainListItems, secondaryListItems } from './listItems';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleDarkMode } from '../redux/store/darkmode/actions';
 import Brightness7Icon from "@material-ui/icons/Brightness7"
 import Brightness4Icon from "@material-ui/icons/Brightness4"
+import UserMenu from './user-menu';
 
 function Copyright() {
     return (
@@ -152,9 +152,7 @@ export default function SideNavLayout({ children }) {
                     <IconButton onClick={handleDarkModeToggle} color="inherit">
                         {darkModeState.isEnabled ? <Brightness7Icon /> : <Brightness4Icon />}
                     </IconButton>
-                    <IconButton color="inherit">
-                        <AccountCircleIcon />
-                    </IconButton>
+                    <UserMenu />
                 </Toolbar>
             </AppBar>
             <Drawer

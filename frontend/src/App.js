@@ -11,7 +11,7 @@ function App() {
       <Switch>
         {routes.map((route, i) => {
           if (route.guarded === LOGGED_IN) {
-            return <LoggedInRouteWithSubRoutes key={i} {...route} />;
+            return <LoggedInRouteWithSubRoutes exact key={i} {...route} />;
           }
           return <RouteWithSubRoutes key={i} {...route} />;
         })}
@@ -26,7 +26,7 @@ function LoggedInRouteWithSubRoutes(route) {
     return (
       <SideNavLayout>
         <Route
-          path={route.path}
+          path={route.location.pathname}
           render={(props) => <route.component {...props} routes={route.routes} />}
         />
       </SideNavLayout>

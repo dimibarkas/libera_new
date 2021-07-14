@@ -15,6 +15,7 @@ import { postLogin } from '../services/account-services';
 import { useSnackbar } from "notistack"
 import { useDispatch } from "react-redux"
 import { login } from "../redux/store/user/actions/index"
+import { PasswordInput } from "../components/controls"
 
 function Copyright() {
     return (
@@ -131,11 +132,7 @@ export default function Login() {
                         onChange={handleChange}
                         value={formData.username}
                     />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
+                    <PasswordInput
                         name="password"
                         label="Passwort"
                         type="password"

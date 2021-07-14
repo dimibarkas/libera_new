@@ -259,7 +259,7 @@ var ArticlesController = /*#__PURE__*/ (function() {
                       return _context3.abrupt("return")
 
                     case 13:
-                      res.status(_http.constants.HTTP_STATUS_OK).json({
+                      res.status(_http.constants.HTTP_STATUS_CREATED).json({
                         code: "INSERTION_SUCCED",
                         message: ""
                           .concat(response.insertedCount, " article with name ")

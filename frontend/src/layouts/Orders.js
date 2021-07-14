@@ -64,7 +64,7 @@ export default function Orders() {
             <CssBaseline />
 
             <Container maxWidth="lg" className={classes.container}>
-                <Typography component="h2" variant="h3" className={classes.headerLabel}>
+                <Typography component="h2" variant="h3" className={classes.headerLabel} >
                     Bestellungen
                 </Typography>
 

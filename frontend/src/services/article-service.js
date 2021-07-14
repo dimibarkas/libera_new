@@ -1,9 +1,9 @@
 import axios from "axios"
 
-export async function listArticles(token) {
+export const listArticles = async (url, token) => {
     const res = await axios({
         method: "get",
-        url: "/api/articles",
+        url: url,
         headers: {
             "Authorization": `Bearer ${token}`
         }
@@ -12,4 +12,21 @@ export async function listArticles(token) {
         throw new Error("request failed");
     }
     return res.data;
+}
+
+export const postArticle = async (token, name) => {
+    const res = await axios({
+        method: "post",
+        url: "/api/articles",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+        data: {
+            name: name
+        },
+    });
+    if (res.status !== 201) {
+        throw new Error("request failed");
+    }
+    return res;
 }

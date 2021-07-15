@@ -128,8 +128,8 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
               filters,
               _ref$page,
               page,
-              _ref$moviesPerPage,
-              moviesPerPage,
+              _ref$articlesPerPage,
+              articlesPerPage,
               queryParams,
               _queryParams,
               _queryParams$query,
@@ -158,11 +158,11 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
                           _ref$filters === void 0 ? null : _ref$filters),
                         (_ref$page = _ref.page),
                         (page = _ref$page === void 0 ? 0 : _ref$page),
-                        (_ref$moviesPerPage = _ref.moviesPerPage),
-                        (moviesPerPage =
-                          _ref$moviesPerPage === void 0
+                        (_ref$articlesPerPage = _ref.articlesPerPage),
+                        (articlesPerPage =
+                          _ref$articlesPerPage === void 0
                             ? 20
-                            : _ref$moviesPerPage)
+                            : _ref$articlesPerPage)
                       queryParams = {}
 
                       if (filters) {
@@ -212,8 +212,8 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
 
                     case 14:
                       displayCursor = cursor
-                        .limit(moviesPerPage)
-                        .skip(moviesPerPage * page)
+                        .limit(articlesPerPage)
+                        .skip(articlesPerPage * page)
                       _context2.prev = 15
                       _context2.next = 18
                       return displayCursor.toArray()

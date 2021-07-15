@@ -4,6 +4,7 @@ import cors from "cors"
 import morgan from "morgan"
 import articles from "./api/articles/articles.route"
 import users from "./api/users/users.route"
+import customers from "./api/customers/customers.route"
 import path from "path"
 
 const app = express()
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 //Register api routes
 app.use("/api/articles", articles)
 app.use("/api/users", users)
+app.use("/api/customers", customers)
 app.use("/", express.static("public"))
 app.use("*", (req, res) =>
   res.sendFile(path.join(path.resolve(), "public/index.html")),

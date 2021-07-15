@@ -35,7 +35,7 @@ export default class ArticlesDAO {
     // setting the default parameters for the getArticles method
     filters = null,
     page = 0,
-    moviesPerPage = 20,
+    articlesPerPage = 20,
   } = {}) {
     let queryParams = {}
     if (filters) {
@@ -56,7 +56,9 @@ export default class ArticlesDAO {
       return { articlesList: [], totalNumArticles: 0 }
     }
 
-    const displayCursor = cursor.limit(moviesPerPage).skip(moviesPerPage * page)
+    const displayCursor = cursor
+      .limit(articlesPerPage)
+      .skip(articlesPerPage * page)
 
     try {
       const articlesList = await displayCursor.toArray()

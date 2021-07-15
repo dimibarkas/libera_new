@@ -34,8 +34,13 @@ describe("Basic CRUD on customers", () => {
     expect(insertedCustomer).toBe(null)
   })
 
-  test("Can search an article by id", async () => {
+  test("Can search a customer by id", async () => {
     const customer = await CustomersDAO.getCustomerById(customerId)
     expect(customer.name).toBe(testCustomerInfo.name)
+  })
+
+  test("Can delete a customer by id", async () => {
+    const deletedCustomer = await CustomersDAO.deleteCustomerById(customerId)
+    expect(deletedCustomer.deletedCount).toBe(1)
   })
 })

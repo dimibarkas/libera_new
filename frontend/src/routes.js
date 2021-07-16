@@ -2,7 +2,8 @@ import Login from "./views/login-page"
 import LandingPage from "./views/landing-page"
 import SignUp from "./views/signup-page";
 import Dashboard from "./layouts/Dashboard";
-import Orders from "./layouts/Orders";
+import Orders from "./views/orders/orders";
+import OrderForm from "./views/orders/order-form";
 import Articles from "./views/articles/articles";
 import ArticleForm from "./views/articles/article-form";
 import Customers from "./views/customers/customers";
@@ -53,6 +54,16 @@ export const routes = [
     {
         path: "/customers/:id",
         component: CustomerForm,
+        guarded: LOGGED_IN
+    },
+    {
+        path: "/orders",
+        component: Orders,
+        guarded: LOGGED_IN
+    },
+    {
+        path: "/orders/:id",
+        component: OrderForm,
         guarded: LOGGED_IN
     },
     {

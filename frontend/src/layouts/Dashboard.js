@@ -116,7 +116,7 @@ export default function Dashboard() {
             <CssBaseline />
 
             <Container maxWidth="lg" className={classes.container}>
-                <Typography component="h2" variant="h3" className={classes.headerLabel}>
+                <Typography component="h2" variant="h4" className={classes.headerLabel}>
                     Dashboard
                 </Typography>
                 <Typography component="p" variant="h5" className={classes.greetingsLabel}>

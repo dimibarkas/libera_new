@@ -14,7 +14,10 @@ const useStyles = makeStyles(theme => ({
     toolbar: {
         display: "flex",
         flexDirection: "row-reverse",
-        padding: "revert"
+        padding: "revert",
+        [theme.breakpoints.down("xs")]: {
+            flexDirection: "inherit"
+        },
     },
     actionTableCell: {
         '& MuiTableCell-alignRight': {
@@ -32,11 +35,6 @@ const useStyles = makeStyles(theme => ({
             display: "none"
         }
     },
-    smallpagination: {
-        [theme.breakpoints.up("sm")]: {
-            display: "none"
-        }
-    }
 }))
 
 export default function useTable(headCells, records, onAdd) {
@@ -95,7 +93,6 @@ export default function useTable(headCells, records, onAdd) {
 
     const TablePagination = () => (
         <MuiTablePagination
-            ActionsComponent={TablePaginationActions}
             page={page}
             rowsPerPageOptions={pages}
             rowsPerPage={entriesPerPage}
@@ -105,21 +102,6 @@ export default function useTable(headCells, records, onAdd) {
             align="right"
         />
     )
-
-    const TablePaginationActions = () => {
-        const classes = useStyles();
-        return (
-            <>
-                <div className={classes.pagination}>
-
-                </div>
-                <div className={classes.smallpagination}>
-                    Nächste Seite anzeigen
-                </div>
-            </>
-        )
-    }
-
 
     return {
         TableContainer,

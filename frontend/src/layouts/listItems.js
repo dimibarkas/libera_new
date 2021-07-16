@@ -6,7 +6,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
+// import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { Link } from "react-router-dom"
@@ -35,7 +35,7 @@ export const mainListItems = (
         <ListItemLink icon={<DashboardIcon />} primary={"Dashboard"} to={"/dashboard"} />
         <ListItemLink icon={<ShoppingCartIcon />} primary={"Bestellungen"} to={"/orders"} />
         <ListItemLink icon={<PeopleIcon />} primary={"Kunden"} to={"/customers"} />
-        <ListItemLink icon={<BarChartIcon />} primary={"Einkaufslisten"} to={"/buylists"} />
+        {/* <ListItemLink icon={<BarChartIcon />} primary={"Einkaufslisten"} to={"/buylists"} /> */}
         <ListItemLink icon={<LayersIcon />} primary={"Artikel"} to={"/articles"} />
     </>
 );

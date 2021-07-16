@@ -92,7 +92,7 @@ export default function Customers() {
         < div className={classes.root} >
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
-                <Typography component="h2" variant="h3" className={classes.headerLabel}>
+                <Typography component="h2" variant="h4" className={classes.headerLabel}>
                     Kunden
                 </Typography>
                 <TableContainer>

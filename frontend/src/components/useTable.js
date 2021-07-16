@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
         '& thead th': {
             fontWeight: "600",
             color: theme.palette.primary.main,
-        },
+        }
     },
     toolbar: {
         display: "flex",
@@ -27,6 +27,16 @@ const useStyles = makeStyles(theme => ({
             color: "inherit"
         }
     },
+    pagination: {
+        [theme.breakpoints.down("xs")]: {
+            display: "none"
+        }
+    },
+    smallpagination: {
+        [theme.breakpoints.up("sm")]: {
+            display: "none"
+        }
+    }
 }))
 
 export default function useTable(headCells, records, onAdd) {
@@ -53,7 +63,6 @@ export default function useTable(headCells, records, onAdd) {
                 {props.children}
                 <TablePagination />
             </Table>
-
         </>
     )
 
@@ -86,6 +95,7 @@ export default function useTable(headCells, records, onAdd) {
 
     const TablePagination = () => (
         <MuiTablePagination
+            ActionsComponent={TablePaginationActions}
             page={page}
             rowsPerPageOptions={pages}
             rowsPerPage={entriesPerPage}
@@ -95,6 +105,20 @@ export default function useTable(headCells, records, onAdd) {
             align="right"
         />
     )
+
+    const TablePaginationActions = () => {
+        const classes = useStyles();
+        return (
+            <>
+                <div className={classes.pagination}>
+
+                </div>
+                <div className={classes.smallpagination}>
+                    Nächste Seite anzeigen
+                </div>
+            </>
+        )
+    }
 
 
     return {

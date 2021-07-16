@@ -12,7 +12,7 @@ import useSWR from 'swr'
 import Error from '../../components/error';
 import { useHistory } from "react-router"
 import TableActionButtons from '../../components/table-action-buttons';
-import { deleteArticle } from '../../services/article-service';
+import { deleteCustomer } from '../../services/customer-service';
 import { useSnackbar } from "notistack"
 import { mutate } from 'swr';
 import ConfirmDialog from "../../components/confirm-dialog"
@@ -45,18 +45,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
-    { id: "name", label: "Artikelname", align: "inherit" },
+    { id: "customer_name", label: "Kundenname", align: "inherit" },
     { id: "actions", label: "Aktionen", align: "right" }
 ]
 
-export default function Articles() {
+export default function Orders() {
     const accessToken = useSelector(state => state.user.authInfo.accessToken)
     const history = useHistory();
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
     const { enqueueSnackbar } = useSnackbar();
 
     const onAdd = () => {
-        history.push("/articles/new")
+        history.push("/orders/new")
     }
 
     const onDelete = async (id) => {
@@ -65,22 +65,22 @@ export default function Articles() {
             isOpen: false,
         })
         try {
-            const res = await deleteArticle(accessToken, id);
+            const res = await deleteCustomer(accessToken, id);
             if (res.status === 200) {
-                enqueueSnackbar("Artikel wurde erfolgreich gelöscht.", { variant: 'success' })
-                mutate("/api/articles");
+                enqueueSnackbar("Kunde wurde erfolgreich gelöscht.", { variant: 'success' })
+                mutate("/api/customers");
             }
         } catch (error) {
-            enqueueSnackbar("Artikel konnte nicht gelöscht werden", { variant: 'error' })
+            enqueueSnackbar("Kunde konnte nicht gelöscht werden.", { variant: 'error' })
         }
     }
 
     const onEdit = (id) => {
-        history.push(`/articles/${id}`)
+        history.push(`/orders/${id}`)
     }
 
     const fetcher = url => listArticles(url, accessToken)
-    const { data, error } = useSWR("/api/articles", fetcher);
+    const { data, error } = useSWR("/api/orders", fetcher);
     const classes = useStyles();
     const { TableContainer, TableHead } = useTable(headCells, data, onAdd);
 
@@ -93,20 +93,20 @@ export default function Articles() {
             <CssBaseline />
             <Container maxWidth="lg" className={classes.container}>
                 <Typography component="h2" variant="h4" className={classes.headerLabel}>
-                    Artikel
+                    Bestellungen
                 </Typography>
                 <TableContainer>
                     <TableHead />
                     <TableBody>
                         {
-                            data.articles.map(item => (
+                            data.orders.map(item => (
                                 <TableRow key={item._id}>
-                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.customer_name}</TableCell>
                                     <TableCell align="right">
                                         <TableActionButtons
                                             onDelete={() => setConfirmDialog({
                                                 isOpen: true,
-                                                title: "Möchten Sie den Artikel wirklich löschen?",
+                                                title: "Möchten Sie den Kunden wirklich löschen?",
                                                 onConfirm: () => onDelete(item._id)
                                             })}
                                             onEdit={() => onEdit(item._id)}

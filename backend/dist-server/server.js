@@ -23,6 +23,8 @@ var _customers = _interopRequireDefault(
   require("./api/customers/customers.route"),
 )
 
+var _orders = _interopRequireDefault(require("./api/orders/orders.route"))
+
 var _path = _interopRequireDefault(require("path"))
 
 var app = (0, _express["default"])()
@@ -39,6 +41,7 @@ app.use(
 app.use("/api/articles", _articles["default"])
 app.use("/api/users", _users["default"])
 app.use("/api/customers", _customers["default"])
+app.use("/api/orders", _orders["default"])
 app.use("/", _express["default"]["static"]("public"))
 app.use("*", function(req, res) {
   return res.sendFile(

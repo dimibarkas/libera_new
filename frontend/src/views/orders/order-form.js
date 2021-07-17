@@ -181,6 +181,7 @@ export default function OrderForm() {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <DatePicker
+                        fullWidth={true}
                         handleChange={handleChange}
                         value={formData.date}
                     />

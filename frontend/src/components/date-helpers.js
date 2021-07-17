@@ -1,11 +1,14 @@
 import { Divider, IconButton, ListItem, ListItemIcon, ListItemText, makeStyles, Menu, MenuItem } from '@material-ui/core'
 import React, { useState } from 'react'
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { Button, DatePicker } from './controls'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import TodayIcon from '@material-ui/icons/Today';
 
 const useStyles = makeStyles(theme => ({
-    actionButtons: {
+    datepicker: {
         [theme.breakpoints.down("xs")]: {
             display: "none"
         }
@@ -15,12 +18,9 @@ const useStyles = makeStyles(theme => ({
             display: "none"
         }
     },
-    list: {
-        width: "100%",
-    }
 }))
 
-export default function TableActionButtons({ onDelete, onEdit }) {
+export default function DateHelpers() {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -31,15 +31,16 @@ export default function TableActionButtons({ onDelete, onEdit }) {
     const handleClose = () => {
         setAnchorEl(null)
     }
-
     return (
         <>
-            <div className={classes.actionButtons}>
-                <IconButton onClick={onEdit}>
-                    <EditIcon />
+            <div className={classes.datepicker}>
+                <Button variant="outlined" text={"HEUTE"} />
+                <IconButton>
+                    <ChevronLeftIcon />
                 </IconButton>
-                <IconButton color="secondary" onClick={onDelete}>
-                    <DeleteIcon />
+                <DatePicker className={classes.datePicker} />
+                <IconButton >
+                    <ChevronRightIcon />
                 </IconButton>
             </div>
             <div className={classes.moreVert}>
@@ -47,22 +48,21 @@ export default function TableActionButtons({ onDelete, onEdit }) {
                     <MoreVertIcon />
                 </IconButton>
                 <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
-                    <MenuItem button onClick={onEdit}>
+                    <MenuItem button>
                         <ListItemIcon>
-                            <EditIcon />
+                            <TodayIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Bearbeiten" />
+                        Bestellungen heute
                     </MenuItem>
                     <Divider />
-                    <MenuItem button onClick={onDelete}>
-                        <ListItemIcon >
-                            <DeleteIcon color="secondary" />
+                    <MenuItem button>
+                        <ListItemIcon>
+                            <CalendarTodayIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Löschen" />
+                        Datum auswählen
                     </MenuItem>
                 </Menu>
             </div>
         </>
     )
 }
-

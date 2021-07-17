@@ -82,7 +82,7 @@ export default function Orders() {
     const fetcher = url => listArticles(url, accessToken)
     const { data, error } = useSWR("/api/orders", fetcher);
     const classes = useStyles();
-    const { TableContainer, TableHead } = useTable(headCells, data, onAdd);
+    const { TableContainer, TableHead } = useTable(headCells, data, onAdd, true);
 
     if (error) return <Error />
 
@@ -106,7 +106,7 @@ export default function Orders() {
                                         <TableActionButtons
                                             onDelete={() => setConfirmDialog({
                                                 isOpen: true,
-                                                title: "Möchten Sie den Kunden wirklich löschen?",
+                                                title: "Möchten Sie die Bestellung wirklich löschen?",
                                                 onConfirm: () => onDelete(item._id)
                                             })}
                                             onEdit={() => onEdit(item._id)}

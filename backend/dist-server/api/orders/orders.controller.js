@@ -23,6 +23,8 @@ var _createClass2 = _interopRequireDefault(
 
 var _OrdersDAO = _interopRequireDefault(require("../../dao/OrdersDAO"))
 
+var _http = require("http2")
+
 var OrdersController = /*#__PURE__*/ (function() {
   function OrdersController() {
     ;(0, _classCallCheck2["default"])(this, OrdersController)
@@ -79,6 +81,96 @@ var OrdersController = /*#__PURE__*/ (function() {
         }
 
         return apiGetOrders
+      })(),
+    },
+    {
+      key: "apiGetOrderById",
+      value: (function() {
+        var _apiGetOrderById = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee2(
+            req,
+            res,
+            next,
+          ) {
+            var id, order
+            return _regenerator["default"].wrap(
+              function _callee2$(_context2) {
+                while (1) {
+                  switch ((_context2.prev = _context2.next)) {
+                    case 0:
+                      _context2.prev = 0
+                      id = req.params.id || {}
+                      _context2.next = 4
+                      return _OrdersDAO["default"].getOrderById(id)
+
+                    case 4:
+                      order = _context2.sent
+
+                      if (order) {
+                        _context2.next = 8
+                        break
+                      }
+
+                      res.status(_http.constants.HTTP_STATUS_NOT_FOUND).json({
+                        code: "ORDER_NOT_FOUND",
+                        message: "Order with id ".concat(
+                          id,
+                          " could not be found.",
+                        ),
+                      })
+                      return _context2.abrupt("return")
+
+                    case 8:
+                      if (!order.error) {
+                        _context2.next = 11
+                        break
+                      }
+
+                      res.status(_http.constants.HTTP_STATUS_BAD_REQUEST).json({
+                        code: "ID_INCORRECT",
+                        message: "Entered id ".concat(id, " was incorrect"),
+                      })
+                      return _context2.abrupt("return")
+
+                    case 11:
+                      res.status(_http.constants.HTTP_STATUS_OK).json({
+                        _id: order._id,
+                        customer_name: order.customer_name,
+                        date: order.date,
+                        positions: order.positions,
+                      })
+                      _context2.next = 17
+                      break
+
+                    case 14:
+                      _context2.prev = 14
+                      _context2.t0 = _context2["catch"](0)
+                      res
+                        .status(
+                          _http.constants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+                        )
+                        .json({
+                          error: _context2.t0,
+                        })
+
+                    case 17:
+                    case "end":
+                      return _context2.stop()
+                  }
+                }
+              },
+              _callee2,
+              null,
+              [[0, 14]],
+            )
+          }),
+        )
+
+        function apiGetOrderById(_x4, _x5, _x6) {
+          return _apiGetOrderById.apply(this, arguments)
+        }
+
+        return apiGetOrderById
       })(),
     },
   ])

@@ -1,20 +1,22 @@
-import { Divider, Grid, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import { Grid, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
-import { AsyncAutocomplete, DatePicker } from '../../components/controls';
+import { AsyncAutocompleteCustomers, DatePicker } from '../../components/controls';
 import { useForm, Form } from '../../components/useForm';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from "react-router";
-import { getCustomerById, postCustomer, updateCustomerById } from '../../services/customer-service';
+import { postCustomer, updateCustomerById } from '../../services/customer-service';
+import { getOrderbyId } from '../../services/order-service';
 import { addBusinessDays } from 'date-fns';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from "notistack"
 import { mutate } from 'swr';
+import Positions from '../../components/positions/positions';
 
 const nextBusinessDay = addBusinessDays(new Date(), 1)
 
 const initialValues = {
-    customer: "",
+    customer_name: "",
     date: new Date(nextBusinessDay),
     positions: {}
 }
@@ -43,14 +45,17 @@ const useStyles = makeStyles((theme) => ({
     },
     subtitle: {
         fontFamily: "Montserrat-Light",
+        marginTop: "1em",
+        display: "inline-block"
+    },
+    subtitleWrapper: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "baseline",
     }
 }));
 
 export default function OrderForm() {
-
-    useEffect(() => {
-        console.log(nextBusinessDay)
-    }, [])
 
     const [currentMode, setCurrentMode] = useState(null);
 
@@ -84,22 +89,17 @@ export default function OrderForm() {
     let path = location.pathname.split("/");
     const id = path.pop() || path.pop();
 
-
     useEffect(() => {
         async function determineAddOrEditMode(id) {
             if (id === "new") {
                 setCurrentMode("Bestellung hinzufügen")
             } else {
                 setCurrentMode("Bestellung bearbeiten")
-                const res = await getCustomerById(accessToken, id);
+                const res = await getOrderbyId(accessToken, id);
                 updateFormData({
-                    name: res.data.name,
-                    street: res.data.address.street,
-                    nr: res.data.address.nr,
-                    zipcode: res.data.address.zipcode,
-                    city: res.data.address.city,
-                    country: res.data.address.country,
-                    phone: res.data.phone
+                    customer_name: res.data.customer_name,
+                    date: res.data.date,
+                    positions: res.data.positions,
                 });
             }
         };
@@ -109,7 +109,7 @@ export default function OrderForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const customerInfo = {
-            name: formData.name,
+            customer_name: formData.customer_name,
             address: {
                 street: formData.street,
                 nr: formData.nr,
@@ -174,20 +174,20 @@ export default function OrderForm() {
             </Toolbar>
             <Grid container spacing={2} className={classes.inputContainer}>
                 <Grid item xs={12} md={6}>
-                    <AsyncAutocomplete
+                    <AsyncAutocompleteCustomers
                         handleChange={handleChange}
-                        value={formData.customer}
+                        value={formData.customer_name}
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <DatePicker
+                        fullWidth={true}
                         handleChange={handleChange}
                         value={formData.date}
                     />
                 </Grid>
                 <Grid item xs={12} md={12}>
-                    <Typography component="h6" variant="h5" className={classes.subtitle}>Positionen</Typography>
-                    <Divider />
+                    <Positions id={id} token={accessToken} />
                 </Grid>
 
             </Grid>

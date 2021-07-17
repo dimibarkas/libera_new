@@ -1,3 +1,5 @@
+import { ObjectId } from "bson"
+
 let orders
 const DEFAULT_SORT = []
 
@@ -54,5 +56,18 @@ export default class OrdersDAO {
       console.error(`Unable to issue find command, ${e}`)
     }
     return { ordersList: [], totalNumOrders: 0 }
+  }
+
+  static async getOrderById(id) {
+    try {
+      const result = await orders.findOne({ _id: ObjectId(id) })
+      if (!result) {
+        return null
+      }
+      return result
+    } catch (error) {
+      console.error(`Error occurred while searching article, ${error}.`)
+      return { error: error }
+    }
   }
 }

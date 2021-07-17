@@ -2,6 +2,7 @@ import { makeStyles, Table, TableCell, TableHead as MuiTableHead, TableRow, Tabl
 import { Button } from "./controls"
 import React, { useState } from 'react'
 import AddIcon from "@material-ui/icons/Add"
+import DateHelpers from './date-helpers'
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -13,11 +14,13 @@ const useStyles = makeStyles(theme => ({
     },
     toolbar: {
         display: "flex",
-        flexDirection: "row-reverse",
+        justifyContent: "space-between",
+        alignItems: "center",
         padding: "revert",
         [theme.breakpoints.down("xs")]: {
-            flexDirection: "inherit"
+            flexDirection: "row-reverse"
         },
+        flexWrap: "wrap"
     },
     actionTableCell: {
         '& MuiTableCell-alignRight': {
@@ -31,13 +34,25 @@ const useStyles = makeStyles(theme => ({
         }
     },
     pagination: {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down("sm")]: {
             display: "none"
         }
     },
+    dateHelper: {
+        display: "flex",
+        alignItems: "center",
+    },
+    onAddButtonContainer: {
+        flexShrink: "0",
+    },
+    datePicker: {
+        [theme.breakpoints.down("sm")]: {
+            display: "none"
+        }
+    }
 }))
 
-export default function useTable(headCells, records, onAdd) {
+export default function useTable(headCells, records, onAdd, showDateHelpers) {
 
     const classes = useStyles();
     const pages = [20, 50];
@@ -48,14 +63,22 @@ export default function useTable(headCells, records, onAdd) {
     const TableContainer = props => (
         <>
             <Toolbar className={classes.toolbar}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.addButton}
-                    startIcon={<AddIcon />}
-                    onClick={onAdd}
-                    text={"Hinzufügen"}
-                />
+                {showDateHelpers ?
+                    <div className={classes.dateHelper}>
+                        <DateHelpers />
+                    </div>
+                    : ""}
+
+                <div className={classes.onAddButtonContainer}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.addButton}
+                        startIcon={<AddIcon />}
+                        onClick={onAdd}
+                        text={"Hinzufügen"}
+                    />
+                </div>
             </Toolbar>
             <Table className={classes.table}>
                 {props.children}
@@ -93,6 +116,7 @@ export default function useTable(headCells, records, onAdd) {
 
     const TablePagination = () => (
         <MuiTablePagination
+            className={classes.pagination}
             page={page}
             rowsPerPageOptions={pages}
             rowsPerPage={entriesPerPage}

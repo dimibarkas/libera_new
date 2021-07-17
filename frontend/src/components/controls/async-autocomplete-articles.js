@@ -2,9 +2,9 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { listCustomers } from "../../services/customer-service";
+import { listArticles } from '../../services/article-service';
 
-export default function AsynchronousAutocompleteCustomer({ value, handleChange }) {
+export default function AsynchronousAutocompleteArticles({ value, handleChange, token }) {
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState([]);
     const loading = open && options.length === 0;
@@ -17,17 +17,17 @@ export default function AsynchronousAutocompleteCustomer({ value, handleChange }
         }
 
         (async () => {
-            const res = await listCustomers("/api/customers");
+            const res = await listArticles("/api/articles", token);
 
             if (active) {
-                setOptions(res.customers);
+                setOptions(res.articles);
             }
         })();
 
         return () => {
             active = false;
         };
-    }, [loading]);
+    }, [loading, token]);
 
     React.useEffect(() => {
         if (!open) {
@@ -59,7 +59,7 @@ export default function AsynchronousAutocompleteCustomer({ value, handleChange }
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Auswahl des Kunden"
+                    label="Artikel auswählen"
                     variant="outlined"
                     InputProps={{
                         ...params.InputProps,

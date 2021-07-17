@@ -21,6 +21,8 @@ var _createClass2 = _interopRequireDefault(
   require("@babel/runtime/helpers/createClass"),
 )
 
+var _bson = require("bson")
+
 var orders
 var DEFAULT_SORT = []
 
@@ -253,6 +255,69 @@ var OrdersDAO = /*#__PURE__*/ (function() {
         }
 
         return getOrders
+      })(),
+    },
+    {
+      key: "getOrderById",
+      value: (function() {
+        var _getOrderById = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee3(id) {
+            var result
+            return _regenerator["default"].wrap(
+              function _callee3$(_context3) {
+                while (1) {
+                  switch ((_context3.prev = _context3.next)) {
+                    case 0:
+                      _context3.prev = 0
+                      _context3.next = 3
+                      return orders.findOne({
+                        _id: (0, _bson.ObjectId)(id),
+                      })
+
+                    case 3:
+                      result = _context3.sent
+
+                      if (result) {
+                        _context3.next = 6
+                        break
+                      }
+
+                      return _context3.abrupt("return", null)
+
+                    case 6:
+                      return _context3.abrupt("return", result)
+
+                    case 9:
+                      _context3.prev = 9
+                      _context3.t0 = _context3["catch"](0)
+                      console.error(
+                        "Error occurred while searching article, ".concat(
+                          _context3.t0,
+                          ".",
+                        ),
+                      )
+                      return _context3.abrupt("return", {
+                        error: _context3.t0,
+                      })
+
+                    case 13:
+                    case "end":
+                      return _context3.stop()
+                  }
+                }
+              },
+              _callee3,
+              null,
+              [[0, 9]],
+            )
+          }),
+        )
+
+        function getOrderById(_x2) {
+          return _getOrderById.apply(this, arguments)
+        }
+
+        return getOrderById
       })(),
     },
   ])

@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
-    { id: "customer_name", label: "Kundenname", align: "inherit" },
+    { id: "customer_name", label: "Kundenname", align: "left" },
     { id: "actions", label: "Aktionen", align: "right" }
 ]
 
@@ -113,6 +113,7 @@ export default function Orders() {
                                         />
                                     </TableCell>
                                 </TableRow>
+
                             ))
                         }
                     </TableBody>

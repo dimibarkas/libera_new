@@ -166,7 +166,7 @@ export default class OrdersDAO {
           {
             $set: {
               customer_name: orderInfo.customer_name,
-              date: orderInfo.date,
+              date: new Date(orderInfo.date),
               positions: orderInfo.positions,
             },
           },

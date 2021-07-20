@@ -13,6 +13,7 @@ var _articles = _interopRequireDefault(require("./articles.controller"))
 
 var router = new _express.Router()
 router.route("/").get(_articles["default"].apiGetArticles)
+router.route("/all").get(_articles["default"].apiGetListOfAllArticles)
 router.route("/search").get(_articles["default"].apiSearchArticles)
 router.route("/").post(_articles["default"].apiInsertArticle)
 router.route("/id/:id").get(_articles["default"].apiGetArticleById)

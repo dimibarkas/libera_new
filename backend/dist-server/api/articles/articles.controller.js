@@ -618,6 +618,73 @@ var ArticlesController = /*#__PURE__*/ (function() {
         return apiDeleteArticleById
       })(),
     },
+    {
+      key: "apiGetListOfAllArticles",
+      value: (function() {
+        var _apiGetListOfAllArticles = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee7(
+            req,
+            res,
+          ) {
+            var response
+            return _regenerator["default"].wrap(
+              function _callee7$(_context7) {
+                while (1) {
+                  switch ((_context7.prev = _context7.next)) {
+                    case 0:
+                      _context7.prev = 0
+                      _context7.next = 3
+                      return _ArticlesDAO["default"].getAllArticles()
+
+                    case 3:
+                      response = _context7.sent
+
+                      if (response) {
+                        _context7.next = 7
+                        break
+                      }
+
+                      res.status(
+                        _http.constants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+                      )
+                      return _context7.abrupt("return")
+
+                    case 7:
+                      res.status(_http.constants.HTTP_STATUS_OK).json(response)
+                      _context7.next = 13
+                      break
+
+                    case 10:
+                      _context7.prev = 10
+                      _context7.t0 = _context7["catch"](0)
+                      res
+                        .status(
+                          _http.constants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+                        )
+                        .json({
+                          error: _context7.t0,
+                        })
+
+                    case 13:
+                    case "end":
+                      return _context7.stop()
+                  }
+                }
+              },
+              _callee7,
+              null,
+              [[0, 10]],
+            )
+          }),
+        )
+
+        function apiGetListOfAllArticles(_x19, _x20) {
+          return _apiGetListOfAllArticles.apply(this, arguments)
+        }
+
+        return apiGetListOfAllArticles
+      })(),
+    },
   ])
   return ArticlesController
 })()

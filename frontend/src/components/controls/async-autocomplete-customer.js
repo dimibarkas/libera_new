@@ -4,7 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { listCustomers } from "../../services/customer-service";
 
-export default function AsynchronousAutocompleteCustomer({ value, handleChange }) {
+export default function AsynchronousAutocompleteCustomer({ value, handleChange, name }) {
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState([]);
     const loading = open && options.length === 0;
@@ -37,8 +37,11 @@ export default function AsynchronousAutocompleteCustomer({ value, handleChange }
 
     return (
         <Autocomplete
-            onChange={handleChange}
+            name={name}
+            id="customer_name"
             value={value}
+            onChange={(event, newValue) => handleChange(newValue)}
+            groupBy={(option) => option.address.country}
             fullWidth
             open={open}
             onOpen={() => {
@@ -47,7 +50,7 @@ export default function AsynchronousAutocompleteCustomer({ value, handleChange }
             onClose={() => {
                 setOpen(false);
             }}
-            getOptionSelected={(option, value) => option.name === value.name}
+            getOptionSelected={() => true}
             getOptionLabel={(option) => {
                 if (option.hasOwnProperty('name')) {
                     return option.name;
@@ -59,7 +62,7 @@ export default function AsynchronousAutocompleteCustomer({ value, handleChange }
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Auswahl des Kunden"
+                    label="Kunde"
                     variant="outlined"
                     InputProps={{
                         ...params.InputProps,

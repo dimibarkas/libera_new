@@ -15,9 +15,10 @@ const useStyles = makeStyles(theme => ({
     toolbar: {
         display: "flex",
         justifyContent: "space-between",
+        flexDirection: "row",
         alignItems: "center",
         padding: "revert",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.up("sm")]: {
             flexDirection: "row-reverse"
         },
         flexWrap: "wrap"
@@ -44,6 +45,7 @@ const useStyles = makeStyles(theme => ({
     },
     onAddButtonContainer: {
         flexShrink: "0",
+
     },
     datePicker: {
         [theme.breakpoints.down("sm")]: {
@@ -52,23 +54,20 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function useTable(headCells, records, onAdd, showDateHelpers) {
 
+export default function useTable(headCells, records, onAdd, showDateHelpers, selectedDate, setSelectedDate) {
     const classes = useStyles();
     const pages = [20, 50];
     const [page, setPage] = useState(0);
     const [entriesPerPage, setEntriesPerPage] = useState(pages[page])
 
+    const handleDateChange = (newDate) => {
+        setSelectedDate(newDate)
+    }
 
     const TableContainer = props => (
         <>
             <Toolbar className={classes.toolbar}>
-                {showDateHelpers ?
-                    <div className={classes.dateHelper}>
-                        <DateHelpers />
-                    </div>
-                    : ""}
-
                 <div className={classes.onAddButtonContainer}>
                     <Button
                         variant="contained"
@@ -79,10 +78,18 @@ export default function useTable(headCells, records, onAdd, showDateHelpers) {
                         text={"Hinzufügen"}
                     />
                 </div>
+                {showDateHelpers ?
+                    <div className={classes.dateHelper}>
+                        <DateHelpers selectedDate={selectedDate} handleDateChange={handleDateChange} />
+                    </div>
+                    :
+                    ""
+                }
+
             </Toolbar>
             <Table className={classes.table}>
                 {props.children}
-                <TablePagination />
+                {/* <TablePagination /> */}
             </Table>
         </>
     )

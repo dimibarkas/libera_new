@@ -4,7 +4,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { useSelector } from 'react-redux';
-import { listArticles } from '../../services/article-service';
 import useTable from '../../components/useTable';
 import { TableBody, TableCell, TableRow } from '@material-ui/core';
 import CircularIndeterminate from '../../components/circular-indeterminate';
@@ -12,10 +11,11 @@ import useSWR from 'swr'
 import Error from '../../components/error';
 import { useHistory } from "react-router"
 import TableActionButtons from '../../components/table-action-buttons';
-import { deleteCustomer } from '../../services/customer-service';
 import { useSnackbar } from "notistack"
 import { mutate } from 'swr';
 import ConfirmDialog from "../../components/confirm-dialog"
+import { format } from 'date-fns';
+import { deleteOrderById, listOrders } from '../../services/order-service';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,6 +41,13 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
         display: "flex",
+    },
+    dateContainer: {
+        paddingBottom: "2rem",
+        fontFamily: "Montserrat-Light",
+        [theme.breakpoints.up("sm")]: {
+            display: "none"
+        }
     }
 }));
 
@@ -48,12 +55,22 @@ const headCells = [
     { id: "customer_name", label: "Kundenname", align: "left" },
     { id: "actions", label: "Aktionen", align: "right" }
 ]
+const initialDate = () => {
+    let currentDate = new Date()
+    currentDate.setHours(12, 0, 0, 0);
+    return currentDate
+}
 
 export default function Orders() {
     const accessToken = useSelector(state => state.user.authInfo.accessToken)
     const history = useHistory();
-    const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
+    const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" })
+    const [selectedDate, setSelectedDate] = useState(initialDate);
     const { enqueueSnackbar } = useSnackbar();
+
+    function calcDiffDays(second) {
+        return Math.round((second - new Date()) / (1000 * 60 * 60 * 24))
+    }
 
     const onAdd = () => {
         history.push("/orders/new")
@@ -65,13 +82,13 @@ export default function Orders() {
             isOpen: false,
         })
         try {
-            const res = await deleteCustomer(accessToken, id);
+            const res = await deleteOrderById(accessToken, id);
             if (res.status === 200) {
-                enqueueSnackbar("Kunde wurde erfolgreich gelöscht.", { variant: 'success' })
-                mutate("/api/customers");
+                enqueueSnackbar("Bestellung wurde erfolgreich gelöscht.", { variant: 'success' })
+                mutate("/api/orders");
             }
         } catch (error) {
-            enqueueSnackbar("Kunde konnte nicht gelöscht werden.", { variant: 'error' })
+            enqueueSnackbar("Bestellung konnte nicht gelöscht werden.", { variant: 'error' })
         }
     }
 
@@ -79,10 +96,11 @@ export default function Orders() {
         history.push(`/orders/${id}`)
     }
 
-    const fetcher = url => listArticles(url, accessToken)
-    const { data, error } = useSWR("/api/orders", fetcher);
+    const fetcher = url => listOrders(url, accessToken)
+    //TODO: ändern des Befehls auf /api/orders/current/:number
+    const { data, error } = useSWR("/api/orders/current/" + calcDiffDays(selectedDate), fetcher);
     const classes = useStyles();
-    const { TableContainer, TableHead } = useTable(headCells, data, onAdd, true);
+    const { TableContainer, TableHead } = useTable(headCells, data, onAdd, true, selectedDate, setSelectedDate);
 
     if (error) return <Error />
 
@@ -95,11 +113,14 @@ export default function Orders() {
                 <Typography component="h2" variant="h4" className={classes.headerLabel}>
                     Bestellungen
                 </Typography>
+                <Typography component="h6" variant="subtitle2" className={classes.dateContainer}>
+                    {"für: " + format(selectedDate, 'dd.MM.yyy')}
+                </Typography>
                 <TableContainer>
                     <TableHead />
                     <TableBody>
-                        {
-                            data.orders.map(item => (
+                        {data.ordersList === [] ? <TableRow colspan="3">Keine Daten gefunden</TableRow> :
+                            data.ordersList.map(item => (
                                 <TableRow key={item._id}>
                                     <TableCell>{item.customer_name}</TableCell>
                                     <TableCell align="right">
@@ -113,7 +134,6 @@ export default function Orders() {
                                         />
                                     </TableCell>
                                 </TableRow>
-
                             ))
                         }
                     </TableBody>

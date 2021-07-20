@@ -2,9 +2,9 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { listArticles } from '../../services/article-service';
+import { retriveArticleList } from '../../services/article-service';
 
-export default function AsynchronousAutocompleteArticles({ value, handleChange, token }) {
+export default function AsynchronousAutocompleteArticles({ value, handleChange, token, name }) {
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState([]);
     const loading = open && options.length === 0;
@@ -17,10 +17,9 @@ export default function AsynchronousAutocompleteArticles({ value, handleChange, 
         }
 
         (async () => {
-            const res = await listArticles("/api/articles", token);
-
+            const res = await retriveArticleList("/api/articles/all", token);
             if (active) {
-                setOptions(res.articles);
+                setOptions(res);
             }
         })();
 
@@ -37,9 +36,11 @@ export default function AsynchronousAutocompleteArticles({ value, handleChange, 
 
     return (
         <Autocomplete
-            onChange={handleChange}
+            name={name}
             value={value}
+            onChange={(event, newValue) => handleChange(newValue)}
             fullWidth
+            id="articles"
             open={open}
             onOpen={() => {
                 setOpen(true);
@@ -47,7 +48,7 @@ export default function AsynchronousAutocompleteArticles({ value, handleChange, 
             onClose={() => {
                 setOpen(false);
             }}
-            getOptionSelected={(option, value) => option.name === value.name}
+            getOptionSelected={() => true}
             getOptionLabel={(option) => {
                 if (option.hasOwnProperty('name')) {
                     return option.name;
@@ -58,9 +59,10 @@ export default function AsynchronousAutocompleteArticles({ value, handleChange, 
             loading={loading}
             renderInput={(params) => (
                 <TextField
+                    fullWidth
                     {...params}
-                    label="Artikel auswählen"
-                    variant="outlined"
+                    name={name}
+                    label="Artikel"
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (

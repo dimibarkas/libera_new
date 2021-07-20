@@ -1,6 +1,5 @@
 import CustomersDAO from "../../dao/CustomersDAO"
 import { constants } from "http2"
-import { isLoggedIn } from "../../utils/token"
 import fs from "fs"
 import crypto from "crypto"
 

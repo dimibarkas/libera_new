@@ -1,24 +1,25 @@
-import { Grid, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import { Divider, Grid, IconButton, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Toolbar, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
 import { AsyncAutocompleteCustomers, DatePicker } from '../../components/controls';
 import { useForm, Form } from '../../components/useForm';
 import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from "react-router";
-import { postCustomer, updateCustomerById } from '../../services/customer-service';
-import { getOrderbyId } from '../../services/order-service';
+import { updateOrderById, getOrderbyId, postOrder } from '../../services/order-service';
 import { addBusinessDays } from 'date-fns';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from "notistack"
 import { mutate } from 'swr';
-import Positions from '../../components/positions/positions';
+import AddIcon from "@material-ui/icons/Add"
+import TableActionButtons from '../../components/table-action-buttons';
+import AddPositionTableRow from '../../components/positions/add-position-table-row';
 
 const nextBusinessDay = addBusinessDays(new Date(), 1)
 
 const initialValues = {
     customer_name: null,
     date: new Date(nextBusinessDay),
-    positions: {}
+    positions: []
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -52,11 +53,15 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "baseline",
+    },
+    onAddButtonMobile: {
+        [theme.breakpoints.up("md")]: {
+            display: "none"
+        }
     }
 }));
 
 export default function OrderForm() {
-
     const [currentMode, setCurrentMode] = useState(null);
 
     const validate = (fieldValues = formData) => {
@@ -72,15 +77,21 @@ export default function OrderForm() {
             return Object.values(temp).every(item => item === "")
     }
 
+    const handleChange = (e, newValue) => {
+        updateFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
     const {
         formData,
         updateFormData,
-        handleChange,
         errors,
         setErrors
     } = useForm(initialValues, true, validate);
 
-    useState(() => {
+    useEffect(() => {
         console.log(formData)
     }, [formData])
 
@@ -96,9 +107,9 @@ export default function OrderForm() {
     useEffect(() => {
         async function determineAddOrEditMode(id) {
             if (id === "new") {
-                setCurrentMode("Bestellung hinzufügen")
+                setCurrentMode("add")
             } else {
-                setCurrentMode("Bestellung bearbeiten")
+                setCurrentMode("edit")
                 const res = await getOrderbyId(accessToken, id);
                 console.log(res.data)
                 updateFormData({
@@ -113,39 +124,33 @@ export default function OrderForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const customerInfo = {
+        const orderInfo = {
             customer_name: formData.customer_name,
-            address: {
-                street: formData.street,
-                nr: formData.nr,
-                zipcode: formData.zipcode,
-                city: formData.city,
-                country: formData.country
-            },
-            phone: formData.phone
+            date: formData.date,
+            positions: formData.positions
         };
         if (validate()) {
-            if (currentMode === "Kunde bearbeiten") {
+            if (currentMode === "edit") {
                 try {
-                    const res = await updateCustomerById(accessToken, id, customerInfo)
+                    const res = await updateOrderById(accessToken, id, orderInfo)
                     if (res.status === 200) {
-                        enqueueSnackbar("Kunde wurde erfolgreich bearbeitet.", { variant: 'success' })
+                        enqueueSnackbar("Bestellung wurde erfolgreich bearbeitet.", { variant: 'success' })
                         history.goBack();
-                        mutate("/api/customers");
+                        mutate("/api/orders");
                         return
                     }
                 } catch (error) {
-                    enqueueSnackbar("Kunde wurde nicht bearbeitet.", { variant: 'warning' })
+                    enqueueSnackbar("Bestellung wurde nicht bearbeitet.", { variant: 'warning' })
                     history.goBack();
                     return
                 }
             }
             try {
-                const res = await postCustomer(accessToken, customerInfo)
+                const res = await postOrder(accessToken, orderInfo)
                 if (res.status === 201) {
-                    enqueueSnackbar("Kunde wurde erfolgreich erstellt.", { variant: 'success' })
+                    enqueueSnackbar("Bestellung wurde erfolgreich erstellt.", { variant: 'success' })
                     history.goBack();
-                    mutate("/api/customers");
+                    mutate("/api/orders");
                 }
             } catch (error) {
                 enqueueSnackbar(`Ein Fehler ist aufgerteten ${error}.`, { variant: 'error' })
@@ -158,10 +163,25 @@ export default function OrderForm() {
         history.goBack();
     }
 
+    const addPosition = (ammount, article) => {
+        updateFormData({
+            ...formData,
+            positions: [...formData.positions, { number: ammount, name: article }]
+        })
+    }
+
+    const deletePosition = (article) => {
+        console.log(article)
+        updateFormData({
+            ...formData,
+            positions: formData.positions.filter(element => element.name !== article)
+        })
+    }
+
     return (
         <Form onSubmit={handleSubmit}>
             <Typography component="h2" variant="h4" className={classes.headerLabel}>
-                {currentMode}
+                {currentMode === "edit" ? "Bestellung bearbeiten" : "Bestellung hinzufügen"}
             </Typography>
             <Toolbar className={classes.toolbar}>
                 <IconButton
@@ -180,8 +200,15 @@ export default function OrderForm() {
             <Grid container spacing={2} className={classes.inputContainer}>
                 <Grid item xs={12} md={6}>
                     <AsyncAutocompleteCustomers
-                        handleChange={handleChange}
                         value={formData.customer_name}
+                        handleChange={
+                            (newValue) => {
+                                updateFormData({
+                                    ...formData,
+                                    customer_name: newValue === null ? "" : newValue.name
+                                })
+                            }
+                        }
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -189,10 +216,44 @@ export default function OrderForm() {
                         fullWidth={true}
                         handleChange={handleChange}
                         value={formData.date}
+                        name="date"
                     />
                 </Grid>
                 <Grid item xs={12} md={12}>
-                    <Positions id={id} token={accessToken} />
+                    <>
+                        <div className={classes.subtitleWrapper}>
+                            <Typography component="h6" variant="h5" className={classes.subtitle}>Positionen</Typography>
+                            <IconButton className={classes.onAddButtonMobile}>
+                                <AddIcon />
+                            </IconButton>
+                        </div>
+                        <Divider />
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="left" >Anzahl</TableCell>
+                                        <TableCell align="left">Artikel</TableCell>
+                                        <TableCell align="center">Aktionen</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <AddPositionTableRow onAdd={addPosition} token={accessToken} />
+                                    {formData.positions.map((row) => (
+                                        <TableRow key={row.name}>
+                                            <TableCell align="left">{row.number}</TableCell>
+                                            <TableCell align="left">{row.name}</TableCell>
+                                            <TableCell align="center">
+                                                <TableActionButtons
+                                                    onDelete={() => deletePosition(row.name)}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </>
                 </Grid>
 
             </Grid>

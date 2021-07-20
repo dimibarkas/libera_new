@@ -134,4 +134,20 @@ export default class ArticlesDAO {
       return { error: error }
     }
   }
+
+  static async getAllArticles() {
+    try {
+      const response = await articles
+        .find({})
+        .project({ _id: 0, name: 1 })
+        .toArray()
+      if (response) {
+        return response
+      }
+      return null
+    } catch (error) {
+      console.error(`Error occurred while deleting the article, ${error}.`)
+      return { error: error }
+    }
+  }
 }

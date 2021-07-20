@@ -25,8 +25,6 @@ var _CustomersDAO = _interopRequireDefault(require("../../dao/CustomersDAO"))
 
 var _http = require("http2")
 
-var _token = require("../../utils/token")
-
 var _fs = _interopRequireDefault(require("fs"))
 
 var _crypto = _interopRequireDefault(require("crypto"))

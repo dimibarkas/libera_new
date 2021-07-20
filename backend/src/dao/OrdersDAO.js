@@ -90,7 +90,7 @@ export default class OrdersDAO {
       if (!result) {
         const { insertedCount, insertedId } = await orders.insertOne({
           customer_name: orderData.customer_name,
-          date: orderData.date,
+          date: new Date(orderData.date),
           positions: orderData.positions,
         })
         let response = { insertedCount, insertedId }
@@ -120,6 +120,7 @@ export default class OrdersDAO {
 
   static async getCurrentOrders(number) {
     let suggestedDate = null
+    let cursor
     try {
       if (isNaN(number)) {
         throw new Error(
@@ -135,30 +136,50 @@ export default class OrdersDAO {
       const searchDate =
         suggestedDate === null ? startOfToday() : startOfDay(suggestedDate)
       console.log("Searching orders for date: " + searchDate)
-      const response = await orders.find({
+      cursor = await orders.find({
         date: {
           $gte:
             suggestedDate === null ? startOfToday() : startOfDay(suggestedDate),
           $lte: suggestedDate === null ? endOfToday() : endOfDay(suggestedDate),
         },
       })
-
-      if (!response) {
-        return null
-      }
-      return response.toArray()
     } catch (error) {
-      console.error(`Error occured: ${error}`)
+      console.error(`Unable to issue find command, ${error}`)
+      return { ordersList: [], totalNumOrders: 0 }
     }
+
+    try {
+      const ordersList = await cursor.toArray()
+      return { ordersList }
+    } catch (error) {
+      console.error(`Unable to issue find command, ${error}`)
+    }
+    return { ordersList: [], totalNumOrders: 0 }
   }
 
-  static async updateOrderById(id) {
+  static async updateOrderById(id, orderInfo) {
     try {
       const result = await orders.findOne({ _id: ObjectId(id) })
       if (result) {
-        const response = await orders.updateOne({ _id: ObjectId(id) })
+        const response = await orders.updateOne(
+          { _id: ObjectId(id) },
+          {
+            $set: {
+              customer_name: orderInfo.customer_name,
+              date: orderInfo.date,
+              positions: orderInfo.positions,
+            },
+          },
+        )
+        if (response) {
+          return response
+        }
+        return null
       }
       return null
-    } catch (error) {}
+    } catch (error) {
+      console.error(`Error occurred while updating article, ${error}.`)
+      return { error: error }
+    }
   }
 }

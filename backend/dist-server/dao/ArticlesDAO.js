@@ -574,6 +574,73 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
         return deleteArticleById
       })(),
     },
+    {
+      key: "getAllArticles",
+      value: (function() {
+        var _getAllArticles = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee7() {
+            var response
+            return _regenerator["default"].wrap(
+              function _callee7$(_context7) {
+                while (1) {
+                  switch ((_context7.prev = _context7.next)) {
+                    case 0:
+                      _context7.prev = 0
+                      _context7.next = 3
+                      return articles
+                        .find({})
+                        .project({
+                          _id: 0,
+                          name: 1,
+                        })
+                        .toArray()
+
+                    case 3:
+                      response = _context7.sent
+
+                      if (!response) {
+                        _context7.next = 6
+                        break
+                      }
+
+                      return _context7.abrupt("return", response)
+
+                    case 6:
+                      return _context7.abrupt("return", null)
+
+                    case 9:
+                      _context7.prev = 9
+                      _context7.t0 = _context7["catch"](0)
+                      console.error(
+                        "Error occurred while deleting the article, ".concat(
+                          _context7.t0,
+                          ".",
+                        ),
+                      )
+                      return _context7.abrupt("return", {
+                        error: _context7.t0,
+                      })
+
+                    case 13:
+                    case "end":
+                      return _context7.stop()
+                  }
+                }
+              },
+              _callee7,
+              null,
+              [[0, 9]],
+            )
+          }),
+        )
+
+        function getAllArticles() {
+          return _getAllArticles.apply(this, arguments)
+        }
+
+        return getAllArticles
+      })(),
+    },
   ])
   return ArticlesDAO
 })()

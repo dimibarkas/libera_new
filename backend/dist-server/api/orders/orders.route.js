@@ -13,8 +13,10 @@ var _orders = _interopRequireDefault(require("./orders.controller"))
 
 var router = new _express.Router()
 router.route("/").get(_orders["default"].apiGetOrders)
+router.route("/").post(_orders["default"].apiInsertOrder)
 router.route("/id/:id").get(_orders["default"].apiGetOrderById)
-router.route("/").post(_orders["default"].apiInsertOrder) //router.route("/current:number").get(OrdersController.apiCurrentOrders)
-
+router.route("/id/:id").patch(_orders["default"].apiUpdateOrderById)
+router.route("/id/:id")["delete"](_orders["default"].apiDeleteOrderById)
+router.route("/current/:number").get(_orders["default"].apiGetCurrentOrders)
 var _default = router
 exports["default"] = _default

@@ -1,5 +1,19 @@
 import axios from "axios"
 
+export const retriveArticleList = async (url, token) => {
+    const res = await axios({
+        method: "get",
+        url: url,
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    if (res.status !== 200) {
+        throw new Error("request failed");
+    }
+    return res.data;
+}
+
 export const listArticles = async (url, token) => {
     const res = await axios({
         method: "get",

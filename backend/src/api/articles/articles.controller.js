@@ -236,4 +236,19 @@ export default class ArticlesController {
         .json({ error: error })
     }
   }
+
+  static async apiGetListOfAllArticles(req, res) {
+    try {
+      const response = await ArticlesDAO.getAllArticles()
+      if (!response) {
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        return
+      }
+      res.status(constants.HTTP_STATUS_OK).json(response)
+    } catch (error) {
+      res
+        .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        .json({ error: error })
+    }
+  }
 }

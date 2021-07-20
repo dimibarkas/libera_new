@@ -1,6 +1,6 @@
 import { makeStyles, Table, TableCell, TableHead as MuiTableHead, TableRow, TablePagination as MuiTablePagination, Toolbar } from '@material-ui/core'
 import { Button } from "./controls"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import AddIcon from "@material-ui/icons/Add"
 import DateHelpers from './date-helpers'
 
@@ -54,25 +54,16 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const initialDate = () => {
-    let currentDate = new Date()
-    currentDate.setHours(12, 0, 0, 0);
-    return currentDate
-}
-export default function useTable(headCells, records, onAdd, showDateHelpers) {
+
+export default function useTable(headCells, records, onAdd, showDateHelpers, selectedDate, setSelectedDate) {
     const classes = useStyles();
     const pages = [20, 50];
     const [page, setPage] = useState(0);
     const [entriesPerPage, setEntriesPerPage] = useState(pages[page])
-    const [selectedDate, setSelectedDate] = useState(initialDate);
 
     const handleDateChange = (newDate) => {
         setSelectedDate(newDate)
     }
-
-    useEffect(() => {
-        console.log(selectedDate)
-    }, [selectedDate])
 
     const TableContainer = props => (
         <>

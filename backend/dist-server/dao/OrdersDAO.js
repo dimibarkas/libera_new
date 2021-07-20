@@ -364,7 +364,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                       _context4.next = 7
                       return orders.insertOne({
                         customer_name: orderData.customer_name,
-                        date: orderData.date,
+                        date: new Date(orderData.date),
                         positions: orderData.positions,
                       })
 
@@ -482,7 +482,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
       value: (function() {
         var _getCurrentOrders = (0, _asyncToGenerator2["default"])(
           /*#__PURE__*/ _regenerator["default"].mark(function _callee6(number) {
-            var suggestedDate, searchDate, response
+            var suggestedDate, cursor, searchDate, ordersList
             return _regenerator["default"].wrap(
               function _callee6$(_context6) {
                 while (1) {
@@ -538,24 +538,46 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                       })
 
                     case 10:
-                      response = _context6.sent
-
-                      if (response) {
-                        _context6.next = 13
-                        break
-                      }
-
-                      return _context6.abrupt("return", null)
+                      cursor = _context6.sent
+                      _context6.next = 17
+                      break
 
                     case 13:
-                      return _context6.abrupt("return", response.toArray())
-
-                    case 16:
-                      _context6.prev = 16
+                      _context6.prev = 13
                       _context6.t0 = _context6["catch"](1)
-                      console.error("Error occured: ".concat(_context6.t0))
+                      console.error(
+                        "Unable to issue find command, ".concat(_context6.t0),
+                      )
+                      return _context6.abrupt("return", {
+                        ordersList: [],
+                        totalNumOrders: 0,
+                      })
 
-                    case 19:
+                    case 17:
+                      _context6.prev = 17
+                      _context6.next = 20
+                      return cursor.toArray()
+
+                    case 20:
+                      ordersList = _context6.sent
+                      return _context6.abrupt("return", {
+                        ordersList: ordersList,
+                      })
+
+                    case 24:
+                      _context6.prev = 24
+                      _context6.t1 = _context6["catch"](17)
+                      console.error(
+                        "Unable to issue find command, ".concat(_context6.t1),
+                      )
+
+                    case 27:
+                      return _context6.abrupt("return", {
+                        ordersList: [],
+                        totalNumOrders: 0,
+                      })
+
+                    case 28:
                     case "end":
                       return _context6.stop()
                   }
@@ -563,7 +585,10 @@ var OrdersDAO = /*#__PURE__*/ (function() {
               },
               _callee6,
               null,
-              [[1, 16]],
+              [
+                [1, 13],
+                [17, 24],
+              ],
             )
           }),
         )
@@ -579,7 +604,10 @@ var OrdersDAO = /*#__PURE__*/ (function() {
       key: "updateOrderById",
       value: (function() {
         var _updateOrderById = (0, _asyncToGenerator2["default"])(
-          /*#__PURE__*/ _regenerator["default"].mark(function _callee7(id) {
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee7(
+            id,
+            orderInfo,
+          ) {
             var result, response
             return _regenerator["default"].wrap(
               function _callee7$(_context7) {
@@ -596,26 +624,54 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                       result = _context7.sent
 
                       if (!result) {
-                        _context7.next = 8
+                        _context7.next = 11
                         break
                       }
 
                       _context7.next = 7
-                      return orders.updateOne({
-                        _id: (0, _bson.ObjectId)(id),
-                      })
+                      return orders.updateOne(
+                        {
+                          _id: (0, _bson.ObjectId)(id),
+                        },
+                        {
+                          $set: {
+                            customer_name: orderInfo.customer_name,
+                            date: orderInfo.date,
+                            positions: orderInfo.positions,
+                          },
+                        },
+                      )
 
                     case 7:
                       response = _context7.sent
 
-                    case 8:
+                      if (!response) {
+                        _context7.next = 10
+                        break
+                      }
+
+                      return _context7.abrupt("return", response)
+
+                    case 10:
                       return _context7.abrupt("return", null)
 
                     case 11:
-                      _context7.prev = 11
-                      _context7.t0 = _context7["catch"](0)
+                      return _context7.abrupt("return", null)
 
-                    case 13:
+                    case 14:
+                      _context7.prev = 14
+                      _context7.t0 = _context7["catch"](0)
+                      console.error(
+                        "Error occurred while updating article, ".concat(
+                          _context7.t0,
+                          ".",
+                        ),
+                      )
+                      return _context7.abrupt("return", {
+                        error: _context7.t0,
+                      })
+
+                    case 18:
                     case "end":
                       return _context7.stop()
                   }
@@ -623,12 +679,12 @@ var OrdersDAO = /*#__PURE__*/ (function() {
               },
               _callee7,
               null,
-              [[0, 11]],
+              [[0, 14]],
             )
           }),
         )
 
-        function updateOrderById(_x6) {
+        function updateOrderById(_x6, _x7) {
           return _updateOrderById.apply(this, arguments)
         }
 

@@ -7,6 +7,12 @@ export default function DatePicker(props) {
 
     const { name, label, value, handleChange, fullWidth, className } = props;
 
+    const convertToEventParameters = (name, value) => ({
+        target: {
+            name, value
+        }
+    })
+
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={deLocale}>
             <KeyboardDatePicker
@@ -18,7 +24,7 @@ export default function DatePicker(props) {
                 format="dd.MM.yyyy"
                 name={name}
                 value={value}
-                onChange={handleChange}
+                onChange={date => handleChange(convertToEventParameters(name, date))}
                 className={className}
                 style={{ marginTop: "0px", marginBottom: "0px" }}
             />

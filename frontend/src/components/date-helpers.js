@@ -1,11 +1,11 @@
-import { Divider, IconButton, ListItemIcon, makeStyles, Menu, MenuItem } from '@material-ui/core'
+import { IconButton, ListItemIcon, makeStyles, Menu, MenuItem } from '@material-ui/core'
 import React, { useState } from 'react'
 import { Button, DatePicker } from './controls'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import TodayIcon from '@material-ui/icons/Today';
+import { addDays, subDays } from 'date-fns'
 
 const useStyles = makeStyles(theme => ({
     datepicker: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export default function DateHelpers() {
+export default function DateHelpers({ selectedDate, handleDateChange }) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -31,17 +31,29 @@ export default function DateHelpers() {
     const handleClose = () => {
         setAnchorEl(null)
     }
+
+    const currentDate = () => {
+        let date = new Date()
+        date.setHours(12, 0, 0, 0)
+        return date
+    }
+
+
     return (
         <>
             <div className={classes.datepicker}>
-                <Button variant="outlined" text={"HEUTE"} />
-                <IconButton>
+                <Button variant="outlined" text={"HEUTE"} onClick={() => handleDateChange(currentDate)} />
+                <IconButton onClick={() => { handleDateChange(subDays(selectedDate, 1)) }}>
                     <ChevronLeftIcon />
                 </IconButton>
-                <DatePicker className={classes.datePicker} />
-                <IconButton >
+                <IconButton onClick={() => { handleDateChange(addDays(selectedDate, 1)) }} >
                     <ChevronRightIcon />
                 </IconButton>
+                <DatePicker
+                    value={selectedDate}
+                    handleChange={handleDateChange}
+                    className={classes.datePicker}
+                />
             </div>
             <div className={classes.moreVert}>
                 <IconButton onClick={handleClick}>
@@ -52,14 +64,7 @@ export default function DateHelpers() {
                         <ListItemIcon>
                             <TodayIcon />
                         </ListItemIcon>
-                        Bestellungen heute
-                    </MenuItem>
-                    <Divider />
-                    <MenuItem button>
-                        <ListItemIcon>
-                            <CalendarTodayIcon />
-                        </ListItemIcon>
-                        Datum auswählen
+                        Datum wählen
                     </MenuItem>
                 </Menu>
             </div>

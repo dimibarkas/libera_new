@@ -1,5 +1,5 @@
 import { Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import CircularIndeterminate from '../circular-indeterminate';
 import useOrder from '../use-order';
@@ -27,7 +27,11 @@ export default function Positions({ id, token }) {
     const classes = useStyles();
     const { data, error } = useOrder(id, token);
     const [open, setOpen] = React.useState(false);
-    const [selectedValue, setSelectedValue] = useState(null);
+    const [positionData, updatePositionData] = useState({ number: "1", article: null });
+
+    useEffect(() => {
+        console.log(positionData)
+    }, [positionData])
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -35,7 +39,7 @@ export default function Positions({ id, token }) {
 
     const handleClose = (value) => {
         setOpen(false);
-        setSelectedValue(value);
+        updatePositionData(value);
     };
 
     if (error) return <Error />
@@ -55,56 +59,88 @@ export default function Positions({ id, token }) {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Anzahl</TableCell>
-                            <TableCell align="center6">Artikel</TableCell>
-                            <TableCell align="right">Aktionen</TableCell>
+                            <TableCell align="left" >Anzahl</TableCell>
+                            <TableCell align="left">Artikel</TableCell>
+                            <TableCell align="center">Aktionen</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
+                        <TableRow>
+                            <TableCell align="left"><TextField /></TableCell>
+                            <TableCell align="left">
+                                <TextField fullWidth />
+                            </TableCell>
+                            <TableCell align="center"><IconButton disabled><AddIcon /></IconButton></TableCell>
+                        </TableRow>
                         {data.data.positions.map((row) => (
                             <TableRow key={row.name}>
-                                <TableCell >{row.number}</TableCell>
-                                <TableCell align="center">{row.name}</TableCell>
-                                <TableCell align="right"><TableActionButtons /></TableCell>
+                                <TableCell align="left">{row.number}</TableCell>
+                                <TableCell align="left">{row.name}</TableCell>
+                                <TableCell align="center"><TableActionButtons /></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-            <PositionDialog selectedValue={selectedValue} open={open} onClose={handleClose} token={token} />
+            <PositionDialog
+                positionData={positionData}
+                updatePositionData={updatePositionData}
+                open={open}
+                onClose={handleClose}
+                token={token}
+            />
         </>
     )
 }
 
 function PositionDialog(props) {
     const classes = useStyles();
-    const { onClose, selectedValue, open, token } = props;
+    const { onClose, positionData, updatePositionData, open, token } = props;
 
     const handleClose = () => {
-        onClose(selectedValue);
-    };
+        onClose()
+    }
 
-    const handleListItemClick = (value) => {
-        onClose(value);
-    };
+    const handleChange = (e) => {
+        updatePositionData({
+            ...positionData,
+            [e.target.id]: e.target.value
+        })
+    }
+
+    const handleOnAdd = () => {
+        onClose(positionData)
+    }
 
     return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+        <Dialog onClose={handleClose} open={open}>
             <DialogTitle>Position hinzufügen</DialogTitle>
             <DialogContent dividers>
                 <Grid container spacing={2} >
                     <Grid item xs={12}>
-                        <TextField type="numbe´" pattern="\d*" fullWidth variant="outlined" />
+                        <TextField
+                            fullWidth
+                            type="number"
+                            variant="outlined"
+                            id="number"
+                            name="number"
+                            onChange={handleChange}
+                            value={positionData.number}
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                        <AsyncAutocompleteArticles token={token} />
+                        <AsyncAutocompleteArticles
+                            name="article"
+                            token={token}
+                            handleChange={handleChange}
+                            value={positionData.article}
+                        />
                     </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions className={classes.dialogActions}>
-
                 <Button text="Abbrechen" color="default" />
-                <Button text="Hinzufügen" />
+                <Button text="Hinzufügen" onClick={handleOnAdd} />
             </DialogActions>
         </Dialog>
     );

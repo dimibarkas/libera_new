@@ -1,6 +1,6 @@
 import { makeStyles, Table, TableCell, TableHead as MuiTableHead, TableRow, TablePagination as MuiTablePagination, Toolbar } from '@material-ui/core'
 import { Button } from "./controls"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddIcon from "@material-ui/icons/Add"
 import DateHelpers from './date-helpers'
 
@@ -15,9 +15,10 @@ const useStyles = makeStyles(theme => ({
     toolbar: {
         display: "flex",
         justifyContent: "space-between",
+        flexDirection: "row",
         alignItems: "center",
         padding: "revert",
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.up("sm")]: {
             flexDirection: "row-reverse"
         },
         flexWrap: "wrap"
@@ -44,6 +45,7 @@ const useStyles = makeStyles(theme => ({
     },
     onAddButtonContainer: {
         flexShrink: "0",
+
     },
     datePicker: {
         [theme.breakpoints.down("sm")]: {
@@ -52,23 +54,29 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+const initialDate = () => {
+    let currentDate = new Date()
+    currentDate.setHours(12, 0, 0, 0);
+    return currentDate
+}
 export default function useTable(headCells, records, onAdd, showDateHelpers) {
-
     const classes = useStyles();
     const pages = [20, 50];
     const [page, setPage] = useState(0);
     const [entriesPerPage, setEntriesPerPage] = useState(pages[page])
+    const [selectedDate, setSelectedDate] = useState(initialDate);
 
+    const handleDateChange = (newDate) => {
+        setSelectedDate(newDate)
+    }
+
+    useEffect(() => {
+        console.log(selectedDate)
+    }, [selectedDate])
 
     const TableContainer = props => (
         <>
             <Toolbar className={classes.toolbar}>
-                {showDateHelpers ?
-                    <div className={classes.dateHelper}>
-                        <DateHelpers />
-                    </div>
-                    : ""}
-
                 <div className={classes.onAddButtonContainer}>
                     <Button
                         variant="contained"
@@ -79,10 +87,18 @@ export default function useTable(headCells, records, onAdd, showDateHelpers) {
                         text={"Hinzufügen"}
                     />
                 </div>
+                {showDateHelpers ?
+                    <div className={classes.dateHelper}>
+                        <DateHelpers selectedDate={selectedDate} handleDateChange={handleDateChange} />
+                    </div>
+                    :
+                    ""
+                }
+
             </Toolbar>
             <Table className={classes.table}>
                 {props.children}
-                <TablePagination />
+                {/* <TablePagination /> */}
             </Table>
         </>
     )

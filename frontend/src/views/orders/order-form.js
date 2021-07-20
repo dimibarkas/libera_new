@@ -16,7 +16,7 @@ import Positions from '../../components/positions/positions';
 const nextBusinessDay = addBusinessDays(new Date(), 1)
 
 const initialValues = {
-    customer_name: "",
+    customer_name: null,
     date: new Date(nextBusinessDay),
     positions: {}
 }
@@ -80,6 +80,10 @@ export default function OrderForm() {
         setErrors
     } = useForm(initialValues, true, validate);
 
+    useState(() => {
+        console.log(formData)
+    }, [formData])
+
     const accessToken = useSelector(state => state.user.authInfo.accessToken)
     const classes = useStyles();
     const history = useHistory();
@@ -96,6 +100,7 @@ export default function OrderForm() {
             } else {
                 setCurrentMode("Bestellung bearbeiten")
                 const res = await getOrderbyId(accessToken, id);
+                console.log(res.data)
                 updateFormData({
                     customer_name: res.data.customer_name,
                     date: res.data.date,

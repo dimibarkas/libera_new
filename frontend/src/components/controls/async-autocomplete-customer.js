@@ -59,7 +59,7 @@ export default function AsynchronousAutocompleteCustomer({ value, handleChange }
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Auswahl des Kunden"
+                    label="Kunde"
                     variant="outlined"
                     InputProps={{
                         ...params.InputProps,

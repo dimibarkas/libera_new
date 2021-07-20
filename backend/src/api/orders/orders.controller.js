@@ -47,4 +47,24 @@ export default class OrdersController {
         .json({ error: error })
     }
   }
+
+  static async apiInsertOrder(req, res, next) {
+    try {
+      const body = req.body
+      const response = await OrdersDAO.insertOrder(body)
+      if (!response) {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).json({
+          code: "ORDER_ALREADY_EXISTS",
+          message: `Insertion failed, order with name ${body.customer_name} and date ${body.date} already exist`,
+        })
+        return
+      }
+      res.status(constants.HTTP_STATUS_CREATED).json({
+        code: "INSERTION_SUCCED",
+        message: `${response.insertedCount} order with name inserted.`,
+      })
+    } catch (e) {
+      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).json({ error: e })
+    }
+  }
 }

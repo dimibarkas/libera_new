@@ -4,7 +4,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { listArticles } from '../../services/article-service';
 
-export default function AsynchronousAutocompleteArticles({ value, handleChange, token }) {
+export default function AsynchronousAutocompleteArticles({ value, handleChange, token, name }) {
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = React.useState([]);
     const loading = open && options.length === 0;
@@ -37,9 +37,12 @@ export default function AsynchronousAutocompleteArticles({ value, handleChange, 
 
     return (
         <Autocomplete
-            onChange={handleChange}
             value={value}
+            onChange={handleChange}
+            inputValue={value}
+            onInputChange={handleChange}
             fullWidth
+            id="articles"
             open={open}
             onOpen={() => {
                 setOpen(true);
@@ -59,7 +62,8 @@ export default function AsynchronousAutocompleteArticles({ value, handleChange, 
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Artikel auswählen"
+                    name={name}
+                    label="Artikel wählen"
                     variant="outlined"
                     InputProps={{
                         ...params.InputProps,

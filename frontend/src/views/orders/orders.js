@@ -16,6 +16,7 @@ import { deleteCustomer } from '../../services/customer-service';
 import { useSnackbar } from "notistack"
 import { mutate } from 'swr';
 import ConfirmDialog from "../../components/confirm-dialog"
+import { format } from 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,6 +42,13 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
         display: "flex",
+    },
+    dateContainer: {
+        paddingBottom: "2rem",
+        fontFamily: "Montserrat-Light",
+        [theme.breakpoints.up("sm")]: {
+            display: "none"
+        }
     }
 }));
 
@@ -50,9 +58,10 @@ const headCells = [
 ]
 
 export default function Orders() {
+    const [selectedDate] = useState(new Date())
     const accessToken = useSelector(state => state.user.authInfo.accessToken)
     const history = useHistory();
-    const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
+    const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" })
     const { enqueueSnackbar } = useSnackbar();
 
     const onAdd = () => {
@@ -80,6 +89,7 @@ export default function Orders() {
     }
 
     const fetcher = url => listArticles(url, accessToken)
+    //TODO: ändern des Befehls auf /api/orders/current/:number
     const { data, error } = useSWR("/api/orders", fetcher);
     const classes = useStyles();
     const { TableContainer, TableHead } = useTable(headCells, data, onAdd, true);
@@ -94,6 +104,9 @@ export default function Orders() {
             <Container maxWidth="lg" className={classes.container}>
                 <Typography component="h2" variant="h4" className={classes.headerLabel}>
                     Bestellungen
+                </Typography>
+                <Typography component="h6" variant="subtitle2" className={classes.dateContainer}>
+                    {"für: " + format(selectedDate, 'dd.MM.yyy')}
                 </Typography>
                 <TableContainer>
                     <TableHead />

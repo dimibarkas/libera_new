@@ -173,6 +173,84 @@ var OrdersController = /*#__PURE__*/ (function() {
         return apiGetOrderById
       })(),
     },
+    {
+      key: "apiInsertOrder",
+      value: (function() {
+        var _apiInsertOrder = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee3(
+            req,
+            res,
+            next,
+          ) {
+            var body, response
+            return _regenerator["default"].wrap(
+              function _callee3$(_context3) {
+                while (1) {
+                  switch ((_context3.prev = _context3.next)) {
+                    case 0:
+                      _context3.prev = 0
+                      body = req.body
+                      _context3.next = 4
+                      return _OrdersDAO["default"].insertOrder(body)
+
+                    case 4:
+                      response = _context3.sent
+
+                      if (response) {
+                        _context3.next = 8
+                        break
+                      }
+
+                      res.status(_http.constants.HTTP_STATUS_BAD_REQUEST).json({
+                        code: "ORDER_ALREADY_EXISTS",
+                        message: "Insertion failed, order with name "
+                          .concat(body.customer_name, " and date ")
+                          .concat(body.date, " already exist"),
+                      })
+                      return _context3.abrupt("return")
+
+                    case 8:
+                      res.status(_http.constants.HTTP_STATUS_CREATED).json({
+                        code: "INSERTION_SUCCED",
+                        message: "".concat(
+                          response.insertedCount,
+                          " order with name inserted.",
+                        ),
+                      })
+                      _context3.next = 14
+                      break
+
+                    case 11:
+                      _context3.prev = 11
+                      _context3.t0 = _context3["catch"](0)
+                      res
+                        .status(
+                          _http.constants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+                        )
+                        .json({
+                          error: _context3.t0,
+                        })
+
+                    case 14:
+                    case "end":
+                      return _context3.stop()
+                  }
+                }
+              },
+              _callee3,
+              null,
+              [[0, 11]],
+            )
+          }),
+        )
+
+        function apiInsertOrder(_x7, _x8, _x9) {
+          return _apiInsertOrder.apply(this, arguments)
+        }
+
+        return apiInsertOrder
+      })(),
+    },
   ])
   return OrdersController
 })()

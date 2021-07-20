@@ -1,4 +1,12 @@
 import { ObjectId } from "bson"
+import {
+  startOfToday,
+  endOfToday,
+  subDays,
+  startOfDay,
+  endOfDay,
+  addDays,
+} from "date-fns"
 
 let orders
 const DEFAULT_SORT = []
@@ -69,5 +77,88 @@ export default class OrdersDAO {
       console.error(`Error occurred while searching article, ${error}.`)
       return { error: error }
     }
+  }
+
+  static async insertOrder(orderData) {
+    try {
+      const result = await orders.findOne({
+        $and: [
+          { customer_name: orderData.customer_name },
+          { date: orderData.date },
+        ],
+      })
+      if (!result) {
+        const { insertedCount, insertedId } = await orders.insertOne({
+          customer_name: orderData.customer_name,
+          date: orderData.date,
+          positions: orderData.positions,
+        })
+        let response = { insertedCount, insertedId }
+        return response
+      }
+      return null
+    } catch (error) {
+      console.error(`
+        Error occurred while adding a new order for
+        ${orderData.customer_name} at ${orderData.date} , ${error}.`)
+      return { error: error }
+    }
+  }
+
+  static async deleteOrderById(id) {
+    try {
+      const response = await orders.deleteOne({ _id: ObjectId(id) })
+      if (response) {
+        return response
+      }
+      return null
+    } catch (error) {
+      console.error(`Error occurred while deleting the article, ${error}.`)
+      return { error: error }
+    }
+  }
+
+  static async getCurrentOrders(number) {
+    let suggestedDate = null
+    try {
+      if (isNaN(number)) {
+        throw new Error(
+          `${number} is not a number, please provide a number as argument`,
+        )
+      }
+      if (number < 0) {
+        suggestedDate = subDays(new Date(), Math.abs(number))
+      }
+      if (number > 0) {
+        suggestedDate = addDays(new Date(), number)
+      }
+      const searchDate =
+        suggestedDate === null ? startOfToday() : startOfDay(suggestedDate)
+      console.log("Searching orders for date: " + searchDate)
+      const response = await orders.find({
+        date: {
+          $gte:
+            suggestedDate === null ? startOfToday() : startOfDay(suggestedDate),
+          $lte: suggestedDate === null ? endOfToday() : endOfDay(suggestedDate),
+        },
+      })
+
+      if (!response) {
+        return null
+      }
+      return response.toArray()
+    } catch (error) {
+      console.error(`Error occured: ${error}`)
+    }
+  }
+
+  static async updateOrderById(id) {
+    try {
+      const result = await orders.findOne({ _id: ObjectId(id) })
+      if (result) {
+        const response = await orders.updateOne({ _id: ObjectId(id) })
+      }
+      return null
+    } catch (error) {}
   }
 }

@@ -5,7 +5,7 @@ describe("Basic CRUD on articles", () => {
     await ArticlesDAO.injectDB(global.liberaClient)
   })
 
-  test("Can return a list of Articles", async () => {
+  test("Can return the list of Articles", async () => {
     const articles = await ArticlesDAO.getArticles()
     expect(articles.articlesList.length > 3).toBeTruthy()
   })

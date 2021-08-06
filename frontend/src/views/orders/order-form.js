@@ -6,7 +6,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory, useLocation } from "react-router";
 import { updateOrderById, getOrderbyId, postOrder } from '../../services/order-service';
-import { addBusinessDays } from 'date-fns';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from "notistack"
 import { mutate } from 'swr';
@@ -14,14 +13,7 @@ import AddIcon from "@material-ui/icons/Add"
 import TableActionButtons from '../../components/table-action-buttons';
 import AddPositionTableRow from '../../components/positions/add-position-table-row';
 import PositionDialog from '../../components/positions/position-dialog';
-
-const nextBusinessDay = addBusinessDays(new Date(), 1)
-
-const initialValues = {
-    customer_name: null,
-    date: new Date(nextBusinessDay),
-    positions: []
-}
+import "./index.css"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function OrderForm() {
     const [currentMode, setCurrentMode] = useState(null);
+    const date = useSelector(state => state.date)
 
     const validate = (fieldValues = formData) => {
         let temp = { ...errors }
@@ -84,6 +77,13 @@ export default function OrderForm() {
             [e.target.name]: e.target.value,
         });
     };
+
+    const initialValues = {
+        customer_name: null,
+        date: new Date(date.date),
+        positions: []
+    }
+
 
     const {
         formData,
@@ -243,8 +243,8 @@ export default function OrderForm() {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell align="left" >Anzahl</TableCell>
-                                        <TableCell align="left">Artikel</TableCell>
+                                        <TableCell align="left" >Artikel</TableCell>
+                                        <TableCell align="center">Anzahl</TableCell>
                                         <TableCell align="center">Aktionen</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -252,8 +252,8 @@ export default function OrderForm() {
                                     <AddPositionTableRow onAdd={addPosition} token={accessToken} />
                                     {formData.positions.map((row) => (
                                         <TableRow key={row.name}>
-                                            <TableCell align="left">{row.number}</TableCell>
                                             <TableCell align="left">{row.name}</TableCell>
+                                            <TableCell align="center">{row.number}</TableCell>
                                             <TableCell align="center">
                                                 <TableActionButtons
                                                     onDelete={() => deletePosition(row.name)}

@@ -8,6 +8,8 @@ import TodayIcon from '@material-ui/icons/Today';
 import { addDays, subDays } from 'date-fns'
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import EventIcon from '@material-ui/icons/Event';
+import { changeActualDate } from '../redux/store/orders/actions'
+import { useDispatch, useSelector } from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
     datepicker: {
@@ -26,8 +28,10 @@ const useStyles = makeStyles(theme => ({
 
 export default function DateHelpers({ selectedDate, handleDateChange, setSelectedDate }) {
     const classes = useStyles();
+    const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const [open, setOpen] = useState(false)
+    const date = useSelector(state => state.date)
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -50,11 +54,12 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
                     color="default"
                     variant="outlined"
                     text={"Heute"}
-                    onClick={() => handleDateChange(currentDate)}
-                    endIcon={<TodayIcon
-                        color="action"
-                        style={{ marginRight: "0.25em", marginLeft: "1em" }}
-                    />}
+                    onClick={() => handleDateChange(currentDate())}
+                    endIcon={
+                        <TodayIcon
+                            color="action"
+                            style={{ marginRight: "0.25em", marginLeft: "1em" }}
+                        />}
 
                 />
                 <IconButton onClick={() => { handleDateChange(subDays(selectedDate, 1)) }}>
@@ -65,8 +70,8 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
                 </IconButton>
                 <DatePicker
                     open={open}
-                    value={selectedDate}
-                    handleChange={(date) => setSelectedDate(date.target.value)}
+                    value={new Date(date.date)}
+                    handleChange={(date) => dispatch(changeActualDate(date.target.value))}
                     className={classes.datePicker}
                     margin="dense"
                     onClose={() => setOpen(false)}

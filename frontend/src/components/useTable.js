@@ -3,6 +3,8 @@ import { Button } from "./controls"
 import React, { useState } from 'react'
 import AddIcon from "@material-ui/icons/Add"
 import DateHelpers from './date-helpers'
+import { changeActualDate } from '../redux/store/orders/actions'
+import { useDispatch } from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
     table: {
@@ -61,8 +63,11 @@ export default function useTable(headCells, records, onAdd, showDateHelpers, sel
     const pages = [20, 50];
     const [page, setPage] = useState(0);
     const [entriesPerPage, setEntriesPerPage] = useState(pages[page])
+    const dispatch = useDispatch();
 
     const handleDateChange = (newDate) => {
+        console.log(newDate)
+        dispatch(changeActualDate(newDate))
         setSelectedDate(newDate)
     }
 

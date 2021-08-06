@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
@@ -100,10 +100,6 @@ export default function Orders() {
     const { data, error } = useSWR("/api/orders/current/" + calcDiffDays(new Date(date.date)), fetcher);
     const classes = useStyles();
     const { TableContainer, TableHead } = useTable(headCells, data, onAdd, true, selectedDate, setSelectedDate);
-
-    useEffect(() => {
-        console.log(new Date(date.date))
-    }, [date])
 
     if (error) return <Error />
 

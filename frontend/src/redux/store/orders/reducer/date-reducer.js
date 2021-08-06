@@ -13,7 +13,6 @@ const initialState = {
 export default function dateReducer(state = initialState, action) {
     switch (action.type) {
         case CHANGE_ACTUAL_DATE:
-            console.log(action.payload)
             return {
                 ...state,
                 date: action.payload

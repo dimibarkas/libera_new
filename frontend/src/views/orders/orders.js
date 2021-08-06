@@ -16,6 +16,7 @@ import { mutate } from 'swr';
 import ConfirmDialog from "../../components/confirm-dialog"
 import { format } from 'date-fns';
 import { deleteOrderById, listOrders } from '../../services/order-service';
+import { de } from 'date-fns/locale';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
         fontFamily: "Montserrat-Light",
         letterSpacing: "0.5px",
         paddingBottom: "2rem",
+        [theme.breakpoints.down("lg")]: {
+            paddingBottom: "0.5rem"
+        }
     },
     card: {
         display: "flex",
@@ -45,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     dateContainer: {
         paddingBottom: "2rem",
         fontFamily: "Montserrat-Light",
-        [theme.breakpoints.up("sm")]: {
+        [theme.breakpoints.up("lg")]: {
             display: "none"
         }
     }
@@ -65,6 +69,7 @@ export default function Orders() {
     const accessToken = useSelector(state => state.user.authInfo.accessToken)
     const history = useHistory();
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" })
+    // const [buyListDialog, setBuyListDialog] = useState(false)
     const [selectedDate, setSelectedDate] = useState(initialDate);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -97,7 +102,6 @@ export default function Orders() {
     }
 
     const fetcher = url => listOrders(url, accessToken)
-    //TODO: ändern des Befehls auf /api/orders/current/:number
     const { data, error } = useSWR("/api/orders/current/" + calcDiffDays(selectedDate), fetcher);
     const classes = useStyles();
     const { TableContainer, TableHead } = useTable(headCells, data, onAdd, true, selectedDate, setSelectedDate);
@@ -114,12 +118,12 @@ export default function Orders() {
                     Bestellungen
                 </Typography>
                 <Typography component="h6" variant="subtitle2" className={classes.dateContainer}>
-                    {"für: " + format(selectedDate, 'dd.MM.yyy')}
+                    {format(selectedDate, 'EE,dd.MM.yyyy', { locale: de })}
                 </Typography>
                 <TableContainer>
                     <TableHead />
                     <TableBody>
-                        {data.ordersList === [] ? <TableRow colspan="3">Keine Daten gefunden</TableRow> :
+                        {data.ordersList === [] ? <TableRow>Keine Daten gefunden</TableRow> :
                             data.ordersList.map(item => (
                                 <TableRow key={item._id}>
                                     <TableCell>{item.customer_name}</TableCell>
@@ -143,6 +147,7 @@ export default function Orders() {
                 confirmDialog={confirmDialog}
                 setConfirmDialog={setConfirmDialog}
             />
+
         </div>
     )
 }

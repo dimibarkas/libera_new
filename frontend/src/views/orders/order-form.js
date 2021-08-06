@@ -13,6 +13,7 @@ import { mutate } from 'swr';
 import AddIcon from "@material-ui/icons/Add"
 import TableActionButtons from '../../components/table-action-buttons';
 import AddPositionTableRow from '../../components/positions/add-position-table-row';
+import PositionDialog from '../../components/positions/position-dialog';
 
 const nextBusinessDay = addBusinessDays(new Date(), 1)
 
@@ -100,6 +101,8 @@ export default function OrderForm() {
     const history = useHistory();
     const location = useLocation();
     const { enqueueSnackbar } = useSnackbar();
+    const [open, setOpen] = useState(false);
+    const [positionDialog, setPositionDialog] = useState(false);
 
     let path = location.pathname.split("/");
     const id = path.pop() || path.pop();
@@ -178,6 +181,10 @@ export default function OrderForm() {
         })
     }
 
+    const handleClosePositionDialog = () => {
+        setPositionDialog(false)
+    }
+
     return (
         <Form onSubmit={handleSubmit}>
             <Typography component="h2" variant="h4" className={classes.headerLabel}>
@@ -217,13 +224,17 @@ export default function OrderForm() {
                         handleChange={handleChange}
                         value={formData.date}
                         name="date"
+                        disableToolbar
+                        open={open}
+                        onOpen={() => setOpen(true)}
+                        onClose={() => setOpen(false)}
                     />
                 </Grid>
                 <Grid item xs={12} md={12}>
                     <>
                         <div className={classes.subtitleWrapper}>
                             <Typography component="h6" variant="h5" className={classes.subtitle}>Positionen</Typography>
-                            <IconButton className={classes.onAddButtonMobile}>
+                            <IconButton className={classes.onAddButtonMobile} onClick={() => setPositionDialog(true)}>
                                 <AddIcon />
                             </IconButton>
                         </div>
@@ -253,6 +264,12 @@ export default function OrderForm() {
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        <PositionDialog
+                            open={positionDialog}
+                            onClose={handleClosePositionDialog}
+                            token={accessToken}
+                            onAdd={addPosition}
+                        />
                     </>
                 </Grid>
 

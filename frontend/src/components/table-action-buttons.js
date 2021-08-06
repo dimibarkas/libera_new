@@ -35,9 +35,11 @@ export default function TableActionButtons({ onDelete, onEdit }) {
     return (
         <>
             <div className={classes.actionButtons}>
-                <IconButton onClick={onEdit}>
-                    <EditIcon />
-                </IconButton>
+                {onEdit ?
+                    <IconButton onClick={onEdit}>
+                        <EditIcon />
+                    </IconButton>
+                    : ""}
                 <IconButton color="secondary" onClick={onDelete}>
                     <DeleteIcon />
                 </IconButton>
@@ -47,13 +49,17 @@ export default function TableActionButtons({ onDelete, onEdit }) {
                     <MoreVertIcon />
                 </IconButton>
                 <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
-                    <MenuItem button onClick={onEdit}>
-                        <ListItemIcon>
-                            <EditIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Bearbeiten" />
-                    </MenuItem>
-                    <Divider />
+                    {onEdit ?
+                        <>
+                            <MenuItem button onClick={onEdit}>
+                                <ListItemIcon>
+                                    <EditIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Bearbeiten" />
+                            </MenuItem>
+                            <Divider />
+                        </>
+                        : ""}
                     <MenuItem button onClick={onDelete}>
                         <ListItemIcon >
                             <DeleteIcon color="secondary" />

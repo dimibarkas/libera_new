@@ -63,7 +63,8 @@ export default function AddPositionTableRow({ onAdd, onDelete, token }) {
                         updatePosition(initialState)
                     }
                     }
-                    disabled={position.ammount < 0 || position.article === ""}>
+                    disabled={position.ammount <= 0 || position.article === ""}
+                >
                     <AddIcon />
                 </IconButton>
             </TableCell>

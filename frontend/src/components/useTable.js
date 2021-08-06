@@ -18,10 +18,11 @@ const useStyles = makeStyles(theme => ({
         flexDirection: "row",
         alignItems: "center",
         padding: "revert",
-        [theme.breakpoints.up("sm")]: {
-            flexDirection: "row-reverse"
+        [theme.breakpoints.up("lg")]: {
+            flexDirection: "row-reverse",
         },
         flexWrap: "wrap"
+
     },
     actionTableCell: {
         '& MuiTableCell-alignRight': {
@@ -48,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     datePicker: {
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down("md")]: {
             display: "none"
         }
     }
@@ -80,7 +81,7 @@ export default function useTable(headCells, records, onAdd, showDateHelpers, sel
                 </div>
                 {showDateHelpers ?
                     <div className={classes.dateHelper}>
-                        <DateHelpers selectedDate={selectedDate} handleDateChange={handleDateChange} />
+                        <DateHelpers selectedDate={selectedDate} handleDateChange={handleDateChange} setSelectedDate={setSelectedDate} />
                     </div>
                     :
                     ""

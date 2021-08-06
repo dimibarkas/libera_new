@@ -27,6 +27,10 @@ var _orders = _interopRequireDefault(require("./api/orders/orders.route"))
 
 var _path = _interopRequireDefault(require("path"))
 
+var _htmlPdf = _interopRequireDefault(require("html-pdf"))
+
+var pdfTemplate = require("../reports")
+
 var app = (0, _express["default"])()
 app.use((0, _cors["default"])())
 process.env.NODE_ENV !== "production" && app.use((0, _morgan["default"])("dev"))
@@ -35,8 +39,22 @@ app.use(
   _bodyParser["default"].urlencoded({
     extended: true,
   }),
-) //JWT-Configuration
-//Register api routes
+) //Report Test
+
+app.post("/api/create-pdf", function(req, res) {
+  _htmlPdf["default"]
+    .create(pdfTemplate(req.body), {})
+    .toFile("result.pdf", function(err) {
+      if (err) {
+        res.send(Promise.reject())
+      }
+
+      res.send(Promise.resolve())
+    })
+})
+app.get("/fetch-pdf", function(req, res) {
+  res.sendFile("".concat(__dirname, "/result.pdf"))
+}) //Register api routes
 
 app.use("/api/articles", _articles["default"])
 app.use("/api/users", _users["default"])

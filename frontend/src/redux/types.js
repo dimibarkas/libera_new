@@ -13,3 +13,9 @@ export const TOGGLE_DARK_MODE = "TOGGLE_DARK_MODE";
 
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
+
+/* ------------------------------ */
+/* Date                           */
+/* ------------------------------ */
+
+export const CHANGE_ACTUAL_DATE = "CHANGE_ACTUAL_DATE"

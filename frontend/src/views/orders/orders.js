@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
@@ -59,18 +59,13 @@ const headCells = [
     { id: "customer_name", label: "Kundenname", align: "left" },
     { id: "actions", label: "Aktionen", align: "right" }
 ]
-const initialDate = () => {
-    let currentDate = new Date()
-    currentDate.setHours(12, 0, 0, 0);
-    return currentDate
-}
 
 export default function Orders() {
     const accessToken = useSelector(state => state.user.authInfo.accessToken)
+    const date = useSelector(state => state.date)
     const history = useHistory();
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" })
-    // const [buyListDialog, setBuyListDialog] = useState(false)
-    const [selectedDate, setSelectedDate] = useState(initialDate);
+    const [selectedDate, setSelectedDate] = useState(new Date(date.date));
     const { enqueueSnackbar } = useSnackbar();
 
     function calcDiffDays(second) {
@@ -102,9 +97,13 @@ export default function Orders() {
     }
 
     const fetcher = url => listOrders(url, accessToken)
-    const { data, error } = useSWR("/api/orders/current/" + calcDiffDays(selectedDate), fetcher);
+    const { data, error } = useSWR("/api/orders/current/" + calcDiffDays(new Date(date.date)), fetcher);
     const classes = useStyles();
     const { TableContainer, TableHead } = useTable(headCells, data, onAdd, true, selectedDate, setSelectedDate);
+
+    useEffect(() => {
+        console.log(new Date(date.date))
+    }, [date])
 
     if (error) return <Error />
 
@@ -118,7 +117,7 @@ export default function Orders() {
                     Bestellungen
                 </Typography>
                 <Typography component="h6" variant="subtitle2" className={classes.dateContainer}>
-                    {format(selectedDate, 'EE,dd.MM.yyyy', { locale: de })}
+                    {format(new Date(date.date), 'EE,dd.MM.yyyy', { locale: de })}
                 </Typography>
                 <TableContainer>
                     <TableHead />

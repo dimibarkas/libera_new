@@ -3,13 +3,14 @@ import React from 'react'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/store/user/actions';
 import { useSnackbar } from "notistack"
 
 export default function UserMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user)
     const { enqueueSnackbar } = useSnackbar();
 
     const handleLogout = () => {
@@ -48,11 +49,15 @@ export default function UserMenu() {
                 }}
             >
                 <List dense={true}>
-                    <ListItem button>
+                    <ListItem >
+
+                        <ListItemText primary={"Angemeldet als: " + user.tokenData.username} />
+                    </ListItem>
+                    <ListItem >
                         <ListItemIcon>
                             <AccountBoxIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Dein Profil" />
+                        <ListItemText primary="Mein Account" />
                     </ListItem>
                     <Divider />
                     <ListItem button>

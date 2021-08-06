@@ -51,7 +51,6 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
         <>
             <div className={classes.datepicker}>
                 <Button
-                    color="default"
                     variant="outlined"
                     text={"Heute"}
                     onClick={() => handleDateChange(currentDate())}
@@ -62,10 +61,10 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
                         />}
 
                 />
-                <IconButton onClick={() => { handleDateChange(subDays(selectedDate, 1)) }}>
+                <IconButton onClick={() => { handleDateChange(subDays(new Date(date.date), 1)) }}>
                     <ChevronLeftIcon />
                 </IconButton>
-                <IconButton onClick={() => { handleDateChange(addDays(selectedDate, 1)) }} >
+                <IconButton onClick={() => { handleDateChange(addDays(new Date(date.date), 1)) }} >
                     <ChevronRightIcon />
                 </IconButton>
                 <DatePicker
@@ -76,9 +75,9 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
                     margin="dense"
                     onClose={() => setOpen(false)}
                     onOpen={() => setOpen(true)}
+                    disableToolbar
                 />
                 <Button
-                    color="default"
                     variant="outlined"
                     text={"Einkaufsliste anzeigen"}
                     endIcon={<AssignmentIcon color="action" style={{ marginRight: "0.25em", marginLeft: "1em" }} />}

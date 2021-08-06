@@ -66,7 +66,6 @@ export default function useTable(headCells, records, onAdd, showDateHelpers, sel
     const dispatch = useDispatch();
 
     const handleDateChange = (newDate) => {
-        console.log(newDate)
         dispatch(changeActualDate(newDate))
         setSelectedDate(newDate)
     }

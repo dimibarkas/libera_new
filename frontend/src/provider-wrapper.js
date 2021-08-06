@@ -12,10 +12,26 @@ import { ThemeProvider } from "@material-ui/styles"
 export const ProviderWrapper = ({ children }) => {
     const dispatch = useDispatch();
     const darkMode = useSelector((state) => state.darkMode);
-    const prefersDarkMode = useMediaQuery("(prefers-color-scheme: light)");
+    const prefersLightMode = useMediaQuery("(prefers-color-scheme: light)");
+
     useEffect(() => {
-        dispatch(toggleDarkMode());
-    }, [dispatch, prefersDarkMode]);
+        const determineLightOrDarkMode = () => {
+            if (prefersLightMode && darkMode.isEnabled) {
+                dispatch(toggleDarkMode());
+            }
+            if (prefersLightMode && !darkMode.isEnabled) {
+
+            }
+            if (!prefersLightMode && darkMode.isEnabled) {
+
+            }
+            if (!prefersLightMode && !darkMode.isEnabled) {
+                dispatch(toggleDarkMode())
+            }
+        };
+        determineLightOrDarkMode();
+    }, [dispatch, prefersLightMode, darkMode]);
+
     const theme = darkMode.isEnabled ? darkTheme : lightTheme;
     return (
         <ThemeProvider theme={theme}>

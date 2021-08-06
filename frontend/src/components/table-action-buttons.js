@@ -1,4 +1,4 @@
-import { Divider, IconButton, ListItemIcon, ListItemText, makeStyles, Menu, MenuItem } from '@material-ui/core'
+import { IconButton, ListItemIcon, ListItemText, makeStyles, Menu, MenuItem } from '@material-ui/core'
 import React, { useState } from 'react'
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -50,15 +50,12 @@ export default function TableActionButtons({ onDelete, onEdit }) {
                 </IconButton>
                 <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
                     {onEdit ?
-                        <>
-                            <MenuItem button onClick={onEdit}>
-                                <ListItemIcon>
-                                    <EditIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Bearbeiten" />
-                            </MenuItem>
-                            <Divider />
-                        </>
+                        <MenuItem button onClick={onEdit}>
+                            <ListItemIcon>
+                                <EditIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Bearbeiten" />
+                        </MenuItem>
                         : ""}
                     <MenuItem button onClick={onDelete}>
                         <ListItemIcon >

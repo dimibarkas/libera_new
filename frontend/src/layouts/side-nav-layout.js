@@ -15,10 +15,10 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems, secondaryListItems } from './listItems';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleDarkMode } from '../redux/store/darkmode/actions';
-import Brightness7Icon from "@material-ui/icons/Brightness7"
-import Brightness4Icon from "@material-ui/icons/Brightness4"
+// import { useDispatch, useSelector } from 'react-redux';
+// import { toggleDarkMode } from '../redux/store/darkmode/actions';
+// import Brightness7Icon from "@material-ui/icons/Brightness7"
+// import Brightness4Icon from "@material-ui/icons/Brightness4"
 import UserMenu from './user-menu';
 
 function Copyright() {
@@ -125,12 +125,12 @@ export default function SideNavLayout({ children }) {
         setOpen(false);
     };
 
-    const dispatch = useDispatch();
-    const darkModeState = useSelector((state) => state.darkMode);
+    // const dispatch = useDispatch();
+    // const darkModeState = useSelector((state) => state.darkMode);
 
-    const handleDarkModeToggle = () => {
-        dispatch(toggleDarkMode())
-    }
+    // const handleDarkModeToggle = () => {
+    //     dispatch(toggleDarkMode())
+    // }
 
     return (
         <div className={classes.root}>
@@ -149,9 +149,9 @@ export default function SideNavLayout({ children }) {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         Libera
                     </Typography>
-                    <IconButton onClick={handleDarkModeToggle} color="inherit">
+                    {/* <IconButton onClick={handleDarkModeToggle} color="inherit">
                         {darkModeState.isEnabled ? <Brightness7Icon /> : <Brightness4Icon />}
-                    </IconButton>
+                    </IconButton> */}
                     <UserMenu />
                 </Toolbar>
             </AppBar>

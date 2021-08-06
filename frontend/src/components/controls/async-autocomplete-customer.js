@@ -41,7 +41,6 @@ export default function AsynchronousAutocompleteCustomer({ value, handleChange, 
             id="customer_name"
             value={value}
             onChange={(event, newValue) => handleChange(newValue)}
-            groupBy={(option) => option.address.country}
             fullWidth
             open={open}
             onOpen={() => {

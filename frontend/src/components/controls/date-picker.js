@@ -16,7 +16,6 @@ export default function DatePicker(props) {
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={deLocale}>
             <KeyboardDatePicker
-                color="default"
                 open={open}
                 fullWidth={fullWidth}
                 disableToolbar={disableToolbar}

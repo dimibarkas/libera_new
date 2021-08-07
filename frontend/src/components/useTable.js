@@ -1,6 +1,6 @@
-import { makeStyles, Table, TableCell, TableHead as MuiTableHead, TableRow, TablePagination as MuiTablePagination, Toolbar } from '@material-ui/core'
+import { makeStyles, Table, TableCell, TableHead as MuiTableHead, TableRow, Toolbar } from '@material-ui/core'
 import { Button } from "./controls"
-import React, { useState } from 'react'
+import React from 'react'
 import AddIcon from "@material-ui/icons/Add"
 import DateHelpers from './date-helpers'
 import { changeActualDate } from '../redux/store/orders/actions'
@@ -58,11 +58,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-export default function useTable(headCells, records, onAdd, showDateHelpers, selectedDate, setSelectedDate) {
+export default function useTable(headCells, records, onAdd, showDateHelpers, selectedDate, setSelectedDate, buyListDialog, setBuyListDialog) {
     const classes = useStyles();
-    const pages = [20, 50];
-    const [page, setPage] = useState(0);
-    const [entriesPerPage, setEntriesPerPage] = useState(pages[page])
     const dispatch = useDispatch();
 
     const handleDateChange = (newDate) => {
@@ -85,7 +82,13 @@ export default function useTable(headCells, records, onAdd, showDateHelpers, sel
                 </div>
                 {showDateHelpers ?
                     <div className={classes.dateHelper}>
-                        <DateHelpers selectedDate={selectedDate} handleDateChange={handleDateChange} setSelectedDate={setSelectedDate} />
+                        <DateHelpers
+                            selectedDate={selectedDate}
+                            handleDateChange={handleDateChange}
+                            setSelectedDate={setSelectedDate}
+                            buyListDialog={buyListDialog}
+                            setBuyListDialog={setBuyListDialog}
+                        />
                     </div>
                     :
                     ""
@@ -118,30 +121,13 @@ export default function useTable(headCells, records, onAdd, showDateHelpers, sel
         )
     }
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage)
-    }
 
-    const handleChangeRowsPerPage = event => {
-        setEntriesPerPage(parseInt(event.target.value, 10))
-    }
-
-    const TablePagination = () => (
-        <MuiTablePagination
-            className={classes.pagination}
-            page={page}
-            rowsPerPageOptions={pages}
-            rowsPerPage={entriesPerPage}
-            count={records.total_results}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            align="right"
-        />
-    )
+    // const recordsAfterPagingAndSorting = () => {
+    //     return null
+    // }
 
     return {
         TableContainer,
-        TableHead,
-        TablePagination
+        TableHead
     }
 }

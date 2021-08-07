@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export default function DateHelpers({ selectedDate, handleDateChange, setSelectedDate }) {
+export default function DateHelpers({ selectedDate, handleDateChange, setSelectedDate, buyListDialog, setBuyListDialog }) {
     const classes = useStyles();
     const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
@@ -81,14 +81,17 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
                     variant="outlined"
                     text={"Einkaufsliste anzeigen"}
                     endIcon={<AssignmentIcon color="action" style={{ marginRight: "0.25em", marginLeft: "1em" }} />}
-                    style={{ marginLeft: "10px" }} />
+                    style={{ marginLeft: "10px" }}
+                    onClick={() => setBuyListDialog(true)}
+                />
+
             </div>
             <div className={classes.moreVert}>
                 <IconButton onClick={handleClick}>
                     <MoreVertIcon />
                 </IconButton>
                 <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
-                    <MenuItem button onClick={() => handleDateChange(currentDate)}>
+                    <MenuItem button onClick={() => handleDateChange(currentDate())}>
                         <ListItemIcon >
                             <TodayIcon />
                         </ListItemIcon>
@@ -101,7 +104,7 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
                         Datum wählen
                     </MenuItem>
                     <Divider />
-                    <MenuItem button>
+                    <MenuItem button onClick={() => setBuyListDialog(true)}>
                         <ListItemIcon>
                             <AssignmentIcon />
                         </ListItemIcon>

@@ -18,4 +18,10 @@ export const LOGOUT = "LOGOUT";
 /* Date                           */
 /* ------------------------------ */
 
-export const CHANGE_ACTUAL_DATE = "CHANGE_ACTUAL_DATE"
+export const CHANGE_ACTUAL_DATE = "CHANGE_ACTUAL_DATE";
+
+/* ------------------------------ */
+/* Articles                       */
+/* ------------------------------ */
+
+export const CHANGE_PAGE = "CHANGE_PAGE";

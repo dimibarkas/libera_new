@@ -17,6 +17,7 @@ import ConfirmDialog from "../../components/confirm-dialog"
 import { format } from 'date-fns';
 import { deleteOrderById, listOrders } from '../../services/order-service';
 import { de } from 'date-fns/locale';
+import BuyListDialog from '../../components/buylist-dialog';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -65,6 +66,7 @@ export default function Orders() {
     const date = useSelector(state => state.date)
     const history = useHistory();
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" })
+    const [buyListDialog, setBuyListDialog] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date(date.date));
     const { enqueueSnackbar } = useSnackbar();
 
@@ -99,7 +101,7 @@ export default function Orders() {
     const fetcher = url => listOrders(url, accessToken)
     const { data, error } = useSWR("/api/orders/current/" + calcDiffDays(new Date(date.date)), fetcher);
     const classes = useStyles();
-    const { TableContainer, TableHead } = useTable(headCells, data, onAdd, true, selectedDate, setSelectedDate);
+    const { TableContainer, TableHead } = useTable(headCells, data, onAdd, true, selectedDate, setSelectedDate, buyListDialog, setBuyListDialog);
 
     if (error) return <Error />
 
@@ -142,7 +144,10 @@ export default function Orders() {
                 confirmDialog={confirmDialog}
                 setConfirmDialog={setConfirmDialog}
             />
-
+            <BuyListDialog
+                open={buyListDialog}
+                setBuyListDialog={setBuyListDialog}
+            />
         </div>
     )
 }

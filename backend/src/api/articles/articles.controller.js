@@ -17,13 +17,13 @@ export default class ArticlesController {
   static async apiGetArticles(req, res, next) {
     //if user not registered
     //if there is no Authorization Header and the Token is not ok
-    if (
-      !req.header("Authorization") ||
-      !isLoggedIn(req.header("Authorization"), config.jwtPublicKey)
-    ) {
-      res.status(constants.HTTP_STATUS_UNAUTHORIZED).send()
-      return
-    }
+    // if (
+    //   !req.header("Authorization") ||
+    //   !isLoggedIn(req.header("Authorization"), config.jwtPublicKey)
+    // ) {
+    //   res.status(constants.HTTP_STATUS_UNAUTHORIZED).send()
+    //   return
+    // }
 
     const ARTICLES_PER_PAGE = 20
     const { articlesList, totalNumArticles } = await ArticlesDAO.getArticles()

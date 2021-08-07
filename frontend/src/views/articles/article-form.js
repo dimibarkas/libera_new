@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ArticleForm() {
     const [currentMode, setCurrentMode] = useState(null);
+    const page = useSelector(state => state.articles_table.page)
 
     const validate = (fieldValues = formData) => {
         let temp = { ...errors }
@@ -71,6 +72,15 @@ export default function ArticleForm() {
     let path = location.pathname.split("/");
     const id = path.pop() || path.pop();
 
+    const inputRef = React.createRef(null)
+
+    useEffect(() => {
+        function focusTextInput() {
+            inputRef.current.focus();
+        }
+        focusTextInput();
+    }, [inputRef])
+
 
     useEffect(() => {
         async function determineAddOrEditMode(id) {
@@ -94,7 +104,7 @@ export default function ArticleForm() {
                     if (res.status === 200) {
                         enqueueSnackbar("Artikel wurde erfolgreich bearbeitet", { variant: 'success' })
                         history.goBack();
-                        mutate("/api/articles");
+                        mutate(`/api/articles/search?page=${page}`);
                         return
                     }
                 } catch (error) {
@@ -109,7 +119,7 @@ export default function ArticleForm() {
                 if (res.status === 201) {
                     enqueueSnackbar("Artikel wurde erfolgreich erstellt", { variant: 'success' })
                     history.goBack();
-                    mutate("/api/articles");
+                    mutate(`/api/articles/search?page=${page}`);
                 }
             } catch (error) {
                 enqueueSnackbar(`Ein Fehler ist aufgerteten ${error}`, { variant: 'error' })
@@ -144,6 +154,7 @@ export default function ArticleForm() {
             <Grid container spacing={2} className={classes.inputContainer}>
                 <Grid item xs={12} md={6}>
                     <Input
+                        inputRef={inputRef}
                         label="Name des Artikels"
                         value={formData.name}
                         onChange={handleChange}

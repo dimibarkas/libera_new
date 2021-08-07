@@ -62,8 +62,7 @@ export default class ArticlesDAO {
 
     try {
       const articlesList = await displayCursor.toArray()
-      const totalNumArticles =
-        page === 0 ? await articles.countDocuments(query) : 0
+      const totalNumArticles = await articles.countDocuments(query)
 
       return { articlesList, totalNumArticles }
     } catch (e) {

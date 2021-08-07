@@ -220,44 +220,30 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
 
                     case 18:
                       articlesList = _context2.sent
-
-                      if (!(page === 0)) {
-                        _context2.next = 25
-                        break
-                      }
-
-                      _context2.next = 22
+                      _context2.next = 21
                       return articles.countDocuments(query)
 
-                    case 22:
-                      _context2.t1 = _context2.sent
-                      _context2.next = 26
-                      break
-
-                    case 25:
-                      _context2.t1 = 0
-
-                    case 26:
-                      totalNumArticles = _context2.t1
+                    case 21:
+                      totalNumArticles = _context2.sent
                       return _context2.abrupt("return", {
                         articlesList: articlesList,
                         totalNumArticles: totalNumArticles,
                       })
 
-                    case 30:
-                      _context2.prev = 30
-                      _context2.t2 = _context2["catch"](15)
+                    case 25:
+                      _context2.prev = 25
+                      _context2.t1 = _context2["catch"](15)
                       console.error(
-                        "Unable to issue find command, ".concat(_context2.t2),
+                        "Unable to issue find command, ".concat(_context2.t1),
                       )
 
-                    case 33:
+                    case 28:
                       return _context2.abrupt("return", {
                         articlesList: [],
                         totalNumArticles: 0,
                       })
 
-                    case 34:
+                    case 29:
                     case "end":
                       return _context2.stop()
                   }
@@ -267,7 +253,7 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
               this,
               [
                 [4, 10],
-                [15, 30],
+                [15, 25],
               ],
             )
           }),

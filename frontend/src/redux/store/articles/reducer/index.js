@@ -1,0 +1,1 @@
+export { default as articlesTable } from "./table-reducer"

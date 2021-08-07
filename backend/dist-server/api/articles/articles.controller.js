@@ -66,28 +66,20 @@ var ArticlesController = /*#__PURE__*/ (function() {
               while (1) {
                 switch ((_context.prev = _context.next)) {
                   case 0:
-                    if (
-                      !(
-                        !req.header("Authorization") ||
-                        !(0, _token.isLoggedIn)(
-                          req.header("Authorization"),
-                          config.jwtPublicKey,
-                        )
-                      )
-                    ) {
-                      _context.next = 3
-                      break
-                    }
-
-                    res.status(_http.constants.HTTP_STATUS_UNAUTHORIZED).send()
-                    return _context.abrupt("return")
-
-                  case 3:
+                    //if user not registered
+                    //if there is no Authorization Header and the Token is not ok
+                    // if (
+                    //   !req.header("Authorization") ||
+                    //   !isLoggedIn(req.header("Authorization"), config.jwtPublicKey)
+                    // ) {
+                    //   res.status(constants.HTTP_STATUS_UNAUTHORIZED).send()
+                    //   return
+                    // }
                     ARTICLES_PER_PAGE = 20
-                    _context.next = 6
+                    _context.next = 3
                     return _ArticlesDAO["default"].getArticles()
 
-                  case 6:
+                  case 3:
                     _yield$ArticlesDAO$ge = _context.sent
                     articlesList = _yield$ArticlesDAO$ge.articlesList
                     totalNumArticles = _yield$ArticlesDAO$ge.totalNumArticles
@@ -100,7 +92,7 @@ var ArticlesController = /*#__PURE__*/ (function() {
                     }
                     res.json(response)
 
-                  case 11:
+                  case 8:
                   case "end":
                     return _context.stop()
                 }

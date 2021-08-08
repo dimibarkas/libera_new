@@ -788,7 +788,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                               buyList.set(
                                 "Papr. Grün 5kg",
                                 parseFloat(buyList.get("Papr. Grün 5kg"), 10) +
-                                  parseFloat(position.number, 10) * 5,
+                                  parseFloat(position.number, 10) * 5000,
                               )
                               break
 
@@ -797,7 +797,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                               buyList.set(
                                 "Papr. Rot 5kg",
                                 parseFloat(buyList.get("Papr. Rot 5kg"), 10) +
-                                  parseFloat(position.number, 10) * 5,
+                                  parseFloat(position.number, 10) * 5000,
                               )
                               break
 
@@ -806,7 +806,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                               buyList.set(
                                 "Papr. Gelb 5kg",
                                 parseFloat(buyList.get("Papr. Gelb 5kg"), 10) +
-                                  parseFloat(position.number, 10) * 5,
+                                  parseFloat(position.number, 10) * 5000,
                               )
                               break
 
@@ -814,17 +814,17 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                               buyList.set(
                                 "Papr. Grün 5kg",
                                 parseFloat(buyList.get("Papr. Grün 5kg"), 10) +
-                                  5 / 3,
+                                  5000 / 3,
                               )
                               buyList.set(
                                 "Papr. Rot 5kg",
                                 parseFloat(buyList.get("Papr. Rot 5kg"), 10) +
-                                  5 / 3,
+                                  5000 / 3,
                               )
                               buyList.set(
                                 "Papr. Gelb 5kg",
                                 parseFloat(buyList.get("Papr. Gelb 5kg"), 10) +
-                                  5 / 3,
+                                  5000 / 3,
                               )
                               break
 
@@ -848,6 +848,27 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                           number: element[1],
                         })
                       })
+                      buyListArray.forEach(function(element) {
+                        switch (element.name) {
+                          case "Papr. Grün 5kg":
+                            element.number =
+                              Math.round(element.number * 1000) / 1000000
+                            break
+
+                          case "Papr. Rot 5kg":
+                            element.number =
+                              Math.round(element.number * 1000) / 1000000
+                            break
+
+                          case "Papr. Gelb 5kg":
+                            element.number =
+                              Math.round(element.number * 1000) / 1000000
+                            break
+
+                          default:
+                            break
+                        }
+                      })
                       console.log(buyListArray)
                       buyListArray.forEach(function(element) {
                         return (totalNumArticles =
@@ -858,8 +879,8 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                         totalNumArticles: Math.round(totalNumArticles),
                       })
 
-                    case 29:
-                      _context8.prev = 29
+                    case 30:
+                      _context8.prev = 30
                       _context8.t0 = _context8["catch"](3)
                       console.error(
                         "Unable to issue find command, ".concat(_context8.t0),
@@ -869,7 +890,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                         totalNumArticles: 0,
                       })
 
-                    case 33:
+                    case 34:
                     case "end":
                       return _context8.stop()
                   }
@@ -877,7 +898,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
               },
               _callee8,
               null,
-              [[3, 29]],
+              [[3, 30]],
             )
           }),
         )

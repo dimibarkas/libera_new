@@ -227,7 +227,7 @@ export default class OrdersDAO {
               buyList.set(
                 "Papr. Grün 5kg",
                 parseFloat(buyList.get("Papr. Grün 5kg"), 10) +
-                  parseFloat(position.number, 10) * 5,
+                  parseFloat(position.number, 10) * 5000,
               )
               break
             case "Papr. Rot 5kg":
@@ -235,7 +235,7 @@ export default class OrdersDAO {
               buyList.set(
                 "Papr. Rot 5kg",
                 parseFloat(buyList.get("Papr. Rot 5kg"), 10) +
-                  parseFloat(position.number, 10) * 5,
+                  parseFloat(position.number, 10) * 5000,
               )
               break
             case "Papr. Gelb 5kg":
@@ -243,21 +243,21 @@ export default class OrdersDAO {
               buyList.set(
                 "Papr. Gelb 5kg",
                 parseFloat(buyList.get("Papr. Gelb 5kg"), 10) +
-                  parseFloat(position.number, 10) * 5,
+                  parseFloat(position.number, 10) * 5000,
               )
               break
             case "Papr. Mix 5kg":
               buyList.set(
                 "Papr. Grün 5kg",
-                parseFloat(buyList.get("Papr. Grün 5kg"), 10) + 5 / 3,
+                parseFloat(buyList.get("Papr. Grün 5kg"), 10) + 5000 / 3,
               )
               buyList.set(
                 "Papr. Rot 5kg",
-                parseFloat(buyList.get("Papr. Rot 5kg"), 10) + 5 / 3,
+                parseFloat(buyList.get("Papr. Rot 5kg"), 10) + 5000 / 3,
               )
               buyList.set(
                 "Papr. Gelb 5kg",
-                parseFloat(buyList.get("Papr. Gelb 5kg"), 10) + 5 / 3,
+                parseFloat(buyList.get("Papr. Gelb 5kg"), 10) + 5000 / 3,
               )
               break
             default:
@@ -277,6 +277,21 @@ export default class OrdersDAO {
       arr.forEach(element =>
         buyListArray.push({ name: element[0], number: element[1] }),
       )
+      buyListArray.forEach(element => {
+        switch (element.name) {
+          case "Papr. Grün 5kg":
+            element.number = Math.round(element.number * 1000) / 1000000
+            break
+          case "Papr. Rot 5kg":
+            element.number = Math.round(element.number * 1000) / 1000000
+            break
+          case "Papr. Gelb 5kg":
+            element.number = Math.round(element.number * 1000) / 1000000
+            break
+          default:
+            break
+        }
+      })
       console.log(buyListArray)
       buyListArray.forEach(
         element => (totalNumArticles = totalNumArticles + element.number),

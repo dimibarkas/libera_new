@@ -776,10 +776,19 @@ var OrdersDAO = /*#__PURE__*/ (function() {
 
                     case 18:
                       articles = _context8.sent
+                      //Erstelle Map mit Schlüssel Name des Artikels und Wert 0
                       articles.forEach(function(element) {
-                        return buyList.set(element.name, 0)
-                      }) // console.log(ordersList)
+                        switch (element.name) {
+                          case "Papr. Mix 5kg (R+G)":
+                            console.log(element.name) //Überspringen
 
+                            break
+
+                          default:
+                            buyList.set(element.name, 0)
+                            break
+                        }
+                      })
                       ordersList.forEach(function(order) {
                         return order.positions.forEach(function(position) {
                           switch (position.name) {
@@ -825,6 +834,19 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                                 "Papr. Gelb 5kg",
                                 parseFloat(buyList.get("Papr. Gelb 5kg"), 10) +
                                   5000 / 3,
+                              )
+                              break
+
+                            case "Papr. Mix 5kg (R+G)":
+                              buyList.set(
+                                "Papr. Grün 5kg",
+                                parseFloat(buyList.get("Papr. Grün 5kg"), 10) +
+                                  5000 / 2,
+                              )
+                              buyList.set(
+                                "Papr. Rot 5kg",
+                                parseFloat(buyList.get("Papr. Rot 5kg"), 10) +
+                                  5000 / 2,
                               )
                               break
 

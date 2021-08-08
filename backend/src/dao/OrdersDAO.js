@@ -217,8 +217,18 @@ export default class OrdersDAO {
       ordersList = await cursor.toArray()
 
       const articles = await ArticlesDAO.getAllArticles()
-      articles.forEach(element => buyList.set(element.name, 0))
-      // console.log(ordersList)
+      //Erstelle Map mit Schlüssel Name des Artikels und Wert 0
+      articles.forEach(element => {
+        switch (element.name) {
+          case "Papr. Mix 5kg (R+G)":
+            console.log(element.name)
+            //Überspringen
+            break
+          default:
+            buyList.set(element.name, 0)
+            break
+        }
+      })
       ordersList.forEach(order =>
         order.positions.forEach(position => {
           switch (position.name) {
@@ -258,6 +268,16 @@ export default class OrdersDAO {
               buyList.set(
                 "Papr. Gelb 5kg",
                 parseFloat(buyList.get("Papr. Gelb 5kg"), 10) + 5000 / 3,
+              )
+              break
+            case "Papr. Mix 5kg (R+G)":
+              buyList.set(
+                "Papr. Grün 5kg",
+                parseFloat(buyList.get("Papr. Grün 5kg"), 10) + 5000 / 2,
+              )
+              buyList.set(
+                "Papr. Rot 5kg",
+                parseFloat(buyList.get("Papr. Rot 5kg"), 10) + 5000 / 2,
               )
               break
             default:

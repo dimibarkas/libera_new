@@ -7,7 +7,7 @@ describe("Basic CRUD on articles", () => {
 
   test("Can resturn all article names", async () => {
     const articles = await ArticlesDAO.getAllArticles()
-    console.log(articles)
+    expect(articles.length > 10).toBeTruthy()
   })
 
   test("Can return the list of Articles", async () => {

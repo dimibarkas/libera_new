@@ -12,6 +12,10 @@ import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Ta
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
+import useSWR from 'swr';
+import { generateBuyList } from '../services/order-service';
+import Error from './error';
+import CircularIndeterminate from './circular-indeterminate';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -44,9 +48,22 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+function calcDiffDays(second) {
+    return Math.round((second - new Date()) / (1000 * 60 * 60 * 24))
+}
+
 export default function BuyListDialog({ open, setBuyListDialog }) {
     const date = useSelector(state => state.date)
     const classes = useStyles();
+    const fetcher = url => generateBuyList(url)
+    const { data, error } = useSWR("/api/orders/buylist/" + calcDiffDays(new Date(date.date)), fetcher);
+
+    if (error) return <Error />
+
+    if (!data) return <CircularIndeterminate />
+
+    const leftSide = data.buyList.slice(0, 38);
+    const rightSide = data.buyList.slice(38);
 
     return (
         <div>
@@ -70,6 +87,8 @@ export default function BuyListDialog({ open, setBuyListDialog }) {
                             <Paper className={classes.paper}>
                                 <div className={classes.date}>
                                     {format(new Date(date.date), 'EE,dd.MM.yyyy', { locale: de })}
+                                    <br />
+                                    Stück insgesamt: {data.totalNumArticles}
                                 </div>
                             </Paper>
                         </Grid>
@@ -84,12 +103,14 @@ export default function BuyListDialog({ open, setBuyListDialog }) {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            <TableBody>
-                                                <TableRow >
-                                                    <TableCell align="left">{"Tomaten"}</TableCell>
-                                                    <TableCell align="left"></TableCell>
-                                                </TableRow>
-                                            </TableBody>
+                                            {
+                                                leftSide.map(item => (
+                                                    <TableRow key={item.name}>
+                                                        <TableCell align="left">{item.name}</TableCell>
+                                                        <TableCell align="left">{item.number === 0 ? "" : item.number}</TableCell>
+                                                    </TableRow>
+                                                ))
+                                            }
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
@@ -106,12 +127,14 @@ export default function BuyListDialog({ open, setBuyListDialog }) {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            <TableBody>
-                                                <TableRow >
-                                                    <TableCell align="left">{"Broccoli 5kg"}</TableCell>
-                                                    <TableCell></TableCell>
-                                                </TableRow>
-                                            </TableBody>
+                                            {
+                                                rightSide.map(item => (
+                                                    <TableRow key={item.name}>
+                                                        <TableCell align="left">{item.name}</TableCell>
+                                                        <TableCell align="left">{item.number === 0 ? "" : item.number}</TableCell>
+                                                    </TableRow>
+                                                ))
+                                            }
                                         </TableBody>
                                     </Table>
                                 </TableContainer>

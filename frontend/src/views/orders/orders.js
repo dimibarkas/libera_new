@@ -87,7 +87,7 @@ export default function Orders() {
             const res = await deleteOrderById(accessToken, id);
             if (res.status === 200) {
                 enqueueSnackbar("Bestellung wurde erfolgreich gelöscht.", { variant: 'success' })
-                mutate("/api/orders");
+                mutate("/api/orders/current/" + calcDiffDays(new Date(date.date)));
             }
         } catch (error) {
             enqueueSnackbar("Bestellung konnte nicht gelöscht werden.", { variant: 'error' })

@@ -1,5 +1,6 @@
 import { applyMiddleware, compose, createStore } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
+// import autoMergeLevel2 from "redux-persist/es/stateReconciler/autoMergeLevel2";
 import localStorage from "redux-persist/es/storage";
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
 import thunk from "redux-thunk";

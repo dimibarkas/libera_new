@@ -8,6 +8,8 @@ import {
   addDays,
 } from "date-fns"
 
+import ArticlesDAO from "./ArticlesDAO"
+
 let orders
 const DEFAULT_SORT = []
 
@@ -20,7 +22,7 @@ export default class OrdersDAO {
       orders = await conn.db(process.env.LIBERA_NS).collection("orders")
       this.orders = orders //this is only for testing
     } catch (e) {
-      console.error(`Unable to establish a connection in UsersDAO: ${e}`)
+      console.error(`Unable to establish a connection in OrderssDAO: ${e}`)
     }
   }
   /**
@@ -180,6 +182,112 @@ export default class OrdersDAO {
     } catch (error) {
       console.error(`Error occurred while updating article, ${error}.`)
       return { error: error }
+    }
+  }
+
+  static async generateBuyList(number) {
+    //determine date & generate map
+    let buyList = new Map()
+    let suggestedDate = null
+    let ordersList
+    let cursor
+    let totalNumArticles = 0
+    try {
+      if (isNaN(number)) {
+        throw new Error(
+          `${number} is not a number, please provide a number as argument`,
+        )
+      }
+      if (number < 0) {
+        suggestedDate = subDays(new Date(), Math.abs(number))
+      }
+      if (number > 0) {
+        suggestedDate = addDays(new Date(), number)
+      }
+      const searchDate =
+        suggestedDate === null ? startOfToday() : startOfDay(suggestedDate)
+      console.log("Searchin Orders for date: " + searchDate)
+      cursor = await orders.find({
+        date: {
+          $gte:
+            suggestedDate === null ? startOfToday() : startOfDay(suggestedDate),
+          $lte: suggestedDate === null ? endOfToday() : endOfDay(suggestedDate),
+        },
+      })
+      ordersList = await cursor.toArray()
+
+      const articles = await ArticlesDAO.getAllArticles()
+      articles.forEach(element => buyList.set(element.name, 0))
+      // console.log(ordersList)
+      ordersList.forEach(order =>
+        order.positions.forEach(position => {
+          switch (position.name) {
+            case "Papr. Grün 5kg":
+              console.log(position.name, position.number)
+              buyList.set(
+                "Papr. Grün 5kg",
+                parseFloat(buyList.get("Papr. Grün 5kg"), 10) +
+                  parseFloat(position.number, 10) * 5,
+              )
+              break
+            case "Papr. Rot 5kg":
+              console.log(position.name, position.number)
+              buyList.set(
+                "Papr. Rot 5kg",
+                parseFloat(buyList.get("Papr. Rot 5kg"), 10) +
+                  parseFloat(position.number, 10) * 5,
+              )
+              break
+            case "Papr. Gelb 5kg":
+              console.log(position.name, position.number)
+              buyList.set(
+                "Papr. Gelb 5kg",
+                parseFloat(buyList.get("Papr. Gelb 5kg"), 10) +
+                  parseFloat(position.number, 10) * 5,
+              )
+              break
+            case "Papr. Mix 5kg":
+              buyList.set(
+                "Papr. Grün 5kg",
+                parseFloat(buyList.get("Papr. Grün 5kg"), 10) + 5 / 3,
+              )
+              buyList.set(
+                "Papr. Rot 5kg",
+                parseFloat(buyList.get("Papr. Rot 5kg"), 10) + 5 / 3,
+              )
+              buyList.set(
+                "Papr. Gelb 5kg",
+                parseFloat(buyList.get("Papr. Gelb 5kg"), 10) + 5 / 3,
+              )
+              break
+            default:
+              buyList.set(
+                position.name,
+                parseFloat(buyList.get(position.name), 10) +
+                  parseFloat(position.number, 10),
+              )
+              break
+          }
+        }),
+      )
+      // console.log(buyList.size)
+      // console.log(buyList.get("Tomaten 5kg"))
+      let buyListArray = []
+      let arr = Array.from(buyList)
+      arr.forEach(element =>
+        buyListArray.push({ name: element[0], number: element[1] }),
+      )
+      console.log(buyListArray)
+      buyListArray.forEach(
+        element => (totalNumArticles = totalNumArticles + element.number),
+      )
+      return {
+        buyListArray: buyListArray,
+        totalNumArticles: Math.round(totalNumArticles),
+      }
+    } catch (error) {
+      console.error(`Unable to issue find command, ${error}`)
+      return { buyListArray: [], totalNumArticles: 0 }
     }
   }
 }

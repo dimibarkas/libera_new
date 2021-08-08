@@ -81,3 +81,17 @@ export const updateOrderById = async (token, id, orderInfo) => {
     return res;
 }
 
+export const generateBuyList = async (url) => {
+    const res = await axios({
+        method: "get",
+        url: url,
+        // headers: {
+        //     "Authorization": `Bearer ${token}`
+        // }
+    });
+    if (res.status !== 200) {
+        throw new Error("request failed");
+    }
+    return res.data;
+}
+

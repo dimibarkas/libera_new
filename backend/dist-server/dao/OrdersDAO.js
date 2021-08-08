@@ -25,6 +25,8 @@ var _bson = require("bson")
 
 var _dateFns = require("date-fns")
 
+var _ArticlesDAO = _interopRequireDefault(require("./ArticlesDAO"))
+
 var orders
 var DEFAULT_SORT = []
 
@@ -67,7 +69,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                       _context.prev = 9
                       _context.t0 = _context["catch"](2)
                       console.error(
-                        "Unable to establish a connection in UsersDAO: ".concat(
+                        "Unable to establish a connection in OrderssDAO: ".concat(
                           _context.t0,
                         ),
                       )
@@ -689,6 +691,202 @@ var OrdersDAO = /*#__PURE__*/ (function() {
         }
 
         return updateOrderById
+      })(),
+    },
+    {
+      key: "generateBuyList",
+      value: (function() {
+        var _generateBuyList = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee8(number) {
+            var buyList,
+              suggestedDate,
+              ordersList,
+              cursor,
+              totalNumArticles,
+              searchDate,
+              articles,
+              buyListArray,
+              arr
+            return _regenerator["default"].wrap(
+              function _callee8$(_context8) {
+                while (1) {
+                  switch ((_context8.prev = _context8.next)) {
+                    case 0:
+                      //determine date & generate map
+                      buyList = new Map()
+                      suggestedDate = null
+                      totalNumArticles = 0
+                      _context8.prev = 3
+
+                      if (!isNaN(number)) {
+                        _context8.next = 6
+                        break
+                      }
+
+                      throw new Error(
+                        "".concat(
+                          number,
+                          " is not a number, please provide a number as argument",
+                        ),
+                      )
+
+                    case 6:
+                      if (number < 0) {
+                        suggestedDate = (0, _dateFns.subDays)(
+                          new Date(),
+                          Math.abs(number),
+                        )
+                      }
+
+                      if (number > 0) {
+                        suggestedDate = (0, _dateFns.addDays)(
+                          new Date(),
+                          number,
+                        )
+                      }
+
+                      searchDate =
+                        suggestedDate === null
+                          ? (0, _dateFns.startOfToday)()
+                          : (0, _dateFns.startOfDay)(suggestedDate)
+                      console.log("Searchin Orders for date: " + searchDate)
+                      _context8.next = 12
+                      return orders.find({
+                        date: {
+                          $gte:
+                            suggestedDate === null
+                              ? (0, _dateFns.startOfToday)()
+                              : (0, _dateFns.startOfDay)(suggestedDate),
+                          $lte:
+                            suggestedDate === null
+                              ? (0, _dateFns.endOfToday)()
+                              : (0, _dateFns.endOfDay)(suggestedDate),
+                        },
+                      })
+
+                    case 12:
+                      cursor = _context8.sent
+                      _context8.next = 15
+                      return cursor.toArray()
+
+                    case 15:
+                      ordersList = _context8.sent
+                      _context8.next = 18
+                      return _ArticlesDAO["default"].getAllArticles()
+
+                    case 18:
+                      articles = _context8.sent
+                      articles.forEach(function(element) {
+                        return buyList.set(element.name, 0)
+                      }) // console.log(ordersList)
+
+                      ordersList.forEach(function(order) {
+                        return order.positions.forEach(function(position) {
+                          switch (position.name) {
+                            case "Papr. Grün 5kg":
+                              console.log(position.name, position.number)
+                              buyList.set(
+                                "Papr. Grün 5kg",
+                                parseFloat(buyList.get("Papr. Grün 5kg"), 10) +
+                                  parseFloat(position.number, 10) * 5,
+                              )
+                              break
+
+                            case "Papr. Rot 5kg":
+                              console.log(position.name, position.number)
+                              buyList.set(
+                                "Papr. Rot 5kg",
+                                parseFloat(buyList.get("Papr. Rot 5kg"), 10) +
+                                  parseFloat(position.number, 10) * 5,
+                              )
+                              break
+
+                            case "Papr. Gelb 5kg":
+                              console.log(position.name, position.number)
+                              buyList.set(
+                                "Papr. Gelb 5kg",
+                                parseFloat(buyList.get("Papr. Gelb 5kg"), 10) +
+                                  parseFloat(position.number, 10) * 5,
+                              )
+                              break
+
+                            case "Papr. Mix 5kg":
+                              buyList.set(
+                                "Papr. Grün 5kg",
+                                parseFloat(buyList.get("Papr. Grün 5kg"), 10) +
+                                  5 / 3,
+                              )
+                              buyList.set(
+                                "Papr. Rot 5kg",
+                                parseFloat(buyList.get("Papr. Rot 5kg"), 10) +
+                                  5 / 3,
+                              )
+                              buyList.set(
+                                "Papr. Gelb 5kg",
+                                parseFloat(buyList.get("Papr. Gelb 5kg"), 10) +
+                                  5 / 3,
+                              )
+                              break
+
+                            default:
+                              buyList.set(
+                                position.name,
+                                parseFloat(buyList.get(position.name), 10) +
+                                  parseFloat(position.number, 10),
+                              )
+                              break
+                          }
+                        })
+                      }) // console.log(buyList.size)
+                      // console.log(buyList.get("Tomaten 5kg"))
+
+                      buyListArray = []
+                      arr = Array.from(buyList)
+                      arr.forEach(function(element) {
+                        return buyListArray.push({
+                          name: element[0],
+                          number: element[1],
+                        })
+                      })
+                      console.log(buyListArray)
+                      buyListArray.forEach(function(element) {
+                        return (totalNumArticles =
+                          totalNumArticles + element.number)
+                      })
+                      return _context8.abrupt("return", {
+                        buyListArray: buyListArray,
+                        totalNumArticles: Math.round(totalNumArticles),
+                      })
+
+                    case 29:
+                      _context8.prev = 29
+                      _context8.t0 = _context8["catch"](3)
+                      console.error(
+                        "Unable to issue find command, ".concat(_context8.t0),
+                      )
+                      return _context8.abrupt("return", {
+                        buyListArray: [],
+                        totalNumArticles: 0,
+                      })
+
+                    case 33:
+                    case "end":
+                      return _context8.stop()
+                  }
+                }
+              },
+              _callee8,
+              null,
+              [[3, 29]],
+            )
+          }),
+        )
+
+        function generateBuyList(_x8) {
+          return _generateBuyList.apply(this, arguments)
+        }
+
+        return generateBuyList
       })(),
     },
   ])

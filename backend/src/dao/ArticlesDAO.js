@@ -12,7 +12,7 @@ export default class ArticlesDAO {
       articles = await conn.db(process.env.LIBERA_NS).collection("articles")
       this.articles = articles //this is only for testing
     } catch (e) {
-      console.error(`Unable to establish a connection in UsersDAO: ${e}`)
+      console.error(`Unable to establish a connection in ArticlesDAO: ${e}`)
     }
   }
   /**
@@ -145,7 +145,7 @@ export default class ArticlesDAO {
       }
       return null
     } catch (error) {
-      console.error(`Error occurred while deleting the article, ${error}.`)
+      console.error(`Error occurred while retrieving articles, ${error}.`)
       return { error: error }
     }
   }

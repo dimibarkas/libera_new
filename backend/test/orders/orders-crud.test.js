@@ -1,4 +1,5 @@
 import OrdersDAO from "../../src/dao/OrdersDAO"
+import ArticlesDAO from "../../src/dao/ArticlesDAO"
 import { addDays } from "date-fns"
 
 describe("Basic CRUD on orders", () => {
@@ -84,11 +85,11 @@ describe("Basic CRUD on orders", () => {
 
   test("Can search orders by current date", async () => {
     const orders = await OrdersDAO.getCurrentOrders(0)
-    console.log(orders)
+    // console.log(orders)
     const orders1 = await OrdersDAO.getCurrentOrders(-5)
-    console.log(orders1)
+    // console.log(orders1)
     const ordersTomorrow = await OrdersDAO.getCurrentOrders(1)
-    console.log(ordersTomorrow)
+    // console.log(ordersTomorrow)
   })
 
   test("Can delete orders by id", async () => {
@@ -98,5 +99,10 @@ describe("Basic CRUD on orders", () => {
     expect(deletedOrder1.deletedCount).toBe(1)
     const deletedOrder3 = await OrdersDAO.deleteOrderById(testOrderId3)
     expect(deletedOrder3.deletedCount).toBe(1)
+  })
+
+  test("Can generate a buylist for a specific date", async () => {
+    await ArticlesDAO.injectDB(global.liberaClient)
+    await OrdersDAO.generateBuyList(-137)
   })
 })

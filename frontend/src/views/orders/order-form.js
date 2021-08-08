@@ -125,6 +125,10 @@ export default function OrderForm() {
         determineAddOrEditMode(id);
     }, [id, accessToken, updateFormData]);
 
+    function calcDiffDays(second) {
+        return Math.round((second - new Date()) / (1000 * 60 * 60 * 24))
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const orderInfo = {
@@ -139,7 +143,7 @@ export default function OrderForm() {
                     if (res.status === 200) {
                         enqueueSnackbar("Bestellung wurde erfolgreich bearbeitet.", { variant: 'success' })
                         history.goBack();
-                        mutate("/api/orders");
+                        mutate("/api/orders/current/" + calcDiffDays(new Date(date.date)));
                         return
                     }
                 } catch (error) {
@@ -153,7 +157,7 @@ export default function OrderForm() {
                 if (res.status === 201) {
                     enqueueSnackbar("Bestellung wurde erfolgreich erstellt.", { variant: 'success' })
                     history.goBack();
-                    mutate("/api/orders");
+                    mutate("/api/orders/current/" + calcDiffDays(new Date(date.date)));
                 }
             } catch (error) {
                 enqueueSnackbar(`Ein Fehler ist aufgerteten ${error}.`, { variant: 'error' })

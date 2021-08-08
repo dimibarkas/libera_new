@@ -67,7 +67,7 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
                       _context.prev = 9
                       _context.t0 = _context["catch"](2)
                       console.error(
-                        "Unable to establish a connection in UsersDAO: ".concat(
+                        "Unable to establish a connection in ArticlesDAO: ".concat(
                           _context.t0,
                         ),
                       )
@@ -598,7 +598,7 @@ var ArticlesDAO = /*#__PURE__*/ (function() {
                       _context7.prev = 9
                       _context7.t0 = _context7["catch"](0)
                       console.error(
-                        "Error occurred while deleting the article, ".concat(
+                        "Error occurred while retrieving articles, ".concat(
                           _context7.t0,
                           ".",
                         ),

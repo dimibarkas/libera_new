@@ -7,6 +7,7 @@ import {
   endOfDay,
   addDays,
 } from "date-fns"
+import generateBuylistPDF from "../report/generate-buylist"
 
 import ArticlesDAO from "./ArticlesDAO"
 
@@ -316,6 +317,7 @@ export default class OrdersDAO {
       buyListArray.forEach(
         element => (totalNumArticles = totalNumArticles + element.number),
       )
+      generateBuylistPDF(buyListArray)
       return {
         buyListArray: buyListArray,
         totalNumArticles: Math.round(totalNumArticles),

@@ -13,6 +13,8 @@ var _customers = _interopRequireDefault(require("./customers.controller"))
 
 var router = new _express.Router()
 router.route("/").get(_customers["default"].apiGetCustomers)
+router.route("/all").get(_customers["default"].apiGetListOfAllCustomers)
+router.route("/search").get(_customers["default"].apiSearchCustomers)
 router.route("/").post(_customers["default"].apiInsertCustomer)
 router.route("/id/:id").get(_customers["default"].apiGetCustomerById)
 router.route("/id/:id").patch(_customers["default"].apiUpdateCustomerById)

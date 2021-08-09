@@ -199,44 +199,30 @@ var CustomersDAO = /*#__PURE__*/ (function() {
 
                     case 18:
                       customerList = _context2.sent
-
-                      if (!(page === 0)) {
-                        _context2.next = 25
-                        break
-                      }
-
-                      _context2.next = 22
+                      _context2.next = 21
                       return customers.countDocuments(query)
 
-                    case 22:
-                      _context2.t1 = _context2.sent
-                      _context2.next = 26
-                      break
-
-                    case 25:
-                      _context2.t1 = 0
-
-                    case 26:
-                      totalNumCustomers = _context2.t1
+                    case 21:
+                      totalNumCustomers = _context2.sent
                       return _context2.abrupt("return", {
                         customerList: customerList,
                         totalNumCustomers: totalNumCustomers,
                       })
 
-                    case 30:
-                      _context2.prev = 30
-                      _context2.t2 = _context2["catch"](15)
+                    case 25:
+                      _context2.prev = 25
+                      _context2.t1 = _context2["catch"](15)
                       console.error(
-                        "Unable to issue find command, ".concat(_context2.t2),
+                        "Unable to issue find command, ".concat(_context2.t1),
                       )
 
-                    case 33:
+                    case 28:
                       return _context2.abrupt("return", {
                         customerList: [],
                         totalNumCustomers: 0,
                       })
 
-                    case 34:
+                    case 29:
                     case "end":
                       return _context2.stop()
                   }
@@ -246,7 +232,7 @@ var CustomersDAO = /*#__PURE__*/ (function() {
               this,
               [
                 [4, 10],
-                [15, 30],
+                [15, 25],
               ],
             )
           }),
@@ -563,6 +549,74 @@ var CustomersDAO = /*#__PURE__*/ (function() {
         }
 
         return deleteCustomerById
+      })(),
+    },
+    {
+      key: "getAllCustomers",
+      value: (function() {
+        var _getAllCustomers = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee7() {
+            var response
+            return _regenerator["default"].wrap(
+              function _callee7$(_context7) {
+                while (1) {
+                  switch ((_context7.prev = _context7.next)) {
+                    case 0:
+                      _context7.prev = 0
+                      _context7.next = 3
+                      return customers
+                        .find({})
+                        .project({
+                          _id: 0,
+                          address: 0,
+                          phone: 0,
+                        })
+                        .toArray()
+
+                    case 3:
+                      response = _context7.sent
+
+                      if (!response) {
+                        _context7.next = 6
+                        break
+                      }
+
+                      return _context7.abrupt("return", response)
+
+                    case 6:
+                      return _context7.abrupt("return", null)
+
+                    case 9:
+                      _context7.prev = 9
+                      _context7.t0 = _context7["catch"](0)
+                      console.error(
+                        "Error occurred while retrieving customers, ".concat(
+                          _context7.t0,
+                          ".",
+                        ),
+                      )
+                      return _context7.abrupt("return", {
+                        error: _context7.t0,
+                      })
+
+                    case 13:
+                    case "end":
+                      return _context7.stop()
+                  }
+                }
+              },
+              _callee7,
+              null,
+              [[0, 9]],
+            )
+          }),
+        )
+
+        function getAllCustomers() {
+          return _getAllCustomers.apply(this, arguments)
+        }
+
+        return getAllCustomers
       })(),
     },
   ])

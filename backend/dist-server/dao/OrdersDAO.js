@@ -25,6 +25,10 @@ var _bson = require("bson")
 
 var _dateFns = require("date-fns")
 
+var _generateBuylist = _interopRequireDefault(
+  require("../report/generate-buylist"),
+)
+
 var _ArticlesDAO = _interopRequireDefault(require("./ArticlesDAO"))
 
 var orders
@@ -896,13 +900,14 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                         return (totalNumArticles =
                           totalNumArticles + element.number)
                       })
+                      ;(0, _generateBuylist["default"])(buyListArray)
                       return _context8.abrupt("return", {
                         buyListArray: buyListArray,
                         totalNumArticles: Math.round(totalNumArticles),
                       })
 
-                    case 30:
-                      _context8.prev = 30
+                    case 31:
+                      _context8.prev = 31
                       _context8.t0 = _context8["catch"](3)
                       console.error(
                         "Unable to issue find command, ".concat(_context8.t0),
@@ -912,7 +917,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                         totalNumArticles: 0,
                       })
 
-                    case 34:
+                    case 35:
                     case "end":
                       return _context8.stop()
                   }
@@ -920,7 +925,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
               },
               _callee8,
               null,
-              [[3, 30]],
+              [[3, 31]],
             )
           }),
         )

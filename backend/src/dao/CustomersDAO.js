@@ -52,8 +52,7 @@ export default class CustomersDAO {
 
     try {
       const customerList = await displayCursor.toArray()
-      const totalNumCustomers =
-        page === 0 ? await customers.countDocuments(query) : 0
+      const totalNumCustomers = await customers.countDocuments(query)
 
       return { customerList, totalNumCustomers }
     } catch (e) {
@@ -135,6 +134,22 @@ export default class CustomersDAO {
       return null
     } catch (error) {
       console.error(`Error occurred while deleting the article, ${error}.`)
+      return { error: error }
+    }
+  }
+
+  static async getAllCustomers() {
+    try {
+      const response = await customers
+        .find({})
+        .project({ _id: 0, address: 0, phone: 0 })
+        .toArray()
+      if (response) {
+        return response
+      }
+      return null
+    } catch (error) {
+      console.error(`Error occurred while retrieving customers, ${error}.`)
       return { error: error }
     }
   }

@@ -15,7 +15,8 @@ import { de } from 'date-fns/locale';
 import useSWR from 'swr';
 import { generateBuyList } from '../services/order-service';
 import Error from './error';
-import CircularIndeterminate from './circular-indeterminate';
+import { useReactToPrint } from "react-to-print"
+
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -56,93 +57,115 @@ export default function BuyListDialog({ open, setBuyListDialog }) {
     const date = useSelector(state => state.date)
     const classes = useStyles();
     const fetcher = url => generateBuyList(url)
-    const { data, error } = useSWR("/api/orders/buylist/" + calcDiffDays(new Date(date.date)), fetcher);
+    const { data, error } = useSWR(open ? "/api/orders/buylist/" + calcDiffDays(new Date(date.date)) : null, fetcher);
+
+
+    const componentRef = React.useRef(null);
+
+    const reactToPrintContent = React.useCallback(() => {
+        return componentRef.current;
+    }, [])
+
+    const formatedDate = format(new Date(date.date), 'EE,dd.MM.yyyy', { locale: de })
+
+    const handlePrint = useReactToPrint({
+        content: reactToPrintContent,
+        documentTitle: `Bestellliste ${formatedDate}`,
+    })
+
+
 
     if (error) return <Error />
 
-    if (!data) return <CircularIndeterminate />
+    if (!data) return null
 
-    const leftSide = data.buyList.slice(0, 38);
-    const rightSide = data.buyList.slice(38);
+    if (data) {
+        const leftSide = data.buyList.slice(0, 38);
+        const rightSide = data.buyList.slice(38);
 
-    return (
-        <div>
-            <Dialog fullScreen open={open} onClose={() => setBuyListDialog(false)} TransitionComponent={Transition}>
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" onClick={() => setBuyListDialog(false)} aria-label="close">
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography variant="h6" className={classes.title}>
-                            Einkaufsliste
-                        </Typography>
-                        <Button autoFocus color="inherit" onClick={() => setBuyListDialog(false)}>
-                            Drucken
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-                <div className={classes.root}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} >
-                            <Paper className={classes.paper}>
-                                <div className={classes.date}>
-                                    {format(new Date(date.date), 'EE,dd.MM.yyyy', { locale: de })}
-                                    <br />
-                                    Stück insgesamt: {data.totalNumArticles}
-                                </div>
-                            </Paper>
+        return (
+            <div>
+                <Dialog fullScreen open={open} onClose={() => setBuyListDialog(false)} TransitionComponent={Transition}>
+                    <AppBar className={classes.appBar}>
+                        <Toolbar>
+                            <IconButton edge="start" color="inherit" onClick={() => setBuyListDialog(false)} aria-label="close">
+                                <CloseIcon />
+                            </IconButton>
+                            <Typography variant="h6" className={classes.title}>
+                                Einkaufsliste
+                            </Typography>
+                            <Button autoFocus color="inherit" onClick={handlePrint}>
+                                Drucken
+                            </Button>
+                        </Toolbar>
+                    </AppBar>
+                    <div className={classes.root} ref={componentRef}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} >
+                                <Paper className={classes.paper}>
+                                    <div className={classes.date}>
+                                        {format(new Date(date.date), 'EE,dd.MM.yyyy', { locale: de })}
+                                        <br />
+                                        Stück insgesamt: {data.totalNumArticles}
+                                    </div>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Paper className={classes.paper}>
+                                    <TableContainer >
+                                        <Table>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell align="left">Artikelname</TableCell>
+                                                    <TableCell align="left">Anzahl</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {
+                                                    leftSide.map(item => (
+                                                        <TableRow key={item.name}>
+                                                            <TableCell align="left">{item.name}</TableCell>
+                                                            <TableCell align="left">{item.number === 0 ? "" : item.number}</TableCell>
+                                                        </TableRow>
+                                                    ))
+                                                }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Paper className={classes.paper}>
+                                    <TableContainer >
+                                        <Table>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell align="left">Artikelname</TableCell>
+                                                    <TableCell align="left">Anzahl</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {
+                                                    rightSide.map(item => (
+                                                        <TableRow key={item.name}>
+                                                            <TableCell align="left">{item.name}</TableCell>
+                                                            <TableCell align="left">{item.number === 0 ? "" : item.number}</TableCell>
+                                                        </TableRow>
+                                                    ))
+                                                }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                </Paper>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Paper className={classes.paper}>
-                                <TableContainer >
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell align="left">Artikelname</TableCell>
-                                                <TableCell align="left">Anzahl</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {
-                                                leftSide.map(item => (
-                                                    <TableRow key={item.name}>
-                                                        <TableCell align="left">{item.name}</TableCell>
-                                                        <TableCell align="left">{item.number === 0 ? "" : item.number}</TableCell>
-                                                    </TableRow>
-                                                ))
-                                            }
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Paper className={classes.paper}>
-                                <TableContainer >
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell align="left">Artikelname</TableCell>
-                                                <TableCell align="left">Anzahl</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {
-                                                rightSide.map(item => (
-                                                    <TableRow key={item.name}>
-                                                        <TableCell align="left">{item.name}</TableCell>
-                                                        <TableCell align="left">{item.number === 0 ? "" : item.number}</TableCell>
-                                                    </TableRow>
-                                                ))
-                                            }
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </Paper>
-                        </Grid>
-                    </Grid>
-                </div>
-            </Dialog>
-        </div>
-    );
+                    </div>
+                </Dialog>
+            </div>
+        );
+    }
+
+
+
+
 }

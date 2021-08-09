@@ -6,7 +6,7 @@ import Container from '@material-ui/core/Container';
 import { useSelector } from 'react-redux';
 import { listArticles } from '../../services/article-service';
 import useTable from '../../components/useTable';
-import { TableBody, TableCell, TableRow } from '@material-ui/core';
+import { TableBody, TableCell, TablePagination, TableRow } from '@material-ui/core';
 import CircularIndeterminate from '../../components/circular-indeterminate';
 import useSWR from 'swr'
 import Error from '../../components/error';
@@ -16,6 +16,7 @@ import { deleteCustomer } from '../../services/customer-service';
 import { useSnackbar } from "notistack"
 import { mutate } from 'swr';
 import ConfirmDialog from "../../components/confirm-dialog"
+import { selectProps, TablePaginationActions } from '../../components/custom-table-pagination';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,6 +55,11 @@ export default function Customers() {
     const history = useHistory();
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
     const { enqueueSnackbar } = useSnackbar();
+    const [page, setPage] = useState(0)
+
+    const handleChangePage = (e, newPage) => {
+        setPage(newPage)
+    }
 
     const onAdd = () => {
         history.push("/customers/new")
@@ -80,7 +86,7 @@ export default function Customers() {
     }
 
     const fetcher = url => listArticles(url, accessToken)
-    const { data, error } = useSWR("/api/customers", fetcher);
+    const { data, error } = useSWR(`/api/customers/search?page=${page}`, fetcher);
     const classes = useStyles();
     const { TableContainer, TableHead } = useTable(headCells, data, onAdd);
 
@@ -117,6 +123,16 @@ export default function Customers() {
                         }
                     </TableBody>
                 </TableContainer>
+                <TablePagination
+                    component="div"
+                    count={data.total_results}
+                    rowsPerPage={data.entries_per_page}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    labelRowsPerPage={""}
+                    SelectProps={selectProps}
+                    ActionsComponent={TablePaginationActions}
+                />
             </Container>
             <ConfirmDialog
                 confirmDialog={confirmDialog}
@@ -125,3 +141,4 @@ export default function Customers() {
         </div>
     )
 }
+

@@ -11,14 +11,18 @@ var _fs = _interopRequireDefault(require("fs"))
 
 var _pdfkit = _interopRequireDefault(require("pdfkit"))
 
-function generateBuylistPDF(buyListArray) {
+function generateBuylistPDF(buyListArray, searchDate) {
   var doc = new _pdfkit["default"]({
     margin: 50,
   })
   generateHeader(doc)
   generateBuylistTable(doc, buyListArray)
   doc.end()
-  doc.pipe(_fs["default"].createWriteStream("./result.pdf"))
+  doc.pipe(
+    _fs["default"].createWriteStream(
+      "./ Einkaufsliste ".concat(searchDate, ".pdf"),
+    ),
+  )
 }
 
 function generateHeader(doc) {

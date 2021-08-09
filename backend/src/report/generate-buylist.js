@@ -1,14 +1,14 @@
 import fs from "fs"
 import PDFDocument from "pdfkit"
 
-export default function generateBuylistPDF(buyListArray) {
+export default function generateBuylistPDF(buyListArray, searchDate) {
   let doc = new PDFDocument({ margin: 50 })
 
   generateHeader(doc)
   generateBuylistTable(doc, buyListArray)
 
   doc.end()
-  doc.pipe(fs.createWriteStream("./result.pdf"))
+  doc.pipe(fs.createWriteStream(`./ Einkaufsliste ${searchDate}.pdf`))
 }
 
 function generateHeader(doc) {

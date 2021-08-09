@@ -317,7 +317,7 @@ export default class OrdersDAO {
       buyListArray.forEach(
         element => (totalNumArticles = totalNumArticles + element.number),
       )
-      generateBuylistPDF(buyListArray)
+      generateBuylistPDF(buyListArray, searchDate)
       return {
         buyListArray: buyListArray,
         totalNumArticles: Math.round(totalNumArticles),

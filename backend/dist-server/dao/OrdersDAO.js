@@ -900,7 +900,10 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                         return (totalNumArticles =
                           totalNumArticles + element.number)
                       })
-                      ;(0, _generateBuylist["default"])(buyListArray)
+                      ;(0, _generateBuylist["default"])(
+                        buyListArray,
+                        searchDate,
+                      )
                       return _context8.abrupt("return", {
                         buyListArray: buyListArray,
                         totalNumArticles: Math.round(totalNumArticles),

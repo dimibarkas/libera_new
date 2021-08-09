@@ -17,10 +17,10 @@ export default function AsynchronousAutocompleteCustomer({ value, handleChange, 
         }
 
         (async () => {
-            const res = await listCustomers("/api/customers");
+            const res = await listCustomers("/api/customers/all");
 
             if (active) {
-                setOptions(res.customers);
+                setOptions(res);
             }
         })();
 

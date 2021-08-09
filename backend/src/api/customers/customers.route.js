@@ -4,6 +4,8 @@ import CustomersController from "./customers.controller"
 const router = new Router()
 
 router.route("/").get(CustomersController.apiGetCustomers)
+router.route("/all").get(CustomersController.apiGetListOfAllCustomers)
+router.route("/search").get(CustomersController.apiSearchCustomers)
 router.route("/").post(CustomersController.apiInsertCustomer)
 router.route("/id/:id").get(CustomersController.apiGetCustomerById)
 router.route("/id/:id").patch(CustomersController.apiUpdateCustomerById)

@@ -32,6 +32,51 @@ export default class CustomersController {
     res.json(response)
   }
 
+  static async apiSearchCustomers(req, res, next) {
+    const CUSTOMERS_PER_PAGE = 20
+    let page
+    try {
+      page = req.query.page ? parseInt(req.query.page, 10) : 0
+    } catch (error) {
+      console.error(`Got bad value for page: ,${error}`)
+      page = 0
+    }
+    let searchType
+    try {
+      searchType = Object.keys(req.query)[0]
+    } catch (error) {
+      console.error(`No search key specified: ${error}`)
+    }
+
+    let filters = {}
+
+    switch (searchType) {
+      case "text":
+        if (req.query.text !== "") {
+          filters.text = req.query.text
+        }
+        break
+      default:
+    }
+
+    const { customerList, totalNumCustomers } = await CustomersDAO.getCustomers(
+      {
+        filters,
+        page,
+        CUSTOMERS_PER_PAGE,
+      },
+    )
+
+    let response = {
+      customers: customerList,
+      page: 0,
+      filters: {},
+      entries_per_page: CUSTOMERS_PER_PAGE,
+      total_results: totalNumCustomers,
+    }
+    res.json(response)
+  }
+
   static async apiInsertCustomer(req, res, next) {
     try {
       const body = req.body
@@ -190,6 +235,21 @@ export default class CustomersController {
         code: "DELETION_SUCCED",
         message: `${response.deletedCount} Customer with id ${id} deleted.`,
       })
+    } catch (error) {
+      res
+        .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        .json({ error: error })
+    }
+  }
+
+  static async apiGetListOfAllCustomers(req, res) {
+    try {
+      const response = await CustomersDAO.getAllCustomers()
+      if (!response) {
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        return
+      }
+      res.status(constants.HTTP_STATUS_OK).json(response)
     } catch (error) {
       res
         .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)

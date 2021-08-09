@@ -6,134 +6,427 @@ module.exports = ({ name, price1, price2, receiptId }) => {
     { id: 3, name: "test3" },
   ]
   return `
-    <!doctype html>
-    <html>
-       <head>
-          <meta charset="utf-8">
-          <title>PDF Result Template</title>
-          <style>
-             .invoice-box {
-             max-width: 800px;
-             margin: auto;
-             padding: 30px;
-             border: 1px solid #eee;
-             box-shadow: 0 0 10px rgba(0, 0, 0, .15);
-             font-size: 16px;
-             line-height: 24px;
-             font-family: 'Helvetica Neue', 'Helvetica',
-             color: #555;
-             }
-             .margin-top {
-             margin-top: 50px;
-             }
-             .justify-center {
-             text-align: center;
-             }
-             .invoice-box table {
-             width: 100%;
-             line-height: inherit;
-             text-align: left;
-             }
-             .invoice-box table td {
-             padding: 5px;
-             vertical-align: top;
-             }
-             .invoice-box table tr td:nth-child(2) {
-             text-align: right;
-             }
-             .invoice-box table tr.top table td {
-             padding-bottom: 20px;
-             }
-             .invoice-box table tr.top table td.title {
-             font-size: 45px;
-             line-height: 45px;
-             color: #333;
-             }
-             .invoice-box table tr.information table td {
-             padding-bottom: 40px;
-             }
-             .invoice-box table tr.heading td {
-             background: #eee;
-             border-bottom: 1px solid #ddd;
-             font-weight: bold;
-             }
-             .invoice-box table tr.details td {
-             padding-bottom: 20px;
-             }
-             .invoice-box table tr.item td {
-             border-bottom: 1px solid #eee;
-             }
-             .invoice-box table tr.item.last td {
-             border-bottom: none;
-             }
-             .invoice-box table tr.total td:nth-child(2) {
-             border-top: 2px solid #eee;
-             font-weight: bold;
-             }
-             @media only screen and (max-width: 600px) {
-             .invoice-box table tr.top table td {
-             width: 100%;
-             display: block;
-             text-align: center;
-             }
-             .invoice-box table tr.information table td {
-             width: 100%;
-             display: block;
-             text-align: center;
-             }
-             }
-          </style>
-       </head>
-       <body>
-       ${arr.map(item => item.name)}
-          <div class="invoice-box">
-             <table cellpadding="0" cellspacing="0">
-                <tr class="top">
-                   <td colspan="2">
-                      <table>
-                         <tr>
-                            <td class="title"><img  src="https://i2.wp.com/cleverlogos.co/wp-content/uploads/2018/05/reciepthound_1.jpg?fit=800%2C600&ssl=1"
-                               style="width:100%; max-width:156px;"></td>
-                            <td>
-                               Datum: ${`${today.getDate()}. ${today.getMonth() +
-                                 1}. ${today.getFullYear()}.`}
-                            </td>
-                         </tr>
-                      </table>
-                   </td>
-                </tr>
-                <tr class="information">
-                   <td colspan="2">
-                      <table>
-                         <tr>
-                            <td>
-                               Customer name: ${name}
-                            </td>
-                            <td>
-                               Receipt number: ${receiptId}
-                            </td>
-                         </tr>
-                      </table>
-                   </td>
-                </tr>
-                <tr class="heading">
-                   <td>Bought items:</td>
-                   <td>Price</td>
-                </tr>
-                <tr class="item">
-                   <td>First item:</td>
-                   <td>${price1}$</td>
-                </tr>
-                <tr class="item">
-                   <td>Second item:</td>
-                   <td>${price2}$</td>
-                </tr>
-             </table>
-             <br />
-             <h1 class="justify-center">Total price: ${parseInt(price1) +
-               parseInt(price2)}$</h1>
-          </div>
-       </body>
-    </html>
+  <!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+  </head>
+  <style>
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+  
+      td,
+      th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+  </style>
+  
+  <body>
+      <table>
+          <tbody>
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Wochentag</td>
+                  <td>Datum</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Artikel</td>
+                  <td>St&uuml;ck</td>
+                  <td>&nbsp;</td>
+                  <td>Artikel</td>
+                  <td>St&uuml;ck</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Tomaten 5kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Broccoli 5kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Gurken 12st.</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Blumenkohl 6-8st</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Eisberg 8-12 st.</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Lauchzwiebeln Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Lollo Bionda</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Cherrytomaten</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Lollo Rosso</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Chinakohl Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Mixsalat</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Paprika Carli t&uuml;te</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Kopfsalat</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Paprika Dolma Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Papr. Gr&uuml;n 5kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Paprika Palermo</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Papr. Rot 5kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Fleischtomaten Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Papr.Gelb 5 kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Fenchel Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Paprika Mix 5kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Feldsalat Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Auberginen 5kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Chicor&eacute;e Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Champignons</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Austernpilze Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Riesenchampignons</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Staudensellerie Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Grillkartoffeln 25kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Knollensellerie Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Kartoffeln Festk.25kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Rotkohl 15 kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>M&ouml;hren Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Latuca Romana Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Radicchio Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Rote Beete 10 kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Radieschen 2,5kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Baby Spinat</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Rucola Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Spinat Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Wei&szlig;kohl 15 kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Frisee Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Zitronen Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Drillinge 10kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Zucchini 5kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Porree Sack</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Zwiebeln 25kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&Auml;pfel Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Zwiebeln Rot 10kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Clementinen</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Knoblauch 5kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Orangen Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Kr&auml;uter</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Wei&szlig;kohl geschnitten kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Petersilie krause Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>M&ouml;hren geschnitten kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Petersilie glatt (Bund)</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Eichenblattsalat</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Blattsellerie Kiste</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Endiviensalat</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Dill (Bund)</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Eier 30st</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Basilikum Schale</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Rote Pfeffer kg</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Oregano Schale</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Wildkr&auml;uter</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Rosmarin Schale</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>Pfifferlinge</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Thymian Schale</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Salbei Schale</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Minze Schale</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Schnittlauch Schale</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>Estragon Schale</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+              <tr>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+              </tr>
+          </tbody>
+      </table>
+  </body>
+  
+  </html>
     `
 }

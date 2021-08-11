@@ -7,9 +7,7 @@ import users from "./api/users/users.route"
 import customers from "./api/customers/customers.route"
 import orders from "./api/orders/orders.route"
 import path from "path"
-import pdf from "html-pdf"
-
-const pdfTemplate = require("../reports")
+import fs from "fs"
 
 const app = express()
 
@@ -18,19 +16,18 @@ process.env.NODE_ENV !== "production" && app.use(morgan("dev"))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-//Report Test
-app.post("/api/create-pdf", (req, res) => {
-  pdf.create(pdfTemplate(req.body), {}).toFile("result.pdf", err => {
+app.get("/fetch-buylist", (req, res) => {
+  var options = {
+    root: path.join(__dirname, "../reports"),
+  }
+  // res.set('Content-Disposition', 'attachment; filename=buylist.pdf')
+  res.sendFile("einkaufsliste.pdf", options, function(err) {
     if (err) {
-      res.send(Promise.reject())
+      console.error(err)
+    } else {
+      console.log("buylist succesfully sent to client!")
     }
-
-    res.send(Promise.resolve())
   })
-})
-
-app.get("/fetch-pdf", (req, res) => {
-  res.sendFile(`${__dirname}/result.pdf`)
 })
 
 //Register api routes

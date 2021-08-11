@@ -1,35 +1,75 @@
+import { format } from "date-fns"
+import { de } from "date-fns/locale"
 import fs from "fs"
 import PDFDocument from "pdfkit"
 
 export default function generateBuylistPDF(buyListArray, searchDate) {
   let doc = new PDFDocument({ margin: 50 })
+  const formatedDate = format(searchDate, "EEEE,dd.MM.yy", { locale: de })
 
-  generateHeader(doc)
+  generateHeader(doc, formatedDate)
   generateBuylistTable(doc, buyListArray)
 
   doc.end()
-  doc.pipe(fs.createWriteStream(`./ Einkaufsliste ${searchDate}.pdf`))
+  doc.pipe(fs.createWriteStream(`./reports/einkaufsliste.pdf`))
 }
 
-function generateHeader(doc) {
+function generateHeader(doc, formatedDate) {
   doc
-    .text(`Einkaufsliste`, 110, 57)
+    .text(`Einkaufsliste für ${formatedDate}`, {
+      underline: true,
+      align: "justify",
+    })
     .fontSize(10)
-    .moveDown()
 }
 
 function generateBuylistTable(doc, buyListArray) {
-  buyListArray.forEach((elem, i) => {
-    generateTableRow(doc, i, elem.name, elem.number)
-  })
+  let i,
+    invoiceTableTop = 60
+
+  for (i = 0; i < 37; i++) {
+    const item = buyListArray[i]
+    const position = invoiceTableTop + (i + 1) * 16
+    generateTableRow(
+      doc,
+      position,
+      item.name,
+      item.number === 0 ? "" : item.number,
+    )
+  }
+
+  invoiceTableTop = 60
+
+  for (i = 38; i < buyListArray.length; i++) {
+    const item = buyListArray[i]
+    const position = invoiceTableTop + (i + 1 - 38) * 16
+    generateTableRowRightHand(
+      doc,
+      position,
+      item.name,
+      item.number === 0 ? "" : item.number,
+    )
+  }
 }
 
-function generateTableRow(doc, y, c1, c2, c3, c4, c5) {
+function generateTableRow(doc, y, c1, c2) {
   doc
     .fontSize(10)
-    .text(c1, 50, y)
-    .text(c2, 150, y)
-    .text(c3, 280, y, { width: 90, align: "right", border: "1px solid black" })
-    .text(c4, 370, y, { width: 90, align: "right" })
-    .text(c5, 0, y, { align: "right" })
+    .text(c1, 50, y, { indent: 5 })
+    .rect(50, y - 4, 150, 16)
+    .stroke()
+    .text(c2, 200, y, { width: 80, align: "center" })
+    .rect(200, y - 4, 80, 16)
+    .stroke()
+}
+
+function generateTableRowRightHand(doc, y, c1, c2) {
+  doc
+    .fontSize(10)
+    .text(c1, 330, y, { indent: 5 })
+    .rect(330, y - 4, 150, 16)
+    .stroke()
+    .text(c2, 480, y, { width: 80, align: "center" })
+    .rect(480, y - 4, 80, 16)
+    .stroke()
 }

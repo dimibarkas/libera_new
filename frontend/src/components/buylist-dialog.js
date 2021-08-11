@@ -13,9 +13,9 @@ import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import useSWR from 'swr';
-import { generateBuyList } from '../services/order-service';
+import { generateBuyList, getBuyList } from '../services/order-service';
 import Error from './error';
-import { useReactToPrint } from "react-to-print"
+import { saveAs } from "file-saver"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -59,21 +59,11 @@ export default function BuyListDialog({ open, setBuyListDialog }) {
     const fetcher = url => generateBuyList(url)
     const { data, error } = useSWR(open ? "/api/orders/buylist/" + calcDiffDays(new Date(date.date)) : null, fetcher);
 
-
-    const componentRef = React.useRef(null);
-
-    const reactToPrintContent = React.useCallback(() => {
-        return componentRef.current;
-    }, [])
-
-    const formatedDate = format(new Date(date.date), 'EE,dd.MM.yyyy', { locale: de })
-
-    const handlePrint = useReactToPrint({
-        content: reactToPrintContent,
-        documentTitle: `Bestellliste ${formatedDate}`,
-    })
-
-
+    const handlePrint = async () => {
+        const res = await getBuyList();
+        const pdfBlob = new Blob([res.data], { type: 'application/pdf' })
+        saveAs(pdfBlob, "Einkaufsliste.pdf")
+    }
 
     if (error) return <Error />
 
@@ -99,7 +89,7 @@ export default function BuyListDialog({ open, setBuyListDialog }) {
                             </Button>
                         </Toolbar>
                     </AppBar>
-                    <div className={classes.root} ref={componentRef}>
+                    <div className={classes.root} >
                         <Grid container spacing={3}>
                             <Grid item xs={12} >
                                 <Paper className={classes.paper}>

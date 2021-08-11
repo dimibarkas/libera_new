@@ -14,11 +14,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { Link as RouterLink } from "react-router-dom"
-import { IconButton } from '@material-ui/core';
+// import { IconButton } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleDarkMode } from "../redux/store/darkmode/actions/index"
-import Brightness7Icon from "@material-ui/icons/Brightness7"
-import Brightness4Icon from "@material-ui/icons/Brightness4"
+// import { toggleDarkMode } from "../redux/store/darkmode/actions/index"
+// import Brightness7Icon from "@material-ui/icons/Brightness7"
+// import Brightness4Icon from "@material-ui/icons/Brightness4"
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -146,13 +146,13 @@ const footers = [
 export default function LandingPage() {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const darkModeState = useSelector((state) => state.darkMode);
+    // const darkModeState = useSelector((state) => state.darkMode);
     const userState = useSelector((state) => state.user);
     const { enqueueSnackbar } = useSnackbar();
 
-    const handleDarkModeToggle = () => {
-        dispatch(toggleDarkMode())
-    }
+    // const handleDarkModeToggle = () => {
+    //     dispatch(toggleDarkMode())
+    // }
 
     const onLogoutClick = () => {
         if (userState.loggedIn) {
@@ -171,9 +171,9 @@ export default function LandingPage() {
                     </Typography>
 
                     <div>
-                        <IconButton onClick={handleDarkModeToggle}>
+                        {/* <IconButton onClick={handleDarkModeToggle}>
                             {darkModeState.isEnabled ? <Brightness7Icon /> : <Brightness4Icon />}
-                        </IconButton>
+                        </IconButton> */}
                         <RouterLink to="/login" className={classes.link}>
                             <Button color="primary" variant="outlined" onClick={onLogoutClick} text={userState.loggedIn ? "Logout" : "Login"} />
                         </RouterLink>
@@ -190,7 +190,7 @@ export default function LandingPage() {
                 </Typography>
                 <div className={classes.getStartedButtonContainer}>
                     <RouterLink to="/dashboard" className={classes.link}>
-                        <Button text={"JETZT STARTEN"} />
+                        <Button text={"JETZT STARTEN"} color="primary" />
                     </RouterLink>
                 </div>
             </Container>

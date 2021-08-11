@@ -27,9 +27,7 @@ var _orders = _interopRequireDefault(require("./api/orders/orders.route"))
 
 var _path = _interopRequireDefault(require("path"))
 
-var _htmlPdf = _interopRequireDefault(require("html-pdf"))
-
-var pdfTemplate = require("../reports")
+var _fs = _interopRequireDefault(require("fs"))
 
 var app = (0, _express["default"])()
 app.use((0, _cors["default"])())
@@ -39,21 +37,19 @@ app.use(
   _bodyParser["default"].urlencoded({
     extended: true,
   }),
-) //Report Test
+)
+app.get("/fetch-buylist", function(req, res) {
+  var options = {
+    root: _path["default"].join(__dirname, "../reports"),
+  } // res.set('Content-Disposition', 'attachment; filename=buylist.pdf')
 
-app.post("/api/create-pdf", function(req, res) {
-  _htmlPdf["default"]
-    .create(pdfTemplate(req.body), {})
-    .toFile("result.pdf", function(err) {
-      if (err) {
-        res.send(Promise.reject())
-      }
-
-      res.send(Promise.resolve())
-    })
-})
-app.get("/fetch-pdf", function(req, res) {
-  res.sendFile("".concat(__dirname, "/result.pdf"))
+  res.sendFile("einkaufsliste.pdf", options, function(err) {
+    if (err) {
+      console.error(err)
+    } else {
+      console.log("buylist succesfully sent to client!")
+    }
+  })
 }) //Register api routes
 
 app.use("/api/articles", _articles["default"])

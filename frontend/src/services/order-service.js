@@ -95,3 +95,15 @@ export const generateBuyList = async (url) => {
     return res.data;
 }
 
+export const getBuyList = async () => {
+    const res = await axios({
+        method: "get",
+        url: "/fetch-buylist",
+        responseType: "blob"
+    });
+    if (res.status !== 200) {
+        throw new Error("reqest failed");
+    }
+    return res
+}
+

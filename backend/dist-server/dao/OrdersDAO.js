@@ -878,17 +878,28 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                         switch (element.name) {
                           case "Papr. Grün 5kg":
                             element.number =
-                              Math.round(element.number * 1000) / 1000000
+                              Math.round(
+                                (element.number + Number.EPSILON) * 100,
+                              ) / 100000
                             break
 
                           case "Papr. Rot 5kg":
                             element.number =
-                              Math.round(element.number * 1000) / 1000000
+                              Math.round(
+                                (element.number + Number.EPSILON) * 100,
+                              ) / 100000
                             break
 
                           case "Papr. Gelb 5kg":
                             element.number =
-                              Math.round(element.number * 1000) / 1000000
+                              Math.round(
+                                (element.number + Number.EPSILON) * 100,
+                              ) / 100000
+                            break
+
+                          case "Zitronen Kiste":
+                            element.number =
+                              Math.round(element.number * 100) / 100
                             break
 
                           default:

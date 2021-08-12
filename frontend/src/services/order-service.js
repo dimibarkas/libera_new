@@ -107,3 +107,22 @@ export const getBuyList = async () => {
     return res
 }
 
+export const generateAndFetchDeliveryNotes = async (url) => {
+    const res = await axios({
+        method: "get",
+        url: url,
+    });
+    if (res.status !== 200) {
+        throw new Error("error at generating delivery notes")
+    }
+    const res2 = await axios({
+        method: "get",
+        url: "/fetch-deliverynotes",
+        responseType: "blob"
+    });
+    if (res2.status !== 200) {
+        throw new Error("error at retriebing delivery notes");
+    }
+    return res2;
+}
+

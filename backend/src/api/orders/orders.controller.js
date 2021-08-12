@@ -236,4 +236,28 @@ export default class OrdersController {
         .json({ error: error })
     }
   }
+
+  static async apiGenerateDeliveryNotes(req, res) {
+    try {
+      let number = req.params.number || {}
+      let errors = {}
+      if (!number) {
+        errors.number = "No number for current provided"
+      }
+      if (Object.keys(errors).length > 0) {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).json({
+          code: "WRONG_NUMBER",
+          message: errors,
+        })
+        return
+      }
+
+      const response = await OrdersDAO.generateDeliveryNotes(number)
+      res.json(response)
+    } catch (error) {
+      res
+        .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        .json({ error: error })
+    }
+  }
 }

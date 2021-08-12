@@ -8,6 +8,7 @@ import customers from "./api/customers/customers.route"
 import orders from "./api/orders/orders.route"
 import path from "path"
 import fs from "fs"
+import generateDeliveryNotePDF from "./report/generate-delivery-note"
 
 const app = express()
 
@@ -26,6 +27,20 @@ app.get("/fetch-buylist", (req, res) => {
       console.error(err)
     } else {
       console.log("buylist succesfully sent to client!")
+    }
+  })
+})
+
+app.get("/fetch-deliverynotes", (req, res) => {
+  var options = {
+    root: path.join(__dirname, "../reports"),
+  }
+  // res.set('Content-Disposition', 'attachment; filename=lieferscheine.pdf')
+  res.sendFile("lieferscheine.pdf", options, function(err) {
+    if (err) {
+      console.error(err)
+    } else {
+      console.log("deliverynotes succesfully sent to client!")
     }
   })
 })

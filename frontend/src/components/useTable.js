@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up("lg")]: {
             flexDirection: "row-reverse",
         },
-        flexWrap: "wrap"
+        // flexWrap: "wrap"
 
     },
     actionTableCell: {
@@ -93,11 +93,9 @@ export default function useTable(headCells, records, onAdd, showDateHelpers, sel
                     :
                     ""
                 }
-
             </Toolbar>
             <Table className={classes.table}>
                 {props.children}
-                {/* <TablePagination /> */}
             </Table>
         </>
     )
@@ -120,11 +118,6 @@ export default function useTable(headCells, records, onAdd, showDateHelpers, sel
             </MuiTableHead>
         )
     }
-
-
-    // const recordsAfterPagingAndSorting = () => {
-    //     return null
-    // }
 
     return {
         TableContainer,

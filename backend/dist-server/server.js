@@ -29,6 +29,10 @@ var _path = _interopRequireDefault(require("path"))
 
 var _fs = _interopRequireDefault(require("fs"))
 
+var _generateDeliveryNote = _interopRequireDefault(
+  require("./report/generate-delivery-note"),
+)
+
 var app = (0, _express["default"])()
 app.use((0, _cors["default"])())
 process.env.NODE_ENV !== "production" && app.use((0, _morgan["default"])("dev"))
@@ -48,6 +52,19 @@ app.get("/fetch-buylist", function(req, res) {
       console.error(err)
     } else {
       console.log("buylist succesfully sent to client!")
+    }
+  })
+})
+app.get("/fetch-deliverynotes", function(req, res) {
+  var options = {
+    root: _path["default"].join(__dirname, "../reports"),
+  } // res.set('Content-Disposition', 'attachment; filename=lieferscheine.pdf')
+
+  res.sendFile("lieferscheine.pdf", options, function(err) {
+    if (err) {
+      console.error(err)
+    } else {
+      console.log("deliverynotes succesfully sent to client!")
     }
   })
 }) //Register api routes

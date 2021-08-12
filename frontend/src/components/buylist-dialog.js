@@ -16,6 +16,7 @@ import useSWR from 'swr';
 import { generateBuyList, getBuyList } from '../services/order-service';
 import Error from './error';
 import { saveAs } from "file-saver"
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -84,8 +85,8 @@ export default function BuyListDialog({ open, setBuyListDialog }) {
                             <Typography variant="h6" className={classes.title}>
                                 Einkaufsliste
                             </Typography>
-                            <Button autoFocus color="inherit" onClick={handlePrint}>
-                                Drucken
+                            <Button autoFocus color="inherit" onClick={handlePrint} startIcon={<PictureAsPdfIcon />}>
+                                PDF anzeigen
                             </Button>
                         </Toolbar>
                     </AppBar>

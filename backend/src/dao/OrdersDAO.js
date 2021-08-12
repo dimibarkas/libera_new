@@ -8,6 +8,7 @@ import {
   addDays,
 } from "date-fns"
 import generateBuylistPDF from "../report/generate-buylist"
+import generateDeliveryNotePDF from "../report/generate-delivery-note"
 
 import ArticlesDAO from "./ArticlesDAO"
 
@@ -331,6 +332,39 @@ export default class OrdersDAO {
     } catch (error) {
       console.error(`Unable to issue find command, ${error}`)
       return { buyListArray: [], totalNumArticles: 0 }
+    }
+  }
+
+  static async generateDeliveryNotes(number) {
+    let suggestedDate = null
+    let ordersList
+    let cursor
+    try {
+      if (isNaN(number)) {
+        throw new Error(
+          `${number} is not a number, please provide a number as argument`,
+        )
+      }
+      if (number < 0) {
+        suggestedDate = subDays(new Date(), Math.abs(number))
+      }
+      if (number > 0) {
+        suggestedDate = addDays(new Date(), number)
+      }
+      const searchDate =
+        suggestedDate === null ? startOfToday() : startOfDay(suggestedDate)
+      console.log("Searchin Orders for date: " + searchDate)
+      cursor = await orders.find({
+        date: {
+          $gte:
+            suggestedDate === null ? startOfToday() : startOfDay(suggestedDate),
+          $lte: suggestedDate === null ? endOfToday() : endOfDay(suggestedDate),
+        },
+      })
+      ordersList = await cursor.toArray()
+      generateDeliveryNotePDF(ordersList)
+    } catch (error) {
+      console.error(`Error: ${error}`)
     }
   }
 }

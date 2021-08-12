@@ -10,6 +10,11 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import EventIcon from '@material-ui/icons/Event';
 import { changeActualDate } from '../redux/store/orders/actions'
 import { useDispatch, useSelector } from 'react-redux'
+import TableChartIcon from '@material-ui/icons/TableChart';
+import { generateAndFetchDeliveryNotes } from '../services/order-service'
+import { calcDiffDays } from "../utils/calc-diff-days"
+import { saveAs } from 'file-saver'
+
 const useStyles = makeStyles(theme => ({
     datepicker: {
         [theme.breakpoints.down("md")]: {
@@ -38,6 +43,12 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
 
     const handleClose = () => {
         setAnchorEl(null)
+    }
+
+    const handleShowDeliveryNotes = async () => {
+        const res = await generateAndFetchDeliveryNotes("/api/orders/deliverynotes/" + calcDiffDays(new Date(date.date)))
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" })
+        saveAs(pdfBlob, "Lieferscheine.pdf")
     }
 
     const currentDate = () => {
@@ -78,12 +89,18 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
                 />
                 <Button
                     variant="outlined"
-                    text={"Einkaufsliste anzeigen"}
+                    text={"Einkaufsliste"}
                     endIcon={<AssignmentIcon color="action" style={{ marginRight: "0.25em", marginLeft: "1em" }} />}
                     style={{ marginLeft: "10px" }}
                     onClick={() => setBuyListDialog(true)}
                 />
-
+                <Button
+                    variant="outlined"
+                    text={"Lieferscheine"}
+                    endIcon={<TableChartIcon color="action" style={{ marginRight: "0.25em", marginLeft: "1em" }} />}
+                    style={{ marginLeft: "10px" }}
+                    onClick={handleShowDeliveryNotes}
+                />
             </div>
             <div className={classes.moreVert}>
                 <IconButton onClick={handleClick}>
@@ -108,6 +125,12 @@ export default function DateHelpers({ selectedDate, handleDateChange, setSelecte
                             <AssignmentIcon />
                         </ListItemIcon>
                         Einkaufsliste anzeigen
+                    </MenuItem>
+                    <MenuItem button onClick={handleShowDeliveryNotes}>
+                        <ListItemIcon>
+                            <TableChartIcon />
+                        </ListItemIcon>
+                        Lieferscheine anzeigen
                     </MenuItem>
                 </Menu>
             </div>

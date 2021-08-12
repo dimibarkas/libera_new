@@ -29,6 +29,10 @@ var _generateBuylist = _interopRequireDefault(
   require("../report/generate-buylist"),
 )
 
+var _generateDeliveryNote = _interopRequireDefault(
+  require("../report/generate-delivery-note"),
+)
+
 var _ArticlesDAO = _interopRequireDefault(require("./ArticlesDAO"))
 
 var orders
@@ -949,6 +953,102 @@ var OrdersDAO = /*#__PURE__*/ (function() {
         }
 
         return generateBuyList
+      })(),
+    },
+    {
+      key: "generateDeliveryNotes",
+      value: (function() {
+        var _generateDeliveryNotes = (0, _asyncToGenerator2["default"])(
+          /*#__PURE__*/ _regenerator["default"].mark(function _callee9(number) {
+            var suggestedDate, ordersList, cursor, searchDate
+            return _regenerator["default"].wrap(
+              function _callee9$(_context9) {
+                while (1) {
+                  switch ((_context9.prev = _context9.next)) {
+                    case 0:
+                      suggestedDate = null
+                      _context9.prev = 1
+
+                      if (!isNaN(number)) {
+                        _context9.next = 4
+                        break
+                      }
+
+                      throw new Error(
+                        "".concat(
+                          number,
+                          " is not a number, please provide a number as argument",
+                        ),
+                      )
+
+                    case 4:
+                      if (number < 0) {
+                        suggestedDate = (0, _dateFns.subDays)(
+                          new Date(),
+                          Math.abs(number),
+                        )
+                      }
+
+                      if (number > 0) {
+                        suggestedDate = (0, _dateFns.addDays)(
+                          new Date(),
+                          number,
+                        )
+                      }
+
+                      searchDate =
+                        suggestedDate === null
+                          ? (0, _dateFns.startOfToday)()
+                          : (0, _dateFns.startOfDay)(suggestedDate)
+                      console.log("Searchin Orders for date: " + searchDate)
+                      _context9.next = 10
+                      return orders.find({
+                        date: {
+                          $gte:
+                            suggestedDate === null
+                              ? (0, _dateFns.startOfToday)()
+                              : (0, _dateFns.startOfDay)(suggestedDate),
+                          $lte:
+                            suggestedDate === null
+                              ? (0, _dateFns.endOfToday)()
+                              : (0, _dateFns.endOfDay)(suggestedDate),
+                        },
+                      })
+
+                    case 10:
+                      cursor = _context9.sent
+                      _context9.next = 13
+                      return cursor.toArray()
+
+                    case 13:
+                      ordersList = _context9.sent
+                      ;(0, _generateDeliveryNote["default"])(ordersList)
+                      _context9.next = 20
+                      break
+
+                    case 17:
+                      _context9.prev = 17
+                      _context9.t0 = _context9["catch"](1)
+                      console.error("Error: ".concat(_context9.t0))
+
+                    case 20:
+                    case "end":
+                      return _context9.stop()
+                  }
+                }
+              },
+              _callee9,
+              null,
+              [[1, 17]],
+            )
+          }),
+        )
+
+        function generateDeliveryNotes(_x9) {
+          return _generateDeliveryNotes.apply(this, arguments)
+        }
+
+        return generateDeliveryNotes
       })(),
     },
   ])

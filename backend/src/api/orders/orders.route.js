@@ -10,5 +10,8 @@ router.route("/id/:id").patch(OrdersController.apiUpdateOrderById)
 router.route("/id/:id").delete(OrdersController.apiDeleteOrderById)
 router.route("/current/:number").get(OrdersController.apiGetCurrentOrders)
 router.route("/buylist/:number").get(OrdersController.apiGenerateBuyList)
+router
+  .route("/deliverynotes/:number")
+  .get(OrdersController.apiGenerateDeliveryNotes)
 
 export default router

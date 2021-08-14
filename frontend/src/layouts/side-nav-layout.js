@@ -14,7 +14,7 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { mainListItems, secondaryListItems } from './listItems';
+import { mainListItems } from './listItems';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { toggleDarkMode } from '../redux/store/darkmode/actions';
 // import Brightness7Icon from "@material-ui/icons/Brightness7"
@@ -75,13 +75,19 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     drawerPaper: {
-        position: 'relative',
+        // position: 'relative',
         whiteSpace: 'nowrap',
         width: drawerWidth,
         transition: theme.transitions.create('width', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
-        })
+        }),
+        [theme.breakpoints.up("lg")]: {
+            position: "relative",
+            width: drawerWidth,
+        }
+
+
     },
     drawerPaperClose: {
         overflowX: 'hidden',
@@ -93,6 +99,9 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('sm')]: {
             width: theme.spacing(9),
         },
+        [theme.breakpoints.down('md')]: {
+            width: 0,
+        },
     },
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -103,6 +112,7 @@ const useStyles = makeStyles((theme) => ({
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
+        // width: "100%",
     },
     paper: {
         padding: theme.spacing(2),
@@ -118,6 +128,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SideNavLayout({ children }) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -169,8 +180,7 @@ export default function SideNavLayout({ children }) {
                 </div>
                 <Divider />
                 <List>{mainListItems}</List>
-                <Divider />
-                <List>{secondaryListItems}</List>
+
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />

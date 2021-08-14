@@ -27,22 +27,57 @@ function generateDeliveryNotePDF(ordersList) {
   var FIRST_POSITION = 100
   var SECOND_POSITION = 325
   var THIRD_POSITION = 550
+  doc
+    .lineWidth(0.5)
+    .moveTo(70, 0)
+    .lineTo(70, 595)
+    .dash(5)
+    .stroke()
+  doc.undash()
   generateOrderColumn(doc, ordersList[0], FIRST_POSITION)
   generateOrderColumn(doc, ordersList[1], SECOND_POSITION)
   generateOrderColumn(doc, ordersList[2], THIRD_POSITION)
   doc.addPage()
+  doc
+    .lineWidth(0.5)
+    .moveTo(70, 0)
+    .lineTo(70, 595)
+    .dash(5)
+    .stroke()
+  doc.undash()
   generateOrderColumn(doc, ordersList[3], FIRST_POSITION)
   generateOrderColumn(doc, ordersList[4], SECOND_POSITION)
   generateOrderColumn(doc, ordersList[5], THIRD_POSITION)
   doc.addPage()
+  doc
+    .lineWidth(0.5)
+    .moveTo(70, 0)
+    .lineTo(70, 595)
+    .dash(5)
+    .stroke()
+  doc.undash()
   generateOrderColumn(doc, ordersList[6], FIRST_POSITION)
   generateOrderColumn(doc, ordersList[7], SECOND_POSITION)
   generateOrderColumn(doc, ordersList[8], THIRD_POSITION)
   doc.addPage()
+  doc
+    .lineWidth(0.5)
+    .moveTo(70, 0)
+    .lineTo(70, 595)
+    .dash(5)
+    .stroke()
+  doc.undash()
   generateOrderColumn(doc, ordersList[9], FIRST_POSITION)
   generateOrderColumn(doc, ordersList[10], SECOND_POSITION)
   generateOrderColumn(doc, ordersList[11], THIRD_POSITION)
   doc.addPage()
+  doc
+    .lineWidth(0.5)
+    .moveTo(70, 0)
+    .lineTo(70, 595)
+    .dash(5)
+    .stroke()
+  doc.undash()
   generateOrderColumn(doc, ordersList[12], FIRST_POSITION)
   generateOrderColumn(doc, ordersList[13], SECOND_POSITION)
   generateOrderColumn(doc, ordersList[14], THIRD_POSITION)
@@ -56,36 +91,43 @@ function generateOrderColumn(doc, order, xPos) {
       locale: _locale.de,
     })
     var headerHeight = 30
-    doc
+    doc //Kundenname
       .fontSize(10)
       .text(order.customer_name, xPos, headerHeight, {
         underline: true,
         width: 150,
         align: "center",
-      })
+      }) //Datum
       .text(formatedDate, xPos + 150, headerHeight, {
         underline: true,
       })
     order.positions.forEach(function(position, i) {
-      console.log(position)
+      // console.log(position)
       var newStr = position.number.replace(/\./g, ",")
       doc
-        .fontSize(10)
+        .fontSize(10) //Anzahl
         .text(newStr, xPos - 25, headerHeight + 10 + 16 * (i + 1), {
           align: "right",
           width: 20,
         })
       doc
-        .fontSize(10)
+        .fontSize(10) //Artikelname
         .text(position.name, xPos, headerHeight + 10 + 16 * (i + 1), {
           width: 150,
           indent: 10,
         })
-      doc
+      doc //Unterstrich
         .fontSize(10)
         .text("              ", xPos + 150, headerHeight + 10 + 16 * (i + 1), {
           underline: true,
         })
     })
+    doc
+      .lineWidth(0.5)
+      .moveTo(xPos + 195, 0)
+      .lineTo(xPos + 195, 595)
+      .dash(5)
+      .stroke()
+    doc.undash()
   }
 }

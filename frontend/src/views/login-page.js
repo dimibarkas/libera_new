@@ -99,7 +99,7 @@ export default function Login() {
                     login(resp.data.access_token, resp.data.refresh_token)
                 )
                 enqueueSnackbar("Login erfolgreich", { variant: 'success' })
-                history.push("/dashboard")
+                history.push("/orders")
             }
         }
     }

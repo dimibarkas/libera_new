@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Dialog as MuiDialog, DialogActions, DialogContent, DialogTitle, Grid, makeStyles, TextField, Button } from "@material-ui/core"
 import { AsyncAutocompleteArticles } from '../controls';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
@@ -41,6 +41,8 @@ export default function PositionDialog(props) {
     const [position, updatePosition] = useState(initialState)
     const classes = useStyles();
 
+    const ref = useRef(null);
+
     const handleChange = (e) => {
         updatePosition({
             ...position,
@@ -57,6 +59,18 @@ export default function PositionDialog(props) {
         updatePosition(initialState)
     }
 
+    const handleFocus = (event) => {
+        event.target.select();
+    }
+
+    const handleAsyncChange = (newValue) => {
+        updatePosition({
+            ...position,
+            article: newValue === null ? "" : newValue.name
+        });
+        ref.current.focus();
+    }
+
     return (
         <MuiDialog open={open} onClose={(e, r) => r === "backdropClick" ? backDrop() : ""} classes={{ paper: classes.dialogWrapper }}>
             <DialogTitle>
@@ -70,12 +84,7 @@ export default function PositionDialog(props) {
                             token={token}
                             name="article"
                             value={position.article}
-                            handleChange={(newValue) => {
-                                updatePosition({
-                                    ...position,
-                                    article: newValue === null ? "" : newValue.name
-                                })
-                            }}
+                            handleChange={(newValue) => handleAsyncChange(newValue)}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -86,6 +95,8 @@ export default function PositionDialog(props) {
                             value={position.ammount}
                             onChange={handleChange}
                             InputProps={{ inputProps: { min: 0, step: 1.0, lang: "de-DE" } }}
+                            onFocus={handleFocus}
+                            ref={ref}
                         />
                     </Grid>
                 </Grid>

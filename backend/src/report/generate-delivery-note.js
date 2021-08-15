@@ -3,151 +3,156 @@ import fs from "fs"
 import { format } from "date-fns"
 import { de } from "date-fns/locale"
 
+//A4 size: A4 (595.28 x 841.89)
+
 const documentOptions = {
-  layout: "landscape",
-  bufferPages: true,
+  size: "A4",
   margin: 0,
 }
+
+const pageXEnd = 595.28
+const pageYEnd = 841.98
+
+const firstLinePosition = 198.425
+const secondLinePosition = 396.85
+const horinzontalLinePosition = 420.9
+
+const headLineHeight = 10
+const lineHeight = 15
+
+const ordersPerPage = 6
 
 export default function generateDeliveryNotePDF(ordersList) {
   let doc = new PDFDocument(documentOptions)
 
-  // console.log(ordersList)
+  //Calculate the total number of pages needed
+  const totalNumPages = calcTotalNumPages(ordersList)
 
-  const FIRST_POSITION = 100
-  const SECOND_POSITION = 325
-  const THIRD_POSITION = 550
+  addCuttingLines(doc)
+  const order_one = ordersList[0]
+  const formatedDate_one = format(new Date(order_one.date), "dd.MM.yy", {
+    locale: de,
+  })
 
-  doc
-    .lineWidth(0.5)
-    .moveTo(70, 0)
-    .lineTo(70, 595)
-    .dash(5)
-    .stroke()
+  /**
+   * Große For-Schleife
+   */
+  for (let k = 0; k < totalNumPages; k++) {
+    if (k > 0) {
+      doc.addPage()
+      addCuttingLines(doc)
+    }
+    for (let i = 0 + k * 6; i < 6 + k * 6; i++) {
+      if (ordersList[i]) {
+        doc
+          .fontSize(9)
+          //Kundenname
+          .text(
+            ordersList[i].customer_name,
+            determineXPos(i) + 30,
+            determineYPos(i, k) + headLineHeight,
+            { underline: true, width: 115, align: "center" },
+          )
+          //Datum
+          .text(
+            formatedDate_one,
+            determineXPos(i) + 150,
+            determineYPos(i, k) + headLineHeight,
+            { underline: true, width: firstLinePosition - 150 },
+          )
 
-  doc.undash()
-
-  generateOrderColumn(doc, ordersList[0], FIRST_POSITION)
-  generateOrderColumn(doc, ordersList[1], SECOND_POSITION)
-  generateOrderColumn(doc, ordersList[2], THIRD_POSITION)
-
-  doc.addPage()
-
-  doc
-    .lineWidth(0.5)
-    .moveTo(70, 0)
-    .lineTo(70, 595)
-    .dash(5)
-    .stroke()
-
-  doc.undash()
-
-  generateOrderColumn(doc, ordersList[3], FIRST_POSITION)
-  generateOrderColumn(doc, ordersList[4], SECOND_POSITION)
-  generateOrderColumn(doc, ordersList[5], THIRD_POSITION)
-
-  doc.addPage()
-
-  doc
-    .lineWidth(0.5)
-    .moveTo(70, 0)
-    .lineTo(70, 595)
-    .dash(5)
-    .stroke()
-
-  doc.undash()
-
-  generateOrderColumn(doc, ordersList[6], FIRST_POSITION)
-  generateOrderColumn(doc, ordersList[7], SECOND_POSITION)
-  generateOrderColumn(doc, ordersList[8], THIRD_POSITION)
-
-  doc.addPage()
-
-  doc
-    .lineWidth(0.5)
-    .moveTo(70, 0)
-    .lineTo(70, 595)
-    .dash(5)
-    .stroke()
-
-  doc.undash()
-
-  generateOrderColumn(doc, ordersList[9], FIRST_POSITION)
-  generateOrderColumn(doc, ordersList[10], SECOND_POSITION)
-  generateOrderColumn(doc, ordersList[11], THIRD_POSITION)
-
-  doc.addPage()
-
-  doc
-    .lineWidth(0.5)
-    .moveTo(70, 0)
-    .lineTo(70, 595)
-    .dash(5)
-    .stroke()
-
-  doc.undash()
-
-  generateOrderColumn(doc, ordersList[12], FIRST_POSITION)
-  generateOrderColumn(doc, ordersList[13], SECOND_POSITION)
-  generateOrderColumn(doc, ordersList[14], THIRD_POSITION)
+        ordersList[i].positions.forEach((position, j) => {
+          const number = position.number.replace(/\./g, ",")
+          doc
+            .fontSize(9)
+            //Anzahl
+            .text(
+              number,
+              determineXPos(i) + 0,
+              determineYPos(i, k) + headLineHeight + 5 + lineHeight * (j + 1),
+              { align: "right", width: 30 },
+            )
+            //Artikelname
+            .text(
+              position.name,
+              determineXPos(i) + 30,
+              determineYPos(i, k) + headLineHeight + 5 + lineHeight * (j + 1),
+              { indent: 5, width: 115 },
+            )
+            //Unterstrich-Preis
+            .text(
+              "              ",
+              determineXPos(i) + 150,
+              determineYPos(i, k) + headLineHeight + 5 + lineHeight * (j + 1),
+              { underline: true },
+            )
+        })
+      }
+    }
+  }
 
   doc.end()
   doc.pipe(fs.createWriteStream("./reports/lieferscheine.pdf"))
 }
 
-function generateOrderColumn(doc, order, xPos) {
-  if (order) {
-    const formatedDate = format(new Date(order.date), "dd.MM.yy", {
-      locale: de,
-    })
-    let headerHeight = 30
-
-    doc
-      //Kundenname
-      .fontSize(10)
-      .text(order.customer_name, xPos, headerHeight, {
-        underline: true,
-        width: 150,
-        align: "center",
-      })
-      //Datum
-      .text(formatedDate, xPos + 150, headerHeight, { underline: true })
-
-    order.positions.forEach((position, i) => {
-      // console.log(position)
-      const newStr = position.number.replace(/\./g, ",")
-
-      doc
-        .fontSize(10)
-        //Anzahl
-        .text(newStr, xPos - 25, headerHeight + 10 + 16 * (i + 1), {
-          align: "right",
-          width: 20,
-        })
-
-      doc
-        .fontSize(10)
-        //Artikelname
-        .text(position.name, xPos, headerHeight + 10 + 16 * (i + 1), {
-          width: 150,
-          indent: 10,
-        })
-
-      doc
-        //Unterstrich
-        .fontSize(10)
-        .text("              ", xPos + 150, headerHeight + 10 + 16 * (i + 1), {
-          underline: true,
-        })
-    })
-
-    doc
-      .lineWidth(0.5)
-      .moveTo(xPos + 195, 0)
-      .lineTo(xPos + 195, 595)
-      .dash(5)
-      .stroke()
-
-    doc.undash()
+function determineXPos(i) {
+  const arg = i % 3
+  switch (arg) {
+    case 0:
+      return 0
+    case 1:
+      return firstLinePosition
+    case 2:
+      return secondLinePosition
+    default:
+      break
   }
+}
+
+function determineYPos(i, k) {
+  let x = i
+  if (x > 5) {
+    x = x - 6 * (k + 1)
+  }
+  const arg = x > 2
+  switch (arg) {
+    case false:
+      return 0
+    case true:
+      return horinzontalLinePosition
+    default:
+      break
+  }
+}
+
+function addCuttingLines(doc) {
+  //first vertical line
+  doc
+    .lineWidth(0.5)
+    .moveTo(firstLinePosition, 0)
+    .lineTo(firstLinePosition, pageYEnd)
+    .dash(5)
+    .stroke()
+
+  //second vertical line
+  doc
+    .lineWidth(0.5)
+    .moveTo(secondLinePosition, 0)
+    .lineTo(secondLinePosition, pageYEnd)
+    .dash(5)
+    .stroke()
+
+  //horizontal line
+  doc
+    .lineWidth(0.5)
+    .moveTo(0, horinzontalLinePosition)
+    .lineTo(pageXEnd, horinzontalLinePosition)
+    .dash(5)
+    .stroke()
+
+  doc.undash()
+}
+
+function calcTotalNumPages(ordersList) {
+  return Math.ceil(ordersList.length / ordersPerPage)
 }

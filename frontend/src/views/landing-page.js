@@ -189,7 +189,7 @@ export default function LandingPage() {
                     Erfassen Sie die Bestellungen Ihrer Kunden digitial und unkompliziert über diese App.
                 </Typography>
                 <div className={classes.getStartedButtonContainer}>
-                    <RouterLink to="/dashboard" className={classes.link}>
+                    <RouterLink to="/orders" className={classes.link}>
                         <Button text={"JETZT STARTEN"} color="primary" />
                     </RouterLink>
                 </div>

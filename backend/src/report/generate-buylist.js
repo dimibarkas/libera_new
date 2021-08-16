@@ -4,7 +4,7 @@ import fs from "fs"
 import PDFDocument from "pdfkit"
 
 export default function generateBuylistPDF(buyListArray, searchDate) {
-  let doc = new PDFDocument({ margin: 50 })
+  let doc = new PDFDocument({ margin: 20 })
   const formatedDate = format(searchDate, "EEEE,dd.MM.yy", { locale: de })
 
   generateHeader(doc, formatedDate)
@@ -16,7 +16,7 @@ export default function generateBuylistPDF(buyListArray, searchDate) {
 
 function generateHeader(doc, formatedDate) {
   doc
-    .text(`Einkaufsliste für ${formatedDate}`, {
+    .text(`Einkaufsliste für ${formatedDate}`, 50, 20, {
       underline: true,
       align: "justify",
     })
@@ -25,9 +25,9 @@ function generateHeader(doc, formatedDate) {
 
 function generateBuylistTable(doc, buyListArray) {
   let i,
-    invoiceTableTop = 60
+    invoiceTableTop = 30
 
-  for (i = 0; i < 37; i++) {
+  for (i = 0; i < 41; i++) {
     const item = buyListArray[i]
     const position = invoiceTableTop + (i + 1) * 16
     generateTableRow(
@@ -38,11 +38,11 @@ function generateBuylistTable(doc, buyListArray) {
     )
   }
 
-  invoiceTableTop = 60
+  invoiceTableTop = 30
 
-  for (i = 38; i < buyListArray.length; i++) {
+  for (i = 41; i < buyListArray.length; i++) {
     const item = buyListArray[i]
-    const position = invoiceTableTop + (i + 1 - 38) * 16
+    const position = invoiceTableTop + (i + 1 - 41) * 16
     generateTableRowRightHand(
       doc,
       position,

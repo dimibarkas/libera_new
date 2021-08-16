@@ -17,7 +17,7 @@ var _pdfkit = _interopRequireDefault(require("pdfkit"))
 
 function generateBuylistPDF(buyListArray, searchDate) {
   var doc = new _pdfkit["default"]({
-    margin: 50,
+    margin: 20,
   })
   var formatedDate = (0, _dateFns.format)(searchDate, "EEEE,dd.MM.yy", {
     locale: _locale.de,
@@ -30,7 +30,7 @@ function generateBuylistPDF(buyListArray, searchDate) {
 
 function generateHeader(doc, formatedDate) {
   doc
-    .text("Einkaufsliste f\xFCr ".concat(formatedDate), {
+    .text("Einkaufsliste f\xFCr ".concat(formatedDate), 50, 20, {
       underline: true,
       align: "justify",
     })
@@ -39,9 +39,9 @@ function generateHeader(doc, formatedDate) {
 
 function generateBuylistTable(doc, buyListArray) {
   var i,
-    invoiceTableTop = 60
+    invoiceTableTop = 30
 
-  for (i = 0; i < 37; i++) {
+  for (i = 0; i < 41; i++) {
     var item = buyListArray[i]
     var position = invoiceTableTop + (i + 1) * 16
     generateTableRow(
@@ -52,12 +52,12 @@ function generateBuylistTable(doc, buyListArray) {
     )
   }
 
-  invoiceTableTop = 60
+  invoiceTableTop = 30
 
-  for (i = 38; i < buyListArray.length; i++) {
+  for (i = 41; i < buyListArray.length; i++) {
     var _item = buyListArray[i]
 
-    var _position = invoiceTableTop + (i + 1 - 38) * 16
+    var _position = invoiceTableTop + (i + 1 - 41) * 16
 
     generateTableRowRightHand(
       doc,

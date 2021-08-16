@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run prod",
+    "start": "node ./index",
     "test": "jest --passWithNoTests",
     "server": "node ./index",
     "transpile": "babel ./src --out-dir dist-server",

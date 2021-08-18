@@ -261,15 +261,18 @@ export default class OrdersDAO {
             case "Papr. Mix 5kg":
               buyList.set(
                 "Papr. Grün 5kg",
-                parseFloat(buyList.get("Papr. Grün 5kg"), 10) + 5000 / 3,
+                parseFloat(buyList.get("Papr. Grün 5kg"), 10) +
+                  (position.number * 5000) / 3,
               )
               buyList.set(
                 "Papr. Rot 5kg",
-                parseFloat(buyList.get("Papr. Rot 5kg"), 10) + 5000 / 3,
+                parseFloat(buyList.get("Papr. Rot 5kg"), 10) +
+                  (position.number * 5000) / 3,
               )
               buyList.set(
                 "Papr. Gelb 5kg",
-                parseFloat(buyList.get("Papr. Gelb 5kg"), 10) + 5000 / 3,
+                parseFloat(buyList.get("Papr. Gelb 5kg"), 10) +
+                  (position.number * 5000) / 3,
               )
               break
             case "Papr. Mix 5kg (R+G)":

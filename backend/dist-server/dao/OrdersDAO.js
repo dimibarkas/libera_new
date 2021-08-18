@@ -831,17 +831,17 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                               buyList.set(
                                 "Papr. Grün 5kg",
                                 parseFloat(buyList.get("Papr. Grün 5kg"), 10) +
-                                  5000 / 3,
+                                  (position.number * 5000) / 3,
                               )
                               buyList.set(
                                 "Papr. Rot 5kg",
                                 parseFloat(buyList.get("Papr. Rot 5kg"), 10) +
-                                  5000 / 3,
+                                  (position.number * 5000) / 3,
                               )
                               buyList.set(
                                 "Papr. Gelb 5kg",
                                 parseFloat(buyList.get("Papr. Gelb 5kg"), 10) +
-                                  5000 / 3,
+                                  (position.number * 5000) / 3,
                               )
                               break
 

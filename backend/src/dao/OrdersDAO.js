@@ -15,6 +15,9 @@ import ArticlesDAO from "./ArticlesDAO"
 let orders
 const DEFAULT_SORT = []
 
+/**
+ * Die Klasse OrdersDAO stellt Methoden zum Erstellen, Bearbeiten, Löschen und Geordneten Anzeigen von Bestellungen zur Verfügung.
+ */
 export default class OrdersDAO {
   static async injectDB(conn) {
     if (orders) {
@@ -295,8 +298,7 @@ export default class OrdersDAO {
           }
         }),
       )
-      // console.log(buyList.size)
-      // console.log(buyList.get("Tomaten 5kg"))
+
       let buyListArray = []
       let arr = Array.from(buyList)
       arr.forEach(element =>

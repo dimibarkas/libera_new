@@ -23,6 +23,7 @@ const lineHeight = 15
 const ordersPerPage = 6
 
 export default function generateDeliveryNotePDF(ordersList) {
+  console.log(ordersList)
   let doc = new PDFDocument(documentOptions)
 
   //Calculate the total number of pages needed
@@ -111,7 +112,7 @@ function determineXPos(i) {
 
 function determineYPos(i, k) {
   let x = i
-  if (x > 5) {
+  if (x > 5 && x <= 8) {
     x = x - 6 * (k + 1)
   }
   const arg = x > 2

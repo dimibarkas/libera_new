@@ -37,6 +37,9 @@ var _ArticlesDAO = _interopRequireDefault(require("./ArticlesDAO"))
 
 var orders
 var DEFAULT_SORT = []
+/**
+ * Die Klasse OrdersDAO stellt Methoden zum Erstellen, Bearbeiten, Löschen und Geordneten Anzeigen von Bestellungen zur Verfügung.
+ */
 
 var OrdersDAO = /*#__PURE__*/ (function() {
   function OrdersDAO() {
@@ -867,9 +870,7 @@ var OrdersDAO = /*#__PURE__*/ (function() {
                               break
                           }
                         })
-                      }) // console.log(buyList.size)
-                      // console.log(buyList.get("Tomaten 5kg"))
-
+                      })
                       buyListArray = []
                       arr = Array.from(buyList)
                       arr.forEach(function(element) {

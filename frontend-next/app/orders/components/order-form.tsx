@@ -57,6 +57,8 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
   const [showPositionDialog, setShowPositionDialog] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [statusVariant, setStatusVariant] = useState<"success" | "warning" | "error">("success");
+  const [dialogMode, setDialogMode] = useState<"add" | "edit">("add");
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
@@ -75,7 +77,7 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
     watch
   } = form;
 
-  const { fields, append, remove } = useFieldArray({ name: "positions", control });
+  const { fields, append, remove, update } = useFieldArray({ name: "positions", control });
 
   const { isLoading: isLoadingOrder } = useSWR(
     mode === "edit" && orderId && token ? ["order", orderId, token] : null,
@@ -93,8 +95,35 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
 
   const positions = useMemo(() => fields.map((field) => ({ ...field, number: Number(field.number) })), [fields]);
 
-  const handleAddPosition = (item: { name: string; number: number }) => {
-    append({ name: item.name, number: item.number });
+  const handleAddPosition = (item: { id?: string; name: string; number: number }) => {
+    append({ name: item.name, number: item.number, id: item.id });
+  };
+
+  const handleOpenDialog = () => {
+    setDialogMode("add");
+    setEditingIndex(null);
+    setShowPositionDialog(true);
+  };
+
+  const handleEditPosition = (index: number) => {
+    setDialogMode("edit");
+    setEditingIndex(index);
+    setShowPositionDialog(true);
+  };
+
+  const handleDialogSubmit = (item: { id?: string; name: string; number: number }) => {
+    if (dialogMode === "edit" && editingIndex !== null) {
+      const current = watch("positions")[editingIndex];
+      update(editingIndex, { ...current, ...item });
+    } else {
+      handleAddPosition(item);
+    }
+  };
+
+  const handleDialogClose = () => {
+    setShowPositionDialog(false);
+    setDialogMode("add");
+    setEditingIndex(null);
   };
 
   const onSubmit = handleSubmit(async (values) => {
@@ -235,7 +264,8 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
                   positions={positions}
                   onRemove={remove}
                   onAdd={handleAddPosition}
-                  onOpenDialog={() => setShowPositionDialog(true)}
+                  onOpenDialog={handleOpenDialog}
+                  onEdit={handleEditPosition}
                   token={token}
                 />
                 <FormMessage>{errors.positions?.message as string}</FormMessage>
@@ -261,9 +291,11 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
       </form>
       <PositionDialog
         open={showPositionDialog}
-        onClose={() => setShowPositionDialog(false)}
-        onAdd={handleAddPosition}
+        onClose={handleDialogClose}
+        onSubmit={handleDialogSubmit}
         token={token}
+        mode={dialogMode}
+        initialPosition={editingIndex !== null ? positions[editingIndex] : null}
       />
     </Form>
   );

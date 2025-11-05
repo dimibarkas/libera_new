@@ -9,12 +9,13 @@ import { TableActionButtons } from "./table-action-buttons";
 interface PositionsTableProps {
   positions: { id?: string; name: string; number: number }[];
   onRemove: (index: number) => void;
-  onAdd: (item: { name: string; number: number }) => void;
+  onAdd: (item: { id?: string; name: string; number: number }) => void;
   onOpenDialog: () => void;
+  onEdit?: (index: number) => void;
   token: string | null;
 }
 
-export function PositionsTable({ positions, onRemove, onAdd, onOpenDialog, token }: PositionsTableProps) {
+export function PositionsTable({ positions, onRemove, onAdd, onOpenDialog, onEdit, token }: PositionsTableProps) {
   return (
     <section className="mt-8 space-y-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between">
@@ -43,7 +44,10 @@ export function PositionsTable({ positions, onRemove, onAdd, onOpenDialog, token
                 <TableCell>{position.name}</TableCell>
                 <TableCell className="text-center">{position.number}</TableCell>
                 <TableCell className="text-center">
-                  <TableActionButtons onDelete={() => onRemove(index)} />
+                  <TableActionButtons
+                    onDelete={() => onRemove(index)}
+                    onEdit={onEdit ? () => onEdit(index) : undefined}
+                  />
                 </TableCell>
               </TableRow>
             ))}

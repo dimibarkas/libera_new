@@ -10,9 +10,10 @@ import { ArticleAutocomplete, ArticleAutocompleteHandle } from "./article-autoco
 interface AddPositionInlineProps {
   token: string | null;
   onAdd: (item: { id?: string; name: string; number: number }) => void;
+  excludeNames?: string[];
 }
 
-export function AddPositionInline({ token, onAdd }: AddPositionInlineProps) {
+export function AddPositionInline({ token, onAdd, excludeNames = [] }: AddPositionInlineProps) {
   const [article, setArticle] = useState("");
   const [amount, setAmount] = useState<number>(1);
   const amountInputRef = useRef<HTMLInputElement>(null);
@@ -43,6 +44,7 @@ export function AddPositionInline({ token, onAdd }: AddPositionInlineProps) {
           value={article}
           onChange={setArticle}
           onTabToNext={() => amountInputRef.current?.focus()}
+          excludeNames={excludeNames}
         />
       </TableCell>
       <TableCell className="w-32 text-center">

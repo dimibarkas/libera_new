@@ -62,8 +62,9 @@ export function CustomerAutocomplete({ token, value, onChange, placeholder = "Ku
                     <CommandItem
                       key={customer.id}
                       value={customer.name}
-                      onSelect={(currentValue) => {
-                        onChange(currentValue);
+                      onSelect={() => {
+                        onChange(customer.name);
+                        setSearch("");
                         setOpen(false);
                       }}
                     >

@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ interface ArticleAutocompleteProps {
   onChange: (value: string) => void;
   placeholder?: string;
   onTabToNext?: () => void;
+  excludeNames?: string[];
 }
 
 export interface ArticleAutocompleteHandle {
@@ -24,7 +25,10 @@ export interface ArticleAutocompleteHandle {
 }
 
 export const ArticleAutocomplete = forwardRef<ArticleAutocompleteHandle, ArticleAutocompleteProps>(
-  ({ token, value, onChange, placeholder = "Artikel auswählen", onTabToNext }, ref) => {
+  (
+    { token, value, onChange, placeholder = "Artikel auswählen", onTabToNext, excludeNames = [] },
+    ref
+  ) => {
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
     const triggerRef = useRef<HTMLButtonElement>(null);
@@ -40,9 +44,21 @@ export const ArticleAutocomplete = forwardRef<ArticleAutocompleteHandle, Article
       keepPreviousData: true
     });
 
-    const filtered = articles?.filter((article) =>
-      article.name.toLowerCase().includes(search.toLowerCase())
+    const normalizedExcludes = useMemo(
+      () => new Set(excludeNames.map((name) => name.trim().toLowerCase())),
+      [excludeNames]
     );
+
+    const filtered = articles?.filter((article) => {
+      const matchesSearch = article.name.toLowerCase().includes(search.toLowerCase());
+      if (!matchesSearch) {
+        return false;
+      }
+      if (value && article.name === value) {
+        return true;
+      }
+      return !normalizedExcludes.has(article.name.toLowerCase());
+    });
 
     useImperativeHandle(ref, () => ({
       focus: () => {
@@ -102,8 +118,8 @@ export const ArticleAutocomplete = forwardRef<ArticleAutocompleteHandle, Article
                       <CommandItem
                         key={article.id}
                         value={article.name}
-                        onSelect={(currentValue) => {
-                          onChange(currentValue);
+                        onSelect={() => {
+                          onChange(article.name);
                           setSearch("");
                           setOpen(false);
                         }}

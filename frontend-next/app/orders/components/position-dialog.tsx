@@ -15,11 +15,20 @@ interface PositionDialogProps {
   token: string | null;
   mode: "add" | "edit";
   initialPosition?: { id?: string; name: string; number: number } | null;
+  excludeNames?: string[];
 }
 
 const initialState: { id?: string; name: string; number: number } = { id: undefined, name: "", number: 1 };
 
-export function PositionDialog({ open, onClose, onSubmit, token, mode, initialPosition }: PositionDialogProps) {
+export function PositionDialog({
+  open,
+  onClose,
+  onSubmit,
+  token,
+  mode,
+  initialPosition,
+  excludeNames = []
+}: PositionDialogProps) {
   const [position, setPosition] = useState(initialState);
   const amountInputRef = useRef<HTMLInputElement>(null);
   const articleRef = useRef<ArticleAutocompleteHandle>(null);
@@ -65,6 +74,7 @@ export function PositionDialog({ open, onClose, onSubmit, token, mode, initialPo
             value={position.name}
             onChange={(name) => setPosition((prev) => ({ ...prev, name }))}
             onTabToNext={() => amountInputRef.current?.focus()}
+            excludeNames={excludeNames}
           />
           <Input
             type="number"

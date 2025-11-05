@@ -38,7 +38,11 @@ export function PositionsTable({ positions, onRemove, onAdd, onOpenDialog, onEdi
             </TableRow>
           </TableHeader>
           <TableBody>
-            <AddPositionInline token={token} onAdd={onAdd} />
+            <AddPositionInline
+              token={token}
+              onAdd={onAdd}
+              excludeNames={positions.map((position) => position.name)}
+            />
             {positions.map((position, index) => (
               <TableRow key={position.id ?? `${position.name}-${index}`}>
                 <TableCell>{position.name}</TableCell>

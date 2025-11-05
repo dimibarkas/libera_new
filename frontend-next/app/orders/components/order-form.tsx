@@ -95,6 +95,15 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
 
   const positions = useMemo(() => fields.map((field) => ({ ...field, number: Number(field.number) })), [fields]);
 
+  const existingNames = useMemo(() => positions.map((position) => position.name), [positions]);
+
+  const dialogExcludeNames = useMemo(() => {
+    if (dialogMode === "edit" && editingIndex !== null) {
+      return existingNames.filter((_, index) => index !== editingIndex);
+    }
+    return existingNames;
+  }, [dialogMode, editingIndex, existingNames]);
+
   const handleAddPosition = (item: { id?: string; name: string; number: number }) => {
     append({ name: item.name, number: item.number, id: item.id });
   };
@@ -296,6 +305,7 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
         token={token}
         mode={dialogMode}
         initialPosition={editingIndex !== null ? positions[editingIndex] : null}
+        excludeNames={dialogExcludeNames}
       />
     </Form>
   );

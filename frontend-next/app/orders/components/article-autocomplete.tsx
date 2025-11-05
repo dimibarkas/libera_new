@@ -15,9 +15,10 @@ interface ArticleAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  onTabToNext?: () => void;
 }
 
-export function ArticleAutocomplete({ token, value, onChange, placeholder = "Artikel auswählen" }: ArticleAutocompleteProps) {
+export function ArticleAutocomplete({ token, value, onChange, placeholder = "Artikel auswählen", onTabToNext }: ArticleAutocompleteProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -45,7 +46,18 @@ export function ArticleAutocomplete({ token, value, onChange, placeholder = "Art
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
         <Command shouldFilter={false}>
-          <CommandInput value={search} onValueChange={setSearch} placeholder="Suche Artikel..." />
+          <CommandInput
+            value={search}
+            onValueChange={setSearch}
+            placeholder="Suche Artikel..."
+            onKeyDown={(event) => {
+              if (event.key === "Tab" && !event.shiftKey && onTabToNext) {
+                event.preventDefault();
+                setOpen(false);
+                requestAnimationFrame(() => onTabToNext());
+              }
+            }}
+          />
           <CommandList>
             {isLoading ? (
               <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">

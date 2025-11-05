@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ const initialState = { name: "", number: 1 };
 
 export function PositionDialog({ open, onClose, onAdd, token }: PositionDialogProps) {
   const [position, setPosition] = useState(initialState);
+  const amountInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!open) {
@@ -41,11 +42,17 @@ export function PositionDialog({ open, onClose, onAdd, token }: PositionDialogPr
           <DialogDescription>Artikel und Menge auswählen, um sie der Bestellung hinzuzufügen.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
-          <ArticleAutocomplete token={token} value={position.name} onChange={(name) => setPosition((prev) => ({ ...prev, name }))} />
+          <ArticleAutocomplete
+            token={token}
+            value={position.name}
+            onChange={(name) => setPosition((prev) => ({ ...prev, name }))}
+            onTabToNext={() => amountInputRef.current?.focus()}
+          />
           <Input
             type="number"
             min={1}
             value={position.number}
+            ref={amountInputRef}
             onChange={(event) => {
               const next = Number(event.target.value);
               setPosition((prev) => ({ ...prev, number: Number.isNaN(next) ? prev.number : next }));

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ interface AddPositionInlineProps {
 export function AddPositionInline({ token, onAdd }: AddPositionInlineProps) {
   const [article, setArticle] = useState("");
   const [amount, setAmount] = useState<number>(1);
+  const amountInputRef = useRef<HTMLInputElement>(null);
 
   const disabled = !article || amount <= 0;
 
@@ -28,13 +29,19 @@ export function AddPositionInline({ token, onAdd }: AddPositionInlineProps) {
   return (
     <TableRow className="hidden md:table-row">
       <TableCell>
-        <ArticleAutocomplete token={token} value={article} onChange={setArticle} />
+        <ArticleAutocomplete
+          token={token}
+          value={article}
+          onChange={setArticle}
+          onTabToNext={() => amountInputRef.current?.focus()}
+        />
       </TableCell>
       <TableCell className="w-32 text-center">
         <Input
           type="number"
           min={1}
           value={amount}
+          ref={amountInputRef}
           onChange={(event) => {
             const next = Number(event.target.value);
             setAmount(Number.isNaN(next) ? 1 : next);

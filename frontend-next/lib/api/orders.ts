@@ -16,43 +16,48 @@ export type OrderResponse = {
   positions: OrderPosition[];
 };
 
-async function request<T>(url: string, token: string | null | undefined, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...init?.headers
-    },
-    cache: "no-store"
-  });
-
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `Request fehlgeschlagen (${response.status})`);
+const mockOrders: OrderResponse[] = [
+  {
+    id: "order-1001",
+    customer_name: "Musterfirma Schmidt GmbH",
+    date: new Date().toISOString(),
+    positions: [
+      { name: "Premium Kaffeebohnen", number: 4 },
+      { name: "Schreibtischlampe Lumen", number: 2 }
+    ]
+  },
+  {
+    id: "order-1002",
+    customer_name: "Agentur Klartext",
+    date: new Date(Date.now() + 86400000 * 3).toISOString(),
+    positions: [
+      { name: "Notizbuch A5 Classic", number: 12 },
+      { name: "USB-C Dockingstation", number: 1 }
+    ]
   }
+];
 
-  if (response.status === 204) {
-    return undefined as unknown as T;
+export async function getOrderById(id: string): Promise<OrderResponse> {
+  const order = mockOrders.find((entry) => entry.id === id);
+  if (!order) {
+    throw new Error("Bestellung wurde nicht gefunden.");
   }
-
-  return (await response.json()) as T;
+  return order;
 }
 
-export async function getOrderById(token: string | null | undefined, id: string): Promise<OrderResponse> {
-  return request<OrderResponse>(`/api/orders/id/${id}`, token);
+export async function createOrder(payload: OrderPayload) {
+  const order: OrderResponse = { id: `order-${Date.now()}`, ...payload };
+  mockOrders.push(order);
+  return order;
 }
 
-export async function createOrder(token: string | null | undefined, payload: OrderPayload) {
-  return request<OrderResponse>(`/api/orders`, token, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  });
-}
-
-export async function updateOrder(token: string | null | undefined, id: string, payload: OrderPayload) {
-  return request<OrderResponse>(`/api/orders/id/${id}`, token, {
-    method: "PATCH",
-    body: JSON.stringify(payload)
-  });
+export async function updateOrder(id: string, payload: OrderPayload) {
+  const index = mockOrders.findIndex((entry) => entry.id === id);
+  const updated: OrderResponse = { id, ...payload };
+  if (index === -1) {
+    mockOrders.push(updated);
+  } else {
+    mockOrders[index] = updated;
+  }
+  return updated;
 }

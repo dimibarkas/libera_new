@@ -1,11 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Save, X } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
-import useSWR, { mutate } from "swr";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,6 @@ import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { OrderPayload, getOrderById, createOrder, updateOrder } from "@/lib/api/orders";
 import { cn, formatDisplayDate } from "@/lib/utils";
-import { useAccessToken } from "@/lib/use-access-token";
 import { CustomerAutocomplete } from "./customer-autocomplete";
 import { OrderDatePicker } from "./order-date-picker";
 import { PositionDialog } from "./position-dialog";
@@ -44,20 +42,14 @@ interface OrderFormProps {
   initialDate?: Date;
 }
 
-function calcDiffDays(target: Date) {
-  const now = new Date();
-  const diff = target.getTime() - now.getTime();
-  return Math.round(diff / (1000 * 60 * 60 * 24));
-}
-
 export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
-  const token = useAccessToken();
   const router = useRouter();
   const [showPositionDialog, setShowPositionDialog] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [statusVariant, setStatusVariant] = useState<"success" | "warning" | "error">("success");
   const [dialogMode, setDialogMode] = useState<"add" | "edit">("add");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [isLoadingOrder, setIsLoadingOrder] = useState(mode === "edit");
 
   const form = useForm<OrderFormValues>({
     defaultValues: {
@@ -70,12 +62,6 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
       onSubmit: orderSchema
     },
     onSubmit: async ({ value }) => {
-      if (!token) {
-        setStatusMessage("Kein Zugriffstoken vorhanden. Bitte erneut anmelden.");
-        setStatusVariant("error");
-        return;
-      }
-
       setStatusMessage(null);
       const payload: OrderPayload = {
         customer_name: value.customer_name,
@@ -85,15 +71,14 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
 
       try {
         if (mode === "edit" && orderId) {
-          await updateOrder(token, orderId, payload);
+          await updateOrder(orderId, payload);
           setStatusVariant("success");
           setStatusMessage("Bestellung wurde erfolgreich bearbeitet.");
         } else {
-          await createOrder(token, payload);
+          await createOrder(payload);
           setStatusVariant("success");
           setStatusMessage("Bestellung wurde erfolgreich erstellt.");
         }
-        mutate(`/api/orders/current/${calcDiffDays(value.date)}`);
         router.back();
       } catch (error) {
         console.error(error);
@@ -110,17 +95,25 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
   const formValues = form.useStore((state) => state.values);
   const isSubmitting = form.useStore((state) => state.isSubmitting);
 
-  const { isLoading: isLoadingOrder } = useSWR(
-    mode === "edit" && orderId && token ? ["order", orderId, token] : null,
-    ([, id, accessToken]) => getOrderById(accessToken, id),
-    {
-      onSuccess: (data) => {
-        form.setFieldValue("customer_name", data.customer_name);
-        form.setFieldValue("date", new Date(data.date));
-        form.setFieldValue("positions", data.positions);
-      }
+  useEffect(() => {
+    if (mode === "edit" && orderId) {
+      setIsLoadingOrder(true);
+      getOrderById(orderId)
+        .then((data) => {
+          form.setFieldValue("customer_name", data.customer_name);
+          form.setFieldValue("date", new Date(data.date));
+          form.setFieldValue("positions", data.positions);
+        })
+        .catch((error) => {
+          console.error(error);
+          setStatusVariant("error");
+          setStatusMessage("Bestellung konnte nicht geladen werden.");
+        })
+        .finally(() => setIsLoadingOrder(false));
+    } else {
+      setIsLoadingOrder(false);
     }
-  );
+  }, [form, mode, orderId]);
 
   const positions = useMemo(
     () => formValues.positions.map((position) => ({ ...position, number: Number(position.number) })),
@@ -242,7 +235,6 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
                 <FormItem>
                   <FormLabel>Kunde</FormLabel>
                   <CustomerAutocomplete
-                    token={token}
                     value={field.state.value}
                     onChange={(value) => field.handleChange(value)}
                   />
@@ -277,7 +269,6 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
                   onAdd={handleAddPosition}
                   onOpenDialog={handleOpenDialog}
                   onEdit={handleEditPosition}
-                  token={token}
                 />
                 <FormMessage>{field.state.meta.errors?.[0]}</FormMessage>
               </div>
@@ -304,7 +295,6 @@ export function OrderForm({ mode, orderId, initialDate }: OrderFormProps) {
         open={showPositionDialog}
         onClose={handleDialogClose}
         onSubmit={handleDialogSubmit}
-        token={token}
         mode={dialogMode}
         initialPosition={editingIndex !== null ? positions[editingIndex] : null}
         excludeNames={dialogExcludeNames}

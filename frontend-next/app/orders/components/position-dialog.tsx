@@ -12,7 +12,6 @@ interface PositionDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (item: { id?: string; name: string; number: number }) => void;
-  token: string | null;
   mode: "add" | "edit";
   initialPosition?: { id?: string; name: string; number: number } | null;
   excludeNames?: string[];
@@ -24,7 +23,6 @@ export function PositionDialog({
   open,
   onClose,
   onSubmit,
-  token,
   mode,
   initialPosition,
   excludeNames = []
@@ -70,7 +68,6 @@ export function PositionDialog({
         <div className="grid gap-4 sm:grid-cols-2">
           <ArticleAutocomplete
             ref={articleRef}
-            token={token}
             value={position.name}
             onChange={(name) => setPosition((prev) => ({ ...prev, name }))}
             onTabToNext={() => amountInputRef.current?.focus()}

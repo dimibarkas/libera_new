@@ -12,10 +12,9 @@ interface PositionsTableProps {
   onAdd: (item: { id?: string; name: string; number: number }) => void;
   onOpenDialog: () => void;
   onEdit?: (index: number) => void;
-  token: string | null;
 }
 
-export function PositionsTable({ positions, onRemove, onAdd, onOpenDialog, onEdit, token }: PositionsTableProps) {
+export function PositionsTable({ positions, onRemove, onAdd, onOpenDialog, onEdit }: PositionsTableProps) {
   return (
     <section className="mt-8 space-y-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between">
@@ -39,7 +38,6 @@ export function PositionsTable({ positions, onRemove, onAdd, onOpenDialog, onEdi
           </TableHeader>
           <TableBody>
             <AddPositionInline
-              token={token}
               onAdd={onAdd}
               excludeNames={positions.map((position) => position.name)}
             />

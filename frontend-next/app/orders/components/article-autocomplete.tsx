@@ -1,17 +1,15 @@
 "use client";
 
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
-import useSWR from "swr";
 
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { listArticles } from "@/lib/api/articles";
+import { listArticles, mockArticles } from "@/lib/api/articles";
 
 interface ArticleAutocompleteProps {
-  token: string | null;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -26,23 +24,24 @@ export interface ArticleAutocompleteHandle {
 
 export const ArticleAutocomplete = forwardRef<ArticleAutocompleteHandle, ArticleAutocompleteProps>(
   (
-    { token, value, onChange, placeholder = "Artikel auswählen", onTabToNext, excludeNames = [] },
+    { value, onChange, placeholder = "Artikel auswählen", onTabToNext, excludeNames = [] },
     ref
   ) => {
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState("");
     const triggerRef = useRef<HTMLButtonElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    
+    const [articles, setArticles] = useState(mockArticles);
+
     useEffect(() => {
       if (!open) {
         setSearch("");
       }
     }, [open]);
 
-    const { data: articles, isLoading } = useSWR(open ? ["articles", token] : null, ([, accessToken]) => listArticles(accessToken), {
-      keepPreviousData: true
-    });
+    useEffect(() => {
+      listArticles().then(setArticles).catch(() => setArticles(mockArticles));
+    }, []);
 
     const normalizedExcludes = useMemo(
       () => new Set(excludeNames.map((name) => name.trim().toLowerCase())),
@@ -106,31 +105,25 @@ export const ArticleAutocomplete = forwardRef<ArticleAutocompleteHandle, Article
               }}
             />
             <CommandList>
-              {isLoading ? (
-                <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Wird geladen ...
-                </div>
-              ) : (
-                <>
-                  <CommandEmpty>Kein Artikel gefunden.</CommandEmpty>
-                  <CommandGroup>
-                    {filtered?.map((article) => (
-                      <CommandItem
-                        key={article.id}
-                        value={article.name}
-                        onSelect={() => {
-                          onChange(article.name);
-                          setSearch("");
-                          setOpen(false);
-                        }}
-                      >
-                        <Check className={cn("mr-2 h-4 w-4", value === article.name ? "opacity-100" : "opacity-0")} />
-                        {article.name}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </>
-              )}
+              <>
+                <CommandEmpty>Kein Artikel gefunden.</CommandEmpty>
+                <CommandGroup>
+                  {filtered?.map((article) => (
+                    <CommandItem
+                      key={article.id}
+                      value={article.name}
+                      onSelect={() => {
+                        onChange(article.name);
+                        setSearch("");
+                        setOpen(false);
+                      }}
+                    >
+                      <Check className={cn("mr-2 h-4 w-4", value === article.name ? "opacity-100" : "opacity-0")} />
+                      {article.name}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </>
             </CommandList>
           </Command>
         </PopoverContent>

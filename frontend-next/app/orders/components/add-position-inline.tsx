@@ -8,12 +8,11 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { ArticleAutocomplete, ArticleAutocompleteHandle } from "./article-autocomplete";
 
 interface AddPositionInlineProps {
-  token: string | null;
   onAdd: (item: { id?: string; name: string; number: number }) => void;
   excludeNames?: string[];
 }
 
-export function AddPositionInline({ token, onAdd, excludeNames = [] }: AddPositionInlineProps) {
+export function AddPositionInline({ onAdd, excludeNames = [] }: AddPositionInlineProps) {
   const [article, setArticle] = useState("");
   const [amount, setAmount] = useState<number>(1);
   const amountInputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +39,6 @@ export function AddPositionInline({ token, onAdd, excludeNames = [] }: AddPositi
       <TableCell>
         <ArticleAutocomplete
           ref={articleRef}
-          token={token}
           value={article}
           onChange={setArticle}
           onTabToNext={() => amountInputRef.current?.focus()}
